@@ -1,0 +1,26 @@
+# --- Environment Variables (CRITICAL) ---
+.env
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# --- IDEs ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Logs & Databases ---
+*.log
+*.sqlite
+instance/
