@@ -13,7 +13,11 @@ class Config:
     CHECK_INTERVAL = int(os.getenv("CHECK_INTERVAL", 10))
     
     TARGET_SENDER = "SCGTicketSystems@service-now.com"
-    TARGET_RECEIVER = "inetmscloud@inetms.co.th"
+    TARGET_RECEIVER = {
+        "scg-wifi@inetms.co.th": "iNET Network Team",
+        "scgcloud@inetms.co.th": "iNET Operation Team",
+        "inetmscloud@inetms.co.th": "iNET Cloud Support Team"
+    }
 
     # สำหรับดักจับเคส Incident ผ่าน URL
     SYSTEM_MAPPING = {

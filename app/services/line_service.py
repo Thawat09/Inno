@@ -4,7 +4,16 @@ from app.config import Config
 STAFF_MAPPING = {
     "AWS Team": [{"name": "Thawat", "userId": "U2bc72dfa6c8f312da0bf1088f1ad1a44"}],
     "GCP Team": [{"name": "เอิงเอย 🖤", "userId": "Ua8f5ff7cf153d4786d5f2ec03a4db9de"}],
-    "GCP & AWS Team (Both)": [{"name": "เอิงเอย 🖤", "userId": "Ua8f5ff7cf153d4786d5f2ec03a4db9de"}, {"name": "Thawat", "userId": "U2bc72dfa6c8f312da0bf1088f1ad1a44"}],
+    "GCP & AWS Team (Both)": [
+        {"name": "เอิงเอย 🖤", "userId": "Ua8f5ff7cf153d4786d5f2ec03a4db9de"},
+        {"name": "Thawat", "userId": "U2bc72dfa6c8f312da0bf1088f1ad1a44"}
+    ],
+    "iNET Network Team": [
+        {"name": "Thawat", "userId": "U2bc72dfa6c8f312da0bf1088f1ad1a44"}
+    ],
+    "iNET Operation Team": [
+        {"name": "Thawat", "userId": "Ua8f5ff7cf153d4786d5f2ec03a4db9de"}
+    ],
 }
 
 def send_task_notification(analysis: dict):
@@ -24,7 +33,8 @@ def send_task_notification(analysis: dict):
         mentions.append(f"{{{key}}}")
         substitution[key] = {"type": "mention", "mentionee": {"type": "user", "userId": s["userId"]}}
         mention_line = ' '.join(mentions)
-        display_text = f"🚨 New Ticket Assigned {analysis.get('ritm')}!\n\n{mention_line}"
+        # display_text = f"🚨 New Ticket Assigned {analysis.get('ritm')}!\n\n{mention_line}"
+        display_text = f"🚨 New Ticket Assigned {analysis.get('ritm')}!\n🎯 Route: {team_name}\n\n{mention_line}"
 
     payload = {
         "to": Config.LINE_GROUP_ID,

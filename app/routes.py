@@ -51,4 +51,20 @@ def line_webhook():
                 print(f"💬 ข้อความ: {text}")
                 print("="*45 + "\n")
                 
+        # ส่วนที่ 3: ตรวจจับคนออกจากกลุ่ม (Member Left)
+        elif event["type"] == "memberLeft":
+            for m in event.get("left", {}).get("members", []):
+                uid_left = m.get("userId")
+                # หมายเหตุ: ตรงนี้ get_display_name จะใช้ไม่ได้แล้วเพราะเขาไม่อยู่ในกลุ่ม
+                print(f"❌ Member Left: User ID {uid_left}")
+
+        # ส่วนที่ 4: ตรวจจับเมื่อ "ตัวบอทเอง" ถูกเตะออกจากกลุ่ม
+        elif event["type"] == "leave":
+            group_id = source.get("groupId") or source.get("roomId")
+            print(f"🏠 Bot has been removed from Group/Room: {group_id}")
+
+        # ส่วนที่ 5: ตรวจจับเมื่อ "ตัวบอทเอง" ถูกเชิญเข้ากลุ่ม
+        elif event["type"] == "join":
+            print(f"🤝 Bot joined a new group: {source.get('groupId')}")
+
     return jsonify({"status": "ok"})

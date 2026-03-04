@@ -19,6 +19,10 @@ def extract_ticket_info(body, subject=""):
         "inc_no": r"Number:\s*(INC\d+)",
         "itask_no": r"Number:\s*(ITASK\d+)",
         "inc_short_desc": r"Short Description:\s*(.*?)(?:\n|Description:|$)",
+
+        # --- Change Task (CTASK) ---
+        "ctask_no": r"Number:\s*(CTASK\d+)",
+        "ctask_short_desc": r"Number:\s*CTASK\d+.*?Short Description:\s*(.*?)(?:\n|Description:|$)",
         
         # --- Common Info ---
         # แก้ไขจุดนี้: ใช้ lookahead/lookbehind หรือระบุขอบเขตให้ชัดเจน
@@ -33,23 +37,23 @@ def extract_ticket_info(body, subject=""):
         match = re.search(pattern, body, re.IGNORECASE | re.DOTALL)
         results[key] = match.group(1).strip() if match else "N/A"
     
-    # 1. ดึง URL ทั้งหมด
+    # 1. ดึง URL และ IP Address
     results["urls"] = re.findall(r"https?://[^\s'\"<>]+", body)
-
-    # 2. ดึง IP Address
     results["ips"] = re.findall(r"10\.(41|42)\.\d{1,3}\.\d{1,3}", body)
 
-    # 3. Filter Logic
+    # 2. Filter Logic
     is_ritm_assign = "Catalog Task Assignment" in subject or "A Catalog Task record has been assigned" in body
     is_itask_assign = "Incident Task Assignment" in subject or "A Incident Task record has been assigned" in body
+    is_ctask_assign = "Change task" in subject or "A Change Task record has been assigned" in body
     
     # --- [จุดแก้ไขสำคัญ] ---
     # ตรวจสอบสถานะ: เราเอาเฉพาะที่เป็น Assigned หรือถ้าคุณอยากให้ Awaiting ผ่านด้วยก็เพิ่มได้ครับ
     # แต่จากรูป TASK1625065 สถานะข้างล่างคือ 'Assigned' ดังนั้นเช็คแค่นี้ก็ควรผ่านแล้ว
     current_state = results["state"].lower()
-    is_assigned_state = "assigned" in current_state
+    is_assigned_state = "assigned" in current_state or results["state"] == "N/A"
     
     results["is_valid_ritm"] = is_ritm_assign and is_assigned_state
     results["is_valid_itask"] = is_itask_assign
+    results["is_valid_ctask"] = is_ctask_assign
     
     return results
