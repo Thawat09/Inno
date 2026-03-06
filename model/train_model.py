@@ -1,64 +1,215 @@
-import sys
 import os
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from pythainlp.tokenize import word_tokenize
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.pipeline import Pipeline
-from sklearn.metrics import classification_report, accuracy_score
+import sys
 import joblib
+import pandas as pd
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics import accuracy_score, classification_report
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import LinearSVC
+from sklearn.naive_bayes import MultinomialNB
+
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(CURRENT_DIR)
+if PROJECT_ROOT not in sys.path:
+    sys.path.append(PROJECT_ROOT)
 
 from app.utils.ml_utils import thai_tokenizer
 
-# 1. โหลดข้อมูลที่เตรียมไว้
-df = pd.read_csv('ticket_training_data.csv')
 
-# ล้างข้อมูลเบื้องต้น (ลบแถวที่ไม่มีข้อความ)
-df['combined_features'] = (
-    "SUBJECT: " + df['subject'].fillna('') + " | " +
-    "TASK_DESC: " + df['task_short_desc'].fillna('') + " | " +
-    "RITM_DESC: " + df['ritm_short_desc'].fillna('') + " | " +
-    "DETAIL: " + df['description'].fillna('') + " | " +
-    "ENV: " + df['related_env'].fillna('')
-)
+# =========================================================
+# 1) CONFIG
+# =========================================================
+# TODO: train สำหรับ Cloud Sub-Team
+DATASET_PATH = "ticket_training_cloud_sub_team.csv"
+TARGET_COLUMN = "label_sub_team"
+MODEL_OUTPUT_PATH = "best_ticket_classifier_model.pkl"
+REPORT_OUTPUT_PATH = "model_comparison_results.csv"
 
-X = df['combined_features']  # ข้อความที่จะใช้เรียนรู้
-y = df['target_team']   # ทีมที่เป็นคำตอบ
+# # TODO: train สำหรับ Cloud Main-Team
+# DATASET_PATH = "ticket_training_main_team.csv"
+# TARGET_COLUMN = "label_main_team"
+# MODEL_OUTPUT_PATH = "best_main_team_model.pkl"
+# REPORT_OUTPUT_PATH = "main_team_model_comparison_results.csv"
 
-# 2. แบ่งข้อมูลเป็นชุดสอน (Train) 80% และชุดทดสอบ (Test) 20%
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+TEST_SIZE = 0.2
+RANDOM_STATE = 42
 
-# 3. สร้าง Pipeline สำหรับประมวลผล
-# TF-IDF: เปลี่ยนข้อความเป็นตัวเลขที่มีน้ำหนักตามความสำคัญของคำ
-# Logistic Regression: อัลกอริทึมสำหรับแยกประเภททีม
-model = Pipeline([
-    ('tfidf', TfidfVectorizer(
-        tokenizer=thai_tokenizer, # ใช้ฟังก์ชันตัดคำไทยที่เราสร้าง
-        ngram_range=(1, 2), 
-        min_df=2,           # ตัดคำที่ปรากฏเพียงครั้งเดียวทิ้งเพื่อลด Noise
-        max_df=0.9,         # ตัดคำที่ปรากฏบ่อยเกินไป (เช่น "Catalog") ทิ้ง
-        use_idf=True,
-        token_pattern=None  # ต้องตั้งเป็น None เมื่อใช้ custom tokenizer
-    )),
-    ('clf', LogisticRegression(
-        class_weight='balanced', # ให้ความสำคัญกับทีมที่มีข้อมูลน้อย (เช่น Both) มากขึ้น
-        max_iter=1000
-    ))
-])
 
-# 4. เริ่มการสอน (Training)
-print("⏳ ระบบกำลังเรียนรู้จากข้อมูลที่คุณเตรียมไว้...")
-model.fit(X_train, y_train)
+# =========================================================
+# 2) DATA PREP
+# =========================================================
+def build_text_input(df: pd.DataFrame) -> pd.Series:
+    """
+    สร้างข้อความรวมจากคอลัมน์ล่าสุดของ dataset
+    """
+    return (
+        "TICKET_TYPE: " + df.get("ticket_type", "").fillna("").astype(str) + " ||| " +
+        "TO_ADDRESS: " + df.get("to_address", "").fillna("").astype(str) + " ||| " +
+        "SUBJECT: " + df.get("subject_clean", "").fillna("").astype(str) + " ||| " +
+        "TASK_DESC: " + df.get("task_short_desc", "").fillna("").astype(str) + " ||| " +
+        "RITM_DESC: " + df.get("ritm_short_desc", "").fillna("").astype(str) + " ||| " +
+        "DETAIL: " + df.get("description", "").fillna("").astype(str) + " ||| " +
+        "ENV: " + df.get("related_env_raw", "").fillna("").astype(str) + " ||| " +
+        "BODY: " + df.get("body_text_clean", "").fillna("").astype(str)
+    )
 
-# 5. ทดสอบความแม่นยำ (Evaluation)
-y_pred = model.predict(X_test)
-print("\n📊 ผลการทดสอบความแม่นยำ (Model Report):")
-print(f"Overall Accuracy: {accuracy_score(y_test, y_pred) * 100:.2f}%")
-print(classification_report(y_test, y_pred, zero_division=0))
 
-# 6. บันทึกโมเดลไว้ใช้งานจริง
-joblib.dump(model, 'ticket_classifier_model.pkl')
-print("\n✅ บันทึกโมเดลเรียบร้อยในชื่อ: 'ticket_classifier_model.pkl'")
+def load_dataset(dataset_path: str, target_column: str) -> tuple[pd.DataFrame, pd.Series, pd.Series]:
+    if not os.path.exists(dataset_path):
+        raise FileNotFoundError(f"ไม่พบไฟล์ dataset: {dataset_path}")
+
+    df = pd.read_csv(dataset_path)
+
+    if target_column not in df.columns:
+        raise ValueError(
+            f"ไม่พบคอลัมน์ target '{target_column}' ในไฟล์ {dataset_path}\n"
+            f"columns ที่มี: {list(df.columns)}"
+        )
+
+    # ลบแถวที่ target ว่าง
+    df = df.dropna(subset=[target_column]).copy()
+    df[target_column] = df[target_column].astype(str).str.strip()
+
+    # ลบ target ว่าง
+    df = df[df[target_column] != ""].copy()
+
+    # สร้าง text input
+    df["combined_features"] = build_text_input(df)
+
+    # ลบแถวที่ text ว่าง
+    df["combined_features"] = df["combined_features"].fillna("").astype(str).str.strip()
+    df = df[df["combined_features"] != ""].copy()
+
+    X = df["combined_features"]
+    y = df[target_column]
+
+    return df, X, y
+
+
+# =========================================================
+# 3) MODEL FACTORIES
+# =========================================================
+def build_models():
+    common_tfidf = {
+        "tokenizer": thai_tokenizer,
+        "token_pattern": None,
+        "ngram_range": (1, 3),
+        "min_df": 2,
+        "max_df": 0.95,
+        "use_idf": True,
+        "sublinear_tf": True,
+    }
+
+    models = {
+        "logistic_regression": Pipeline([
+            ("tfidf", TfidfVectorizer(**common_tfidf)),
+            ("clf", LogisticRegression(
+                class_weight="balanced",
+                max_iter=2000,
+                random_state=RANDOM_STATE
+            ))
+        ]),
+        "linear_svc": Pipeline([
+            ("tfidf", TfidfVectorizer(**common_tfidf)),
+            ("clf", LinearSVC(
+                class_weight="balanced",
+                random_state=RANDOM_STATE
+            ))
+        ]),
+        "multinomial_nb": Pipeline([
+            ("tfidf", TfidfVectorizer(**common_tfidf)),
+            ("clf", MultinomialNB())
+        ]),
+    }
+
+    return models
+
+
+# =========================================================
+# 4) TRAIN / EVALUATE
+# =========================================================
+def evaluate_models(X, y):
+    """
+    train/test split แล้วเทียบ 3 model
+    """
+    # ถ้า class ไหนมีน้อยมาก stratify อาจพัง
+    use_stratify = y if y.nunique() > 1 and y.value_counts().min() >= 2 else None
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=TEST_SIZE,
+        random_state=RANDOM_STATE,
+        stratify=use_stratify
+    )
+
+    models = build_models()
+    results = []
+    trained_models = {}
+
+    print("📦 Dataset summary")
+    print(f"Rows: {len(X)}")
+    print(f"Classes: {y.nunique()}")
+    print("\n📊 Label distribution:")
+    print(y.value_counts())
+    print("-" * 70)
+
+    for model_name, model in models.items():
+        print(f"\n⏳ Training model: {model_name}")
+        model.fit(X_train, y_train)
+
+        y_pred = model.predict(X_test)
+        acc = accuracy_score(y_test, y_pred)
+
+        print(f"\n📊 Report for: {model_name}")
+        print(f"Accuracy: {acc * 100:.2f}%")
+        print(classification_report(y_test, y_pred, zero_division=0))
+
+        results.append({
+            "model_name": model_name,
+            "accuracy": acc,
+            "train_rows": len(X_train),
+            "test_rows": len(X_test),
+            "num_classes": y.nunique()
+        })
+
+        trained_models[model_name] = model
+
+    results_df = pd.DataFrame(results).sort_values(by="accuracy", ascending=False).reset_index(drop=True)
+    best_model_name = results_df.iloc[0]["model_name"]
+    best_model = trained_models[best_model_name]
+
+    return results_df, best_model_name, best_model
+
+
+# =========================================================
+# 5) MAIN
+# =========================================================
+def main():
+    print("🚀 Start training model comparison")
+    print(f"Dataset: {DATASET_PATH}")
+    print(f"Target: {TARGET_COLUMN}")
+    print("-" * 70)
+
+    df, X, y = load_dataset(DATASET_PATH, TARGET_COLUMN)
+
+    if len(df) < 10:
+        raise ValueError("ข้อมูลน้อยเกินไปสำหรับ train/test split")
+
+    results_df, best_model_name, best_model = evaluate_models(X, y)
+
+    print("\n🏆 Model comparison summary")
+    print(results_df)
+
+    results_df.to_csv(REPORT_OUTPUT_PATH, index=False, encoding="utf-8-sig")
+    print(f"\n📝 Saved comparison report to: {REPORT_OUTPUT_PATH}")
+
+    joblib.dump(best_model, MODEL_OUTPUT_PATH)
+    print(f"✅ Saved best model: {best_model_name} -> {MODEL_OUTPUT_PATH}")
+
+
+if __name__ == "__main__":
+    main()
