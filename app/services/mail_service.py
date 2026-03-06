@@ -186,6 +186,7 @@ def fetch_and_group_tasks():
     return all_tasks_list
 
 # TODO ---------------------------------------------------------- new version model
+#! Flow การทำงานที่หายไป คือ หากมี 2 task แล้วตรง relate บอกแล้วว่าต้องมีทั้ง GCP และ AWS แล้วรู้แล้วว่า task นึงเป็น GCP อีก task นึงต้องให้เป็น AWS เลย ถ้าแก้ตรงนี้ได้น่าจะสมบูรณ์มากขึ้น แล้วลบของเก่าออกไปได้เลย
 
 # import imaplib
 # import email
@@ -208,7 +209,7 @@ def fetch_and_group_tasks():
 # PROJECT_ROOT = os.path.dirname(BASE_DIR)
 
 # MODEL_PATH = os.path.join(PROJECT_ROOT, "model", "best_ticket_classifier_model.pkl")
-# ML_CONFIDENCE_THRESHOLD = 0.80
+# ML_CONFIDENCE_THRESHOLD = 0.75
 # IMAP_TIMEOUT = 30
 # MAILBOX_FOLDER = "scg"
 # DAYS_BACK = 30
@@ -768,8 +769,8 @@ def fetch_and_group_tasks():
                     
 #                     predicted_team, score = predict_team_with_ml(text_for_ml)
                     
-#                     # ถ้า ML มั่นใจมากกว่า 70% ให้เชื่อ AI
-#                     if predicted_team and score > 0.70:
+#                     # ถ้า ML มั่นใจมากกว่า 75% ให้เชื่อ AI
+#                     if predicted_team and score > 0.75:
 #                         final_route = predicted_team
 #                         print(f"🤖 [ML_MATCH] Task: {current_task_id} | Team: {final_route} | Confidence: {score:.2%}")
 #                     else:
