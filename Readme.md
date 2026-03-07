@@ -3,7 +3,8 @@
 
 # Run Project
 1. python run.py
-2. ./ngrok http 5000
+2. ngrok config add-authtoken #####
+3. ./ngrok http 5000
 
 # Run Model
 1. cd .\model\
