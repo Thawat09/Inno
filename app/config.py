@@ -16,7 +16,8 @@ class Config:
     TARGET_RECEIVER = {
         "scg-wifi@inetms.co.th": "iNET Network Team",
         "scgcloud@inetms.co.th": "iNET Operation Team",
-        "inetmscloud@inetms.co.th": "iNET Cloud Support Team"
+        "inetmscloud@inetms.co.th": "iNET Cloud Support Team",
+        "scg_cloud_inet01@scg.com": "iNET Cloud Support Team"
     }
 
     # สำหรับดักจับเคส Incident ผ่าน URL
@@ -24,7 +25,30 @@ class Config:
         "justperformqas.scg.com": "AWS Team",
         "api-justperformqas.scg.com": "AWS Team",
         "tscpcl.outsystemsenterprise.com": "AWS Team",
-        "aws": "AWS Team",
-        "gcp": "GCP Team",
-        "google": "GCP Team"
+        "lsp.com": "AWS Team",
+        "scgbpc.scg.com": "AWS Team",
+        "test-scgbpc.scg.com": "AWS Team",
+        "mdm.scg.com": "AWS Team",
+        "test-mdm.scg.com": "AWS Team",
+        "dev-mdm.scg.com": "AWS Team",
+        "swdwd.scg.com": "AWS Team",
+        "swqwd.scg.com": "AWS Team",
+        "swpwd.scg.com": "AWS Team",
+        "e-hr.scg.co.th": "AWS Team",
+        "uat-e-hr.scg.co.th": "AWS Team",
+        "dev-e-hr.scg.co.th": "AWS Team",
+        "ehr.scg.co.th": "AWS Team",
+        "uat-hr.scg.co.th": "AWS Team",
+        "dev-hr.scg.co.th": "AWS Team",
+        "ehr-efm.scg.co.th": "AWS Team",
+        "uat-hr-efm.scg.co.th": "AWS Team",
+        "dev-hr-efm.scg.co.th": "AWS Team",
+        "sandeeuat.scg.com": "AWS Team",
+        "sandee.scg.com": "AWS Team",
+        "scgchem-ecbqa.scg.com": "AWS Team",
+        "ssdmsg.scg.com": "AWS Team",
+        "ssqmsg.scg.com": "AWS Team",
+        "sspmsg.scg.com": "AWS Team",
+        "scc-awss4wd71.scg.com": "AWS Team",
+        "scc-awss4wd01.scg.com": "AWS Team"
     }

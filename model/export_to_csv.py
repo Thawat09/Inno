@@ -33,21 +33,42 @@ class Config:
         "justperformqas.scg.com": "AWS Team",
         "api-justperformqas.scg.com": "AWS Team",
         "tscpcl.outsystemsenterprise.com": "AWS Team",
-        "aws": "AWS Team",
-        "amazon": "AWS Team",
-        "gcp": "GCP Team",
-        "google": "GCP Team",
-        "gemini": "GCP Team",
-        "google workspace": "GCP Team",
+        "lsp.com": "AWS Team",
+        "scgbpc.scg.com": "AWS Team",
+        "test-scgbpc.scg.com": "AWS Team",
+        "mdm.scg.com": "AWS Team",
+        "test-mdm.scg.com": "AWS Team",
+        "dev-mdm.scg.com": "AWS Team",
+        "swdwd.scg.com": "AWS Team",
+        "swqwd.scg.com": "AWS Team",
+        "swpwd.scg.com": "AWS Team",
+        "e-hr.scg.co.th": "AWS Team",
+        "uat-e-hr.scg.co.th": "AWS Team",
+        "dev-e-hr.scg.co.th": "AWS Team",
+        "ehr.scg.co.th": "AWS Team",
+        "uat-hr.scg.co.th": "AWS Team",
+        "dev-hr.scg.co.th": "AWS Team",
+        "ehr-efm.scg.co.th": "AWS Team",
+        "uat-hr-efm.scg.co.th": "AWS Team",
+        "dev-hr-efm.scg.co.th": "AWS Team",
+        "sandeeuat.scg.com": "AWS Team",
+        "sandee.scg.com": "AWS Team",
+        "scgchem-ecbqa.scg.com": "AWS Team",
+        "ssdmsg.scg.com": "AWS Team",
+        "ssqmsg.scg.com": "AWS Team",
+        "sspmsg.scg.com": "AWS Team",
+        "scc-awss4wd71.scg.com": "AWS Team",
+        "scc-awss4wd01.scg.com": "AWS Team"
     }
 
-    AWS_KEYWORDS = ["[AWS]", "AWS", "AMAZON", "AWS HUB"]
-    GCP_KEYWORDS = ["[GCP]", "GCP", "GOOGLE", "GEMINI", "GOOGLE WORKSPACE"]
+    AWS_KEYWORDS = ["[AWS]", "AWS", "AMAZON", "AWS HUB", "EC2", "ALB", "NLB", "ELB", "ACM", "ROUTE 53", "WAF", "S3", "RDS", "LAMBDA", "CLOUDFRONT", "ELB", "EKS", "ECS", "Phassakorn Seenil"]
+    GCP_KEYWORDS = ["[GCP]", "GCP", "GCP Project", "GOOGLE", "GEMINI", "GOOGLE WORKSPACE", "GCP USER", "GCP user", "GOOGLE CLOUD", "GKE", "GCS", "BIGQUERY", "CLOUDFUNCTIONS", "CLOUDRUN", "APPENGINE", "Cloud Run", "spoke01", "sharedservices-prd-rg"]
 
     DIRECT_TO_TEAM_MAP = {
         "scg-wifi@inetms.co.th": "iNET Network Team",
         "scgcloud@inetms.co.th": "iNET Operation Team",
         "inetmscloud@inetms.co.th": "iNET Cloud Support Team",
+        "scg_cloud_inet01@scg.com": "iNET Cloud Support Team"
     }
 
 
@@ -212,7 +233,11 @@ def contains_any(text, keywords):
     if not text:
         return False
     text_upper = text.upper()
-    return any(k.upper() in text_upper for k in keywords)
+    for k in keywords:
+        pattern = re.escape(k.upper())
+        if re.search(rf"(?<!\w){pattern}(?!\w)", text_upper):
+            return True
+    return False
 
 
 def safe_group(match, default="N/A"):
@@ -324,18 +349,19 @@ def detect_assigned_team_by_to(to_address):
     return None
 
 
-def build_feature_flags(info, clean_body):
+def build_feature_flags(info, clean_body, subject=""):
     full_content = (clean_body or "").upper()
     related_env = (info.get("related_env") or "").upper()
     task_short_desc = (info.get("task_short_desc") or "").upper()
     ritm_short_desc = (info.get("ritm_short_desc") or "").upper()
     description = (info.get("description") or "").upper()
+    subject_upper = (subject or "").upper()
 
     has_aws_ip = any(ip.startswith("10.41.") for ip in info.get("ips", []))
     has_gcp_ip = any(ip.startswith("10.42.") for ip in info.get("ips", []))
 
-    combined_headers = f"{task_short_desc} {ritm_short_desc}"
-    header_plus_desc = f"{ritm_short_desc} {description}"
+    combined_headers = f"{subject_upper} {task_short_desc} {ritm_short_desc}"
+    header_plus_desc = f"{subject_upper} {ritm_short_desc} {description}"
 
     has_aws_keyword_header = contains_any(combined_headers, Config.AWS_KEYWORDS)
     has_gcp_keyword_header = contains_any(combined_headers, Config.GCP_KEYWORDS)
@@ -363,8 +389,17 @@ def build_feature_flags(info, clean_body):
     }
 
 
-def decide_cloud_subteam(info, clean_body):
-    flags = build_feature_flags(info, clean_body)
+def decide_cloud_subteam(info, clean_body, subject):
+    full_text = f"{subject} {clean_body}".upper()
+    flags = build_feature_flags(info, clean_body, subject)
+
+    if "[GCP]" in full_text:
+        return "GCP Team", "hard_rule_gcp_prefix", flags
+
+    if "[AWS]" in full_text:
+        return "AWS Team", "hard_rule_aws_prefix", flags
+    
+    flags = build_feature_flags(info, clean_body, subject)
 
     if flags["has_aws_ip"] and not flags["has_gcp_ip"]:
         return "AWS Team", "ip_match", flags
@@ -424,7 +459,7 @@ def build_master_record(msg, info, clean_body, assigned_team_key, main_team, sub
     subject_cleaned = clean_subject(subject_raw)
     body_text_clean = clean_body_for_training(clean_body)
 
-    flags = build_feature_flags(info, clean_body)
+    flags = build_feature_flags(info, clean_body, subject_raw)
 
     record = {
         "message_id": normalize_for_csv(msg.get("Message-ID", "")),
@@ -730,7 +765,7 @@ def run_export():
 
                 elif assigned_team_key == "iNET Cloud Support Team":
                     main_team = "iNET Cloud Support Team"
-                    sub_team, label_source, _ = decide_cloud_subteam(info, clean_body)
+                    sub_team, label_source, _ = decide_cloud_subteam(info, clean_body, subject)
 
                 else:
                     continue
@@ -769,7 +804,7 @@ def run_export():
             if sibling_count > 1 and known_team:
                 for t in tasks:
                     if t["label_sub_team"] == "GCP & AWS Team (Both)":
-                        t["label_sub_team"] = "AWS Team" if known_team == "GCP Team" else "GCP Team"
+                        t["label_sub_team"] = known_team
                         t["label_source"] = "cross_task_inference"
                         t["cross_task_inference_used"] = "true"
 
