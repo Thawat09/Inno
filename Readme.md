@@ -7,6 +7,5 @@
 3. ./ngrok http 5000
 
 # Run Model
-1. cd .\model\
-2. python export_to_csv.py
-3. python train_model.py
+1. python -m model.export_to_csv
+2. python -m model.train_model
