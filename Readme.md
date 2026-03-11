@@ -1,5 +1,5 @@
 # Library
-1. pip install flask requests python-dotenv beautifulsoup4 pythainlp
+1. pip install flask requests python-dotenv beautifulsoup4 pythainlp sqlalchemy
 
 # Run Project
 1. python run.py

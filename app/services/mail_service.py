@@ -1,191 +1,306 @@
-import imaplib, email
+import email
+import imaplib
 from datetime import datetime, timedelta
+
 from app.config import Config
-from app.utils.parser import clean_text, extract_ticket_info
+from model.export_to_csv import (
+    decode_mime_words,
+    extract_email_body,
+    extract_ticket_info,
+    identify_task_and_parent,
+    get_ticket_type,
+    detect_assigned_team_by_to,
+    decide_cloud_subteam,
+    apply_cross_task_inference
+)
+
+# import DB connection
+from app.db.db_connection import db
+
 
 processed_tasks = set()
 
+
+def build_db_record(msg, info, clean_body, assigned_team_key, main_team, sub_team, label_source, task_id, parent_id):
+
+    subject_raw = decode_mime_words(msg.get("Subject", ""))
+    from_address = decode_mime_words(msg.get("From", ""))
+    to_address = decode_mime_words(msg.get("To", ""))
+
+    try:
+        sent_date = email.utils.parsedate_to_datetime(msg.get("Date"))
+    except:
+        sent_date = None
+
+    short_desc = (
+        info.get("task_short_desc")
+        or info.get("ritm_short_desc")
+        or info.get("inc_short_desc")
+        or info.get("ctask_short_desc")
+    )
+
+    return {
+        "task_id": task_id,
+        "parent_id": parent_id,
+        "ticket_type": get_ticket_type(info),
+        "message_id": msg.get("Message-ID"),
+        "email_date": sent_date,
+
+        "from_address": from_address,
+        "to_address": to_address,
+
+        "subject": subject_raw,
+        "short_desc": short_desc,
+        "description": info.get("description"),
+        "related_env": info.get("related_env"),
+        "clean_body": clean_body,
+
+        "request_number": info.get("request_number"),
+        "ritm_no": info.get("ritm_no"),
+        "task_no": info.get("task_no"),
+        "itask_no": info.get("itask_no"),
+        "ctask_no": info.get("ctask_no"),
+
+        "opened_by": info.get("opened_by"),
+        "requested_for": info.get("requested_for"),
+        "priority": info.get("priority"),
+
+        "ips": info.get("ips"),
+        "urls": info.get("urls"),
+
+        "assigned_group_from_to": assigned_team_key,
+        "label_main_team": main_team,
+        "label_sub_team": sub_team,
+        "label_source": label_source,
+
+        "sibling_task_count": 1,
+        "sibling_known_sub_team": None,
+        "cross_task_inference_used": False,
+    }
+
+
+def task_already_recorded(task_id):
+
+    """
+    ตรวจสอบว่า task นี้เคยถูกบันทึกใน DB หรือยัง
+
+    ตอนนี้ COMMENT ไว้ก่อน
+    """
+
+    # session = db.get_session()
+    #
+    # result = session.execute(
+    #     "SELECT task_id FROM email_tasks WHERE task_id = :task_id",
+    #     {"task_id": task_id}
+    # ).fetchone()
+    #
+    # session.close()
+    #
+    # return result is not None
+
+    return False
+
+
+def save_task_record(record):
+
+    """
+    บันทึกข้อมูลลง DB
+
+    ตอนนี้ COMMENT ไว้ก่อน
+    """
+
+    # session = db.get_session()
+    #
+    # session.execute(
+    #     """
+    #     INSERT INTO email_tasks (
+    #         task_id,
+    #         parent_id,
+    #         ticket_type,
+    #         subject,
+    #         short_desc,
+    #         label_main_team,
+    #         label_sub_team
+    #     )
+    #     VALUES (
+    #         :task_id,
+    #         :parent_id,
+    #         :ticket_type,
+    #         :subject,
+    #         :short_desc,
+    #         :label_main_team,
+    #         :label_sub_team
+    #     )
+    #     """,
+    #     record
+    # )
+    #
+    # session.commit()
+    # session.close()
+
+    pass
+
+
+def should_send_task(task_id):
+
+    if not task_id:
+        return False
+
+    # อนาคตใช้ DB
+    if task_already_recorded(task_id):
+        return False
+
+    # ตอนนี้ใช้ set ชั่วคราว
+    if task_id in processed_tasks:
+        return False
+
+    return True
+
+
 def fetch_and_group_tasks():
     all_tasks_list = []
-    ritm_groups = {}
+    parent_groups = {}
     mail = None
 
     try:
-        mail = imaplib.IMAP4_SSL(Config.IMAP_SERVER, timeout=30) 
+
+        mail = imaplib.IMAP4_SSL(Config.IMAP_SERVER, timeout=30)
         mail.login(Config.EMAIL_USER, Config.EMAIL_PASS)
         mail.select("scg")
 
-        since_date = (datetime.now() - timedelta(days=31)).strftime("%d-%b-%Y")
-        _, messages = mail.search(None, f'(SINCE "{since_date}")')
+        since_date = (datetime.now() - timedelta(days=7)).strftime("%d-%b-%Y")
+
+        status, messages = mail.search(None, f'(SINCE "{since_date}")')
         ids = messages[0].split()
 
-        if not ids: return []
+        if not ids:
+            return []
 
         for m_id in reversed(ids):
+
             try:
-                _, msg_data = mail.fetch(m_id, "(RFC822)")
-                if not msg_data or not msg_data[0]: continue
-                
+
+                status, msg_data = mail.fetch(m_id, "(RFC822)")
+                if status != "OK":
+                    continue
+
                 msg = email.message_from_bytes(msg_data[0][1])
-                date_str = msg.get("Date")
-                msg_date = email.utils.parsedate_to_datetime(date_str)
-                subject = msg.get("Subject", "")
 
-                if Config.TARGET_SENDER not in msg.get("From", ""): continue
+                from_address = decode_mime_words(msg.get("From", ""))
+                to_address = decode_mime_words(msg.get("To", "")).lower()
+                subject = decode_mime_words(msg.get("Subject", ""))
 
-                to_address = msg.get("To", "").lower()
-                body = ""
-                if msg.is_multipart():
-                    for part in msg.walk():
-                        if part.get_content_type() in ["text/plain", "text/html"]:
-                            try: body += part.get_payload(decode=True).decode('utf-8', errors='replace')
-                            except: pass
-                else:
-                    body = msg.get_payload(decode=True).decode('utf-8', errors='replace')
+                if Config.TARGET_SENDER.lower() not in from_address.lower():
+                    continue
 
-                clean_body = clean_text(body)
+                clean_body = extract_email_body(msg)
                 info = extract_ticket_info(clean_body, subject)
 
-                current_task_id = "N/A"
-                display_parent_id = "N/A"
-                display_short_desc = "N/A"
+                task_id, parent_id = identify_task_and_parent(info)
 
-                if info["is_valid_itask"]:
-                    current_task_id = info["itask_no"]
-                    display_parent_id = info["itask_no"]
-                    display_short_desc = info["inc_short_desc"]
-                elif info["is_valid_ritm"]:
-                    current_task_id = info["task_no"]
-                    display_parent_id = info["ritm_no"]
-                    display_short_desc = info["task_short_desc"]
-                elif info["is_valid_ctask"]:
-                    current_task_id = info["ctask_no"]
-                    display_parent_id = info["ctask_no"]
-                    display_short_desc = info["ctask_short_desc"]
-
-                if current_task_id == "N/A" or current_task_id in processed_tasks:
+                if not should_send_task(task_id):
                     continue
 
-                # --- 2. Advanced Decision Matrix ---
-                final_route = "GCP & AWS Team (Both)"
-                assigned_team_key = None
-                if "scg-wifi@inetms.co.th" in to_address:
-                    assigned_team_key = "iNET Network Team"
-                elif "scgcloud@inetms.co.th" in to_address:
-                    assigned_team_key = "iNET Operation Team"
-                elif "inetmscloud@inetms.co.th" in to_address:
-                    assigned_team_key = "iNET Cloud Support Team"
-                elif "scg_cloud_inet01@scg.com" in to_address:
-                    assigned_team_key = "iNET Cloud Support Team"
+                assigned_team_key = detect_assigned_team_by_to(to_address)
+
+                if not assigned_team_key:
+                    continue
 
                 if assigned_team_key == "iNET Network Team":
-                    final_route = "iNET Network Team"
+
+                    main_team = "iNET Network Team"
+                    sub_team = None
+                    label_source = "to_address"
+
                 elif assigned_team_key == "iNET Operation Team":
-                    final_route = "iNET Operation Team"
+
+                    main_team = "iNET Operation Team"
+                    sub_team = None
+                    label_source = "to_address"
+
                 elif assigned_team_key == "iNET Cloud Support Team":
-                    full_content = clean_body.upper()
-                    env_text = info["related_env"].upper()
-                    task_header = info["task_short_desc"].upper()
-                    ritm_header = info["ritm_short_desc"].upper()
-                    ritm_desc = info["description"].upper()
-                    found_team = False
 
-                    # A. เช็คจาก IP
-                    if info["ips"]:
-                        if any("41" in ip for ip in info["ips"]): final_route = "AWS Team"; found_team = True
-                        elif any("42" in ip for ip in info["ips"]): final_route = "GCP Team"; found_team = True
+                    main_team = "iNET Cloud Support Team"
 
-                    # B. Keyword Hierarchy
-                    if not found_team:
-                        combined_headers = (task_header + " " + ritm_header).upper()
-    
-                        is_header_gcp = any(k in combined_headers for k in ["[GCP]", "GCP", "GCP Project", "GOOGLE", "GEMINI", "GOOGLE WORKSPACE", "GCP USER", "GCP user", "GOOGLE CLOUD", "GKE", "GCS", "BIGQUERY", "CLOUDFUNCTIONS", "CLOUDRUN", "APPENGINE", "Cloud Run", "spoke01", "sharedservices-prd-rg"])
-                        is_header_aws = any(k in combined_headers for k in ["[AWS]", "AWS", "AMAZON", "AWS HUB", "EC2", "ALB", "NLB", "ELB", "ACM", "ROUTE 53", "WAF", "S3", "RDS", "LAMBDA", "CLOUDFRONT", "ELB", "EKS", "ECS", "Phassakorn Seenil"])
-
-                        if is_header_gcp and not is_header_aws:
-                            final_route = "GCP Team"; found_team = True
-                        elif is_header_aws and not is_header_gcp:
-                            final_route = "AWS Team"; found_team = True
-                        # is_header_gcp = any(k in task_header for k in ["[GCP]", "GCP", "GCP Project", "GOOGLE", "GEMINI", "GOOGLE WORKSPACE", "GCP USER", "GCP user", "GOOGLE CLOUD", "GKE", "GCS", "BIGQUERY", "CLOUDFUNCTIONS", "CLOUDRUN", "APPENGINE", "Cloud Run", "spoke01", "sharedservices-prd-rg"])
-                        # is_header_aws = any(k in task_header for k in ["[AWS]", "AWS", "AMAZON", "AWS HUB", "EC2", "ALB", "NLB", "ELB", "ACM", "ROUTE 53", "WAF", "S3", "RDS", "LAMBDA", "CLOUDFRONT", "ELB", "EKS", "ECS", "Phassakorn Seenil"])
-                        # if is_header_gcp and not is_header_aws: final_route = "GCP Team"; found_team = True
-                        # elif is_header_aws and not is_header_gcp: final_route = "AWS Team"; found_team = True
-
-                    if not found_team:
-                        desc_has_gcp = any(k in full_content for k in ["GOOGLE", "GCP", "GEMINI", "GOOGLE WORKSPACE"])
-                        desc_has_aws = any(k in full_content for k in ["AWS", "AMAZON", "AWS HUB"])
-                        if (env_text.count("GCP") > 0 or desc_has_gcp) and not desc_has_aws: final_route = "GCP Team"; found_team = True
-                        elif (env_text.count("AWS") > 0 or desc_has_aws) and not desc_has_gcp: final_route = "AWS Team"; found_team = True
-
-                    if not found_team:
-                        header_content = f"{subject} {ritm_header} {ritm_desc}"
-                        is_header_gcp = any(k in header_content for k in ["[GCP]", "GCP", "GCP Project", "GOOGLE", "GEMINI", "GOOGLE WORKSPACE", "GCP USER", "GCP user", "GOOGLE CLOUD", "GKE", "GCS", "BIGQUERY", "CLOUDFUNCTIONS", "CLOUDRUN", "APPENGINE", "Cloud Run", "spoke01", "sharedservices-prd-rg"])
-                        is_header_aws = any(k in header_content for k in ["[AWS]", "AWS", "AMAZON", "AWS HUB", "EC2", "ALB", "NLB", "ELB", "ACM", "ROUTE 53", "WAF", "S3", "RDS", "LAMBDA", "CLOUDFRONT", "ELB", "EKS", "ECS", "Phassakorn Seenil"])
-                        if is_header_gcp and not is_header_aws: final_route = "GCP Team"; found_team = True
-                        elif is_header_aws and not is_header_gcp: final_route = "AWS Team"; found_team = True
-
-                    # C. เช็คจาก URL
-                    if not found_team:
-                        for url in info["urls"]:
-                            for domain, team in Config.SYSTEM_MAPPING.items():
-                                if domain in url.lower(): final_route = team; found_team = True; break
-                            if found_team: break
+                    sub_team, label_source, _ = decide_cloud_subteam(
+                        info,
+                        clean_body,
+                        subject
+                    )
 
                 else:
                     continue
 
-                # เก็บข้อมูลลงกลุ่ม RITM
-                task_obj = {
-                    "task": current_task_id,
-                    "ritm": display_parent_id,
-                    "short_desc": display_short_desc,
-                    "env": info["related_env"],
-                    "final_route": final_route,
-                    "sent_date": msg_date
-                }
-                
-                if display_parent_id not in ritm_groups:
-                    ritm_groups[display_parent_id] = []
-                ritm_groups[display_parent_id].append(task_obj)
-                processed_tasks.add(current_task_id)
+                db_record = build_db_record(
+                    msg,
+                    info,
+                    clean_body,
+                    assigned_team_key,
+                    main_team,
+                    sub_team,
+                    label_source,
+                    task_id,
+                    parent_id
+                )
+
+                if parent_id not in parent_groups:
+                    parent_groups[parent_id] = []
+
+                parent_groups[parent_id].append(db_record)
+
+                processed_tasks.add(task_id)
 
             except Exception as e:
-                print(f"❌ Error processing message: {e}")
+                print(f"Error processing message: {e}")
 
-        # --- [จุดแก้ไขสำคัญ] Cross-Task Logic ภายใต้ RITM เดียวกัน ---
-        for ritm_id, tasks in ritm_groups.items():
-            if len(tasks) > 1:
-                # 1. หาดูว่ามี Task ไหนใน RITM นี้ที่รู้ทีมชัดเจนแล้วหรือไม่ (ไม่ใช่ "Both")
-                known_team = None
-                for t in tasks:
-                    if t["final_route"] in ["GCP Team", "AWS Team"]:
-                        known_team = t["final_route"]
-                        break
-                
-                # 2. ถ้ามีหนึ่ง Task รู้ทีมแล้ว และอีก Task ยังเป็น "Both"
-                # ให้สลับ Task ที่เป็น Both ไปให้อีกทีมตามเงื่อนไข (GCP Hub <-> AWS Hub)
-                if known_team:
-                    for t in tasks:
-                        if t["final_route"] == "GCP & AWS Team (Both)":
-                            if known_team == "GCP Team":
-                                t["final_route"] = "AWS Team"
-                            else:
-                                t["final_route"] = "GCP Team"
+        for parent_id, tasks in parent_groups.items():
+            task_rows = apply_cross_task_inference(tasks)
+            sibling_count = len(task_rows)
 
-            # นำ Task ที่ประมวลผล Cross-Check แล้วใส่ลงรายการสรุป
-            all_tasks_list.extend(tasks)
+            explicit_teams = [
+                t["label_sub_team"]
+                for t in tasks
+                if t["label_sub_team"] in ["AWS Team", "GCP Team"]
+            ]
+            sibling_known_sub_team = ",".join(sorted(set(explicit_teams))) if explicit_teams else None
 
-        all_tasks_list.sort(key=lambda x: x["sent_date"])
+            for row in tasks:
+                row["sibling_task_count"] = sibling_count
+                row["sibling_known_sub_team"] = sibling_known_sub_team
+
+                task_obj = {
+                    "task": row["task_id"],
+                    "ritm": row["parent_id"],
+                    "short_desc": row["short_desc"],
+                    "env": row["related_env"],
+                    "final_route": row["label_sub_team"] if row["label_sub_team"] else row["label_main_team"],
+                    "sent_date": row["email_date"],
+                    "db_record": row
+                }
+
+                all_tasks_list.append(task_obj)
+
+                # หลังส่งสำเร็จค่อยบันทึก DB
+                # save_task_record(row)
+
+        all_tasks_list.sort(key=lambda x: x["sent_date"] or datetime.min)
+
         mail.logout()
 
-    except Exception as e:
-        print(f"📧 IMAP Error: {e}")
-    finally:
-        if mail:
-            try: mail.close()
-            except: pass
+        return all_tasks_list
 
-    return all_tasks_list
+    except Exception as e:
+
+        print(f"IMAP Error: {e}")
+        return []
+
+    finally:
+
+        if mail:
+            try:
+                mail.close()
+            except:
+                pass
 
 # TODO ---------------------------------------------------------- new
 

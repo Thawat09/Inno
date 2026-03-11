@@ -29,6 +29,8 @@ class Config:
     CHECK_INTERVAL = int(env_or_default("CHECK_INTERVAL", 10))
     TARGET_SENDER = env_or_default("TARGET_SENDER", "SCGTicketSystems@service-now.com")
 
+    DB_URI = os.getenv("DATABASE_URL")
+
     TARGET_RECEIVER = {
         "scg-wifi@inetms.co.th": "iNET Network Team",
         "scgcloud@inetms.co.th": "iNET Operation Team",

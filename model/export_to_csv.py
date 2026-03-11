@@ -301,6 +301,67 @@ def get_value_after_label_from_text(section_text, label):
     return get_value_after_label(lines, label)
 
 
+def apply_cross_task_inference(task_rows):
+    """
+    task_rows = list ของ db_record หรือ master_db_row ภายใต้ parent_id เดียวกัน
+    """
+
+    if not task_rows or len(task_rows) < 2:
+        return task_rows
+
+    cloud_rows = [
+        row for row in task_rows
+        if row.get("label_main_team") == "iNET Cloud Support Team"
+    ]
+
+    if len(cloud_rows) < 2:
+        return task_rows
+
+    explicit_rows = [
+        row for row in cloud_rows
+        if row.get("label_sub_team") in ["AWS Team", "GCP Team"]
+    ]
+
+    both_rows = [
+        row for row in cloud_rows
+        if row.get("label_sub_team") == "GCP & AWS Team (Both)"
+    ]
+
+    if not both_rows:
+        return task_rows
+
+    explicit_teams = {row.get("label_sub_team") for row in explicit_rows}
+
+    combined_env = " ".join([
+        (row.get("related_env_raw") or row.get("related_env") or "").upper()
+        for row in cloud_rows
+    ])
+
+    env_has_aws = "AWS" in combined_env
+    env_has_gcp = "GCP" in combined_env or "GOOGLE" in combined_env
+
+    if explicit_teams == {"GCP Team"} and env_has_aws and env_has_gcp:
+        for row in both_rows:
+            row["label_sub_team"] = "AWS Team"
+            row["label_source"] = "cross_task_env_opposite_inference"
+            row["cross_task_inference_used"] = True
+
+    elif explicit_teams == {"AWS Team"} and env_has_aws and env_has_gcp:
+        for row in both_rows:
+            row["label_sub_team"] = "GCP Team"
+            row["label_source"] = "cross_task_env_opposite_inference"
+            row["cross_task_inference_used"] = True
+
+    elif len(explicit_teams) == 1:
+        only_team = list(explicit_teams)[0]
+        for row in both_rows:
+            row["label_sub_team"] = only_team
+            row["label_source"] = "cross_task_same_inference"
+            row["cross_task_inference_used"] = True
+
+    return task_rows
+
+
 # =========================================================
 # 2) FIELD EXTRACTION (LINE-BASED)
 # =========================================================
@@ -765,11 +826,24 @@ def decide_cloud_subteam(info, clean_body, subject):
     ]
 
     # A. hard prefix
-    full_text = f"{subject_text} {full_content}"
-    if "[GCP]" in full_text:
-        return "GCP Team", "hard_rule_gcp_prefix", flags
-    if "[AWS]" in full_text:
-        return "AWS Team", "hard_rule_aws_prefix", flags
+    explicit_task_text = f"{task_header}"
+    explicit_ritm_text = f"{ritm_header}"
+    explicit_subject_text = f"{subject_text}"
+
+    if "[AWS]" in explicit_task_text and "[GCP]" not in explicit_task_text:
+        return "AWS Team", "task_short_desc_prefix", flags
+    if "[GCP]" in explicit_task_text and "[AWS]" not in explicit_task_text:
+        return "GCP Team", "task_short_desc_prefix", flags
+
+    if "[AWS]" in explicit_ritm_text and "[GCP]" not in explicit_ritm_text:
+        return "AWS Team", "ritm_short_desc_prefix", flags
+    if "[GCP]" in explicit_ritm_text and "[AWS]" not in explicit_ritm_text:
+        return "GCP Team", "ritm_short_desc_prefix", flags
+
+    if "[AWS]" in explicit_subject_text and "[GCP]" not in explicit_subject_text:
+        return "AWS Team", "subject_prefix", flags
+    if "[GCP]" in explicit_subject_text and "[AWS]" not in explicit_subject_text:
+        return "GCP Team", "subject_prefix", flags
 
     # B. เช็คจาก short description ล่างสุดของ TASK ก่อน
     task_hub = detect_hub_from_text(task_header)
@@ -1226,54 +1300,22 @@ def run_export():
                 print(f"⚠️ Error message ID {m_id}: {e}")
             
         for parent_id, task_bundles in parent_groups.items():
-            sibling_count = len(task_bundles)
+            rows = [bundle["master_db"] for bundle in task_bundles]
+            rows = apply_cross_task_inference(rows)
+            sibling_count = len(rows)
 
             explicit_teams = [
-                bundle["master_db"]["label_sub_team"]
-                for bundle in task_bundles
-                if bundle["master_db"]["label_sub_team"] in ["GCP Team", "AWS Team"]
+                row["label_sub_team"]
+                for row in rows
+                if row["label_sub_team"] in ["GCP Team", "AWS Team"]
             ]
 
             sibling_known_sub_team = ",".join(sorted(set(explicit_teams))) if explicit_teams else None
 
-            # กรณีมีหลาย task ใต้ parent เดียวกัน
-            catalog_rows = [
-                bundle["master_db"]
-                for bundle in task_bundles
-                if bundle["master_db"]["ticket_type"] == "catalog_task"
-            ]
-
-            if len(catalog_rows) > 1:
-                has_gcp = any(row["label_sub_team"] == "GCP Team" for row in catalog_rows)
-                has_aws = any(row["label_sub_team"] == "AWS Team" for row in catalog_rows)
-
-                both_rows = [
-                    row for row in catalog_rows
-                    if row["label_sub_team"] == "GCP & AWS Team (Both)"
-                ]
-
-                # ถ้ารู้แค่ฝั่งเดียว และมี both อยู่ ให้ infer เป็นฝั่งตรงข้าม
-                if has_gcp and not has_aws:
-                    for row in both_rows:
-                        row["label_sub_team"] = "AWS Team"
-                        row["label_source"] = "cross_task_opposite_inference"
-                        row["cross_task_inference_used"] = True
-
-                elif has_aws and not has_gcp:
-                    for row in both_rows:
-                        row["label_sub_team"] = "GCP Team"
-                        row["label_source"] = "cross_task_opposite_inference"
-                        row["cross_task_inference_used"] = True
-
-                # ถ้ามี explicit team แค่ทีมเดียว และไม่มี both logic ข้างบนครอบ
-                elif len(set(explicit_teams)) == 1:
-                    only_team = explicit_teams[0]
-                    for bundle in task_bundles:
-                        row = bundle["master_db"]
-                        if row["label_sub_team"] == "GCP & AWS Team (Both)":
-                            row["label_sub_team"] = only_team
-                            row["label_source"] = "cross_task_same_inference"
-                            row["cross_task_inference_used"] = True
+            for bundle, row in zip(task_bundles, rows):
+                bundle["master_db"] = row
+                bundle["master_db"]["sibling_task_count"] = sibling_count
+                bundle["master_db"]["sibling_known_sub_team"] = sibling_known_sub_team
 
             for bundle in task_bundles:
                 master_db_row = bundle["master_db"]
