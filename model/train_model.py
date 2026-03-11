@@ -13,12 +13,13 @@ from typing import Dict, List, Optional, Tuple
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import StratifiedKFold, cross_validate
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import classification_report
+from sklearn.metrics import accuracy_score, f1_score, classification_report
 from sklearn.linear_model import LogisticRegression, SGDClassifier, RidgeClassifier
 from sklearn.svm import LinearSVC
 from sklearn.naive_bayes import MultinomialNB, ComplementNB, BernoulliNB
 from sklearn.calibration import CalibratedClassifierCV
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
+from sklearn.tree import DecisionTreeClassifier
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(CURRENT_DIR)
@@ -50,6 +51,18 @@ VALID_LABELS = {
     for x in Config.VALID_CLOUD_SUBTEAM_LABELS.split(",")
     if x.strip()
 }
+
+BEST_VS_BUNDLE_REPORT_OUTPUT_PATH = getattr(
+    Config,
+    "BEST_VS_BUNDLE_REPORT_OUTPUT_PATH",
+    os.path.join(PROJECT_ROOT, "best_vs_bundle_report.csv")
+)
+
+BEST_VS_BUNDLE_PREDICTIONS_OUTPUT_PATH = getattr(
+    Config,
+    "BEST_VS_BUNDLE_PREDICTIONS_OUTPUT_PATH",
+    os.path.join(PROJECT_ROOT, "best_vs_bundle_predictions.csv")
+)
 
 
 # =========================================================
@@ -406,6 +419,16 @@ def build_models():
                 class_weight="balanced",
                 random_state=RANDOM_STATE,
                 n_jobs=-1
+            ))
+        ]),
+        "decision_tree": Pipeline([
+            ("tfidf", TfidfVectorizer(**common_tfidf)),
+            ("clf", DecisionTreeClassifier(
+                class_weight="balanced",
+                random_state=RANDOM_STATE,
+                max_depth=30,
+                min_samples_split=5,
+                min_samples_leaf=2
             ))
         ]),
     }
@@ -773,6 +796,201 @@ def train_explain_model(df: pd.DataFrame, target_column: str):
     explain_model.fit(explain_X, explain_y)
     return explain_model
 
+def rebuild_text_input_for_row(row_dict: Dict) -> str:
+    return (
+        "TICKET_TYPE: " + safe_text(row_dict.get("ticket_type")) + " ||| " +
+        "TO_ADDRESS: " + safe_text(row_dict.get("to_address")) + " ||| " +
+        "SUBJECT: " + safe_text(row_dict.get("subject_clean")) + " ||| " +
+        "SHORT_DESC: " + safe_text(row_dict.get("short_desc_clean")) + " ||| " +
+        "DETAIL: " + safe_text(row_dict.get("description_for_model")) + " ||| " +
+        "ENV: " + safe_text(row_dict.get("related_env_raw")) + " ||| " +
+        "BODY: " + safe_text(row_dict.get("body_for_model"))
+    )
+
+
+def predict_best_single_model_row(row_dict: Dict, best_model) -> Dict:
+    row_copy = dict(row_dict)
+
+    if not safe_text(row_copy.get("text_input")):
+        row_copy["text_input"] = rebuild_text_input_for_row(row_copy)
+
+    logic_df = build_logic_features(pd.DataFrame([row_copy]))
+    combined_text = (
+        safe_text(row_copy.get("text_input")) + " ||| " +
+        safe_text(logic_df.iloc[0]["logic_text"])
+    )
+
+    predicted_label = best_model.predict([combined_text])[0]
+
+    confidence = None
+    is_low_confidence = None
+
+    if hasattr(best_model, "predict_proba"):
+        try:
+            probs = best_model.predict_proba([combined_text])[0]
+            confidence = float(np.max(probs))
+            is_low_confidence = confidence < CONFIDENCE_THRESHOLD
+        except Exception:
+            confidence = None
+            is_low_confidence = None
+
+    return {
+        "predicted_label": predicted_label,
+        "prediction_source": "best_single_model",
+        "confidence": confidence,
+        "is_low_confidence": is_low_confidence
+    }
+
+
+def compute_metrics(y_true: List[str], y_pred: List[str], approach_name: str) -> Dict:
+    return {
+        "approach": approach_name,
+        "accuracy": accuracy_score(y_true, y_pred),
+        "macro_f1": f1_score(y_true, y_pred, average="macro"),
+        "weighted_f1": f1_score(y_true, y_pred, average="weighted"),
+        "rows": len(y_true)
+    }
+
+
+def evaluate_best_vs_bundle(df: pd.DataFrame, target_column: str):
+    print("\n🧪 Evaluate: best single model vs ensemble bundle")
+    print("-" * 80)
+
+    y_all = df[target_column].astype(str)
+
+    min_class_count = y_all.value_counts().min()
+    if min_class_count < 2:
+        raise ValueError("มีบาง class ข้อมูลน้อยกว่า 2 แถว ไม่สามารถทำ StratifiedKFold ได้")
+
+    n_splits = min(10, min_class_count)
+    if n_splits < 2:
+        raise ValueError("ข้อมูลต่อ class น้อยเกินไปสำหรับ cross-validation")
+
+    cv = StratifiedKFold(
+        n_splits=n_splits,
+        shuffle=True,
+        random_state=RANDOM_STATE
+    )
+
+    best_model_true = []
+    best_model_pred = []
+
+    bundle_true = []
+    bundle_pred = []
+
+    prediction_rows = []
+
+    fold_no = 0
+
+    for train_idx, valid_idx in cv.split(df, y_all):
+        fold_no += 1
+        print(f"\n🔁 Fold {fold_no}/{n_splits}")
+
+        train_df = df.iloc[train_idx].copy().reset_index(drop=True)
+        valid_df = df.iloc[valid_idx].copy().reset_index(drop=True)
+
+        X_train = train_df["combined_features"]
+        y_train = train_df[target_column].astype(str)
+
+        # 1) train all models บน train fold
+        models = build_models()
+        trained_models = {}
+        fold_results = []
+
+        for model_name, model in models.items():
+            model.fit(X_train, y_train)
+            trained_models[model_name] = model
+
+            valid_pred = model.predict(valid_df["combined_features"])
+
+            fold_results.append({
+                "model_name": model_name,
+                "accuracy": accuracy_score(valid_df[target_column], valid_pred),
+                "macro_f1": f1_score(valid_df[target_column], valid_pred, average="macro"),
+                "weighted_f1": f1_score(valid_df[target_column], valid_pred, average="weighted"),
+            })
+
+        fold_results_df = (
+            pd.DataFrame(fold_results)
+            .sort_values(by=["macro_f1", "accuracy"], ascending=False)
+            .reset_index(drop=True)
+        )
+
+        best_model_name = fold_results_df.iloc[0]["model_name"]
+        best_model = trained_models[best_model_name]
+
+        bundle = build_hybrid_bundle(
+            results_df=fold_results_df.rename(columns={
+                "accuracy": "accuracy_mean",
+                "macro_f1": "macro_f1_mean",
+                "weighted_f1": "weighted_f1_mean"
+            }),
+            trained_models=trained_models,
+            best_model_name=best_model_name,
+            best_model=best_model
+        )
+
+        print(f"🏆 Fold best single model: {best_model_name}")
+
+        # 2) predict valid fold ด้วย best single model
+        for row_idx, row in valid_df.iterrows():
+            row_dict = row.to_dict()
+            actual_label = str(row[target_column])
+
+            single_result = predict_best_single_model_row(row_dict, best_model)
+            bundle_result = predict_with_rules_first(row_dict, bundle)
+
+            best_model_true.append(actual_label)
+            best_model_pred.append(single_result["predicted_label"])
+
+            bundle_true.append(actual_label)
+            bundle_pred.append(bundle_result["predicted_label"])
+
+            prediction_rows.append({
+                "fold": fold_no,
+                "actual_label": actual_label,
+
+                "best_model_name": best_model_name,
+                "best_model_predicted_label": single_result["predicted_label"],
+                "best_model_prediction_source": single_result["prediction_source"],
+                "best_model_confidence": single_result.get("confidence"),
+                "best_model_is_low_confidence": single_result.get("is_low_confidence"),
+
+                "bundle_best_model_name": bundle.best_model_name,
+                "bundle_predicted_label": bundle_result["predicted_label"],
+                "bundle_prediction_source": bundle_result["prediction_source"],
+                "bundle_confidence": bundle_result.get("confidence"),
+                "bundle_is_low_confidence": bundle_result.get("is_low_confidence"),
+                "bundle_used_rule": bundle_result.get("used_rule", False),
+
+                "ticket_type": safe_text(row_dict.get("ticket_type")),
+                "subject_clean": safe_text(row_dict.get("subject_clean")),
+                "short_desc_clean": safe_text(row_dict.get("short_desc_clean")),
+                "related_env_raw": safe_text(row_dict.get("related_env_raw")),
+            })
+
+    summary_rows = [
+        compute_metrics(best_model_true, best_model_pred, "best_single_model"),
+        compute_metrics(bundle_true, bundle_pred, "ensemble_bundle"),
+    ]
+
+    summary_df = pd.DataFrame(summary_rows).sort_values(
+        by=["macro_f1", "accuracy"],
+        ascending=False
+    ).reset_index(drop=True)
+
+    predictions_df = pd.DataFrame(prediction_rows)
+
+    print("\n📊 Comparison summary")
+    print(summary_df)
+
+    print("\n📄 Classification report: best_single_model")
+    print(classification_report(best_model_true, best_model_pred, digits=4))
+
+    print("\n📄 Classification report: ensemble_bundle")
+    print(classification_report(bundle_true, bundle_pred, digits=4))
+
+    return summary_df, predictions_df
 
 def main():
     print("🚀 Start training model comparison")
@@ -826,6 +1044,23 @@ def main():
     bundle = build_hybrid_bundle(results_df, trained_models, best_model_name, best_model)
     joblib.dump(bundle, ENSEMBLE_OUTPUT_PATH)
     print(f"✅ Saved hybrid ensemble bundle -> {ENSEMBLE_OUTPUT_PATH}")
+
+    # 3) evaluate best single model vs ensemble bundle
+    comparison_summary_df, comparison_predictions_df = evaluate_best_vs_bundle(df, TARGET_COLUMN)
+
+    comparison_summary_df.to_csv(
+        BEST_VS_BUNDLE_REPORT_OUTPUT_PATH,
+        index=False,
+        encoding="utf-8-sig"
+    )
+    print(f"✅ Saved best-vs-bundle summary -> {BEST_VS_BUNDLE_REPORT_OUTPUT_PATH}")
+
+    comparison_predictions_df.to_csv(
+        BEST_VS_BUNDLE_PREDICTIONS_OUTPUT_PATH,
+        index=False,
+        encoding="utf-8-sig"
+    )
+    print(f"✅ Saved best-vs-bundle predictions -> {BEST_VS_BUNDLE_PREDICTIONS_OUTPUT_PATH}")
 
 
 if __name__ == "__main__":

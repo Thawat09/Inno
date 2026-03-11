@@ -1,4 +1,47 @@
 ﻿record_id,ticket_type,to_address,subject_clean,short_desc_clean,description_for_model,related_env_raw,body_for_model,text_input,label_sub_team
+TASK1631813,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,ขอ Allow Firewall เพื่อดึงข้อมูล Time จาก LSP เข้า Data Warehouse HR,"ขอ Allow Firewall เพื่อดึงข้อมูล Time จาก LSP เข้า Data Warehouse HR
+Form : DXC Request form for Firewall v3.7 LSPTMS_HRDW.xlsx",,"Request Number:
+REQ_ID
+Opened By:
+Arunya Trisamuchkul
+Opened Date:
+2026-03-10 13:16:14 ICT
+Click
+here
+to view the request
+Requested For:
+Kan Preecha
+Business Phone:
+(080) 440-4831
+Email Address:
+KANPREEC@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-10 13:16:13 ICT
+Short Description:
+ขอ Allow Firewall เพื่อดึงข้อมูล Time จาก LSP เข้า Data Warehouse HR
+Description:
+ขอ Allow Firewall เพื่อดึงข้อมูล Time จาก LSP เข้า Data Warehouse HR
+Form : DXC Request form for Firewall v3.7 LSPTMS_HRDW.xlsx
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+ขอ Allow Firewall เพื่อดึงข้อมูล Time จาก LSP เข้า Data Warehouse HR
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: ขอ Allow Firewall เพื่อดึงข้อมูล Time จาก LSP เข้า Data Warehouse HR [SEP] description: ขอ Allow Firewall เพื่อดึงข้อมูล Time จาก LSP เข้า Data Warehouse HR | Form : DXC Request form for Firewall v3.7 LSPTMS_HRDW.xlsx [SEP] body: Request Number: | REQ_ID | Opened By: | Arunya Trisamuchkul | Opened Date: | 2026-03-10 13:16:14 ICT | Click | here | to view the request | Requested For: | Kan Preecha | Business Phone: | (080) 440-4831 | Email Address: | KANPREEC@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-10 13:16:13 ICT | Short Description: | ขอ Allow Firewall เพื่อดึงข้อมูล Time จาก LSP เข้า Data Warehouse HR | Description: | ขอ Allow Firewall เพื่อดึงข้อมูล Time จาก LSP เข้า Data Warehouse HR | Form : DXC Request form for Firewall v3.7 LSPTMS_HRDW.xlsx | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | ขอ Allow Firewall เพื่อดึงข้อมูล Time จาก LSP เข้า Data Warehouse HR | Click | here | to view the task,GCP & AWS Team (Both)
 TASK1630653,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP] ขอข้อมูล GCP ของ SCG เพื่อนำไปคำนวน Resource ของ CSPM,"[GCP] ขอข้อมูล GCP ของ SCG เพื่อนำไปคำนวน Resource ของ CSPM
 โดยจะขอข้อมูลตามนี้
 Total GCP Project
