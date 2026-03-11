@@ -7,11 +7,8 @@ import re
 from datetime import datetime, timedelta
 from email.header import decode_header
 from email.utils import parsedate_to_datetime
-
 from bs4 import BeautifulSoup
-
 from app.config import Config
-
 
 # =========================================================
 # 1) UTILS
@@ -302,10 +299,6 @@ def get_value_after_label_from_text(section_text, label):
 
 
 def apply_cross_task_inference(task_rows):
-    """
-    task_rows = list ของ db_record หรือ master_db_row ภายใต้ parent_id เดียวกัน
-    """
-
     if not task_rows or len(task_rows) < 2:
         return task_rows
 
@@ -503,7 +496,6 @@ def extract_ticket_info(body, subject=""):
         ["alert_details", "recommendation"]
     )
 
-    # ใช้ regex จับ raw section ซ้ำอีกชั้น เพื่อให้แม่นขึ้น
     catalog_task_text = extract_section_text(
         body,
         "Catalog Task Details:",
@@ -562,7 +554,6 @@ def extract_ticket_info(body, subject=""):
         ),
     }
 
-    # fallback ด้วย raw section text
     results["task_no"] = (
         results["task_no"]
         or get_value_after_label_from_text(catalog_task_text, "Task Number:")
@@ -817,7 +808,6 @@ def decide_cloud_subteam(info, clean_body, subject):
 
     flags = build_feature_flags(info, clean_body, subject)
 
-    # รวม keyword แบบเก่าที่จับได้ดีกว่า
     gcp_keywords = list(Config.GCP_KEYWORDS) + [
         "GEMINI", "CLOUDFUNCTIONS", "CLOUD RUN", "SPOKE01", "SHAREDSERVICES-PRD-RG"
     ]
@@ -825,7 +815,6 @@ def decide_cloud_subteam(info, clean_body, subject):
         "PHASSAKORN SEENIL"
     ]
 
-    # A. hard prefix
     explicit_task_text = f"{task_header}"
     explicit_ritm_text = f"{ritm_header}"
     explicit_subject_text = f"{subject_text}"
@@ -845,19 +834,16 @@ def decide_cloud_subteam(info, clean_body, subject):
     if "[GCP]" in explicit_subject_text and "[AWS]" not in explicit_subject_text:
         return "GCP Team", "subject_prefix", flags
 
-    # B. เช็คจาก short description ล่างสุดของ TASK ก่อน
     task_hub = detect_hub_from_text(task_header)
     if task_hub:
         return task_hub, "task_short_desc_hub", flags
 
-    # C. เช็คจาก IP
     if info.get("ips"):
         if any(ip.startswith("10.41.") for ip in info["ips"]):
             return "AWS Team", "ip_match", flags
         if any(ip.startswith("10.42.") for ip in info["ips"]):
             return "GCP Team", "ip_match", flags
 
-    # D. Header hierarchy แบบโค้ดเก่า
     combined_headers = f"{task_header} {ritm_header} {inc_header} {ctask_header}"
 
     is_header_gcp = contains_any_loose(combined_headers, gcp_keywords)
@@ -868,7 +854,6 @@ def decide_cloud_subteam(info, clean_body, subject):
     if is_header_aws and not is_header_gcp:
         return "AWS Team", "keyword_header", flags
 
-    # E. เช็คจาก related_env + body แบบโค้ดเก่า
     desc_has_gcp = contains_any_loose(full_content, ["GOOGLE", "GCP", "GEMINI", "GOOGLE WORKSPACE"])
     desc_has_aws = contains_any_loose(full_content, ["AWS", "AMAZON", "AWS HUB"])
 
@@ -877,7 +862,6 @@ def decide_cloud_subteam(info, clean_body, subject):
     if (env_text.count("AWS") > 0 or desc_has_aws) and not desc_has_gcp:
         return "AWS Team", "keyword_body_env", flags
 
-    # F. subject + ritm + description
     header_content = f"{subject_text} {ritm_header} {desc_text}"
 
     is_content_gcp = contains_any_loose(header_content, gcp_keywords)
@@ -888,7 +872,6 @@ def decide_cloud_subteam(info, clean_body, subject):
     if is_content_aws and not is_content_gcp:
         return "AWS Team", "keyword_desc", flags
 
-    # G. URL
     for url in info.get("urls", []):
         url_lower = url.lower()
         for domain, team in Config.SYSTEM_MAPPING.items():
@@ -1168,7 +1151,7 @@ def write_csv(filename, headers, rows):
 # =========================================================
 # 8) MAIN
 # =========================================================
-def run_export():
+def run_export(save_to_db=True):
     processed_tasks = set()
     parent_groups = {}
 
@@ -1298,7 +1281,7 @@ def run_export():
 
             except Exception as e:
                 print(f"⚠️ Error message ID {m_id}: {e}")
-            
+
         for parent_id, task_bundles in parent_groups.items():
             rows = [bundle["master_db"] for bundle in task_bundles]
             rows = apply_cross_task_inference(rows)
@@ -1316,15 +1299,11 @@ def run_export():
                 bundle["master_db"] = row
                 bundle["master_db"]["sibling_task_count"] = sibling_count
                 bundle["master_db"]["sibling_known_sub_team"] = sibling_known_sub_team
+                bundle["master_db"]["text_input"] = build_text_input(bundle["master_db"])
 
             for bundle in task_bundles:
                 master_db_row = bundle["master_db"]
                 audit_raw_row = bundle["audit_raw"]
-
-                master_db_row["sibling_task_count"] = sibling_count
-                master_db_row["sibling_known_sub_team"] = sibling_known_sub_team
-                master_db_row["text_input"] = build_text_input(master_db_row)
-
                 final_master_db_rows.append(master_db_row)
                 final_audit_raw_rows.append(audit_raw_row)
                 final_training_rows.append(build_training_record(master_db_row))
@@ -1352,4 +1331,4 @@ def run_export():
 
 
 if __name__ == "__main__":
-    run_export()
+    run_export(save_to_db=True)

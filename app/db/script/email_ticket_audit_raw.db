@@ -1,0 +1,45 @@
+CREATE TABLE email_ticket_audit_raw (
+    record_id VARCHAR(100) PRIMARY KEY,
+    parent_id VARCHAR(100),
+    message_id VARCHAR(255),
+    email_date DATETIME2 NULL,
+
+    subject_raw NVARCHAR(MAX),
+    body_raw NVARCHAR(MAX),
+
+    parsed_task_short_desc NVARCHAR(MAX),
+    parsed_ritm_short_desc NVARCHAR(MAX),
+    parsed_inc_short_desc NVARCHAR(MAX),
+    parsed_ctask_short_desc NVARCHAR(MAX),
+    parsed_description NVARCHAR(MAX),
+    parsed_related_env NVARCHAR(MAX),
+    parsed_requested_for VARCHAR(255),
+    parsed_opened_by VARCHAR(255),
+    parsed_business_service VARCHAR(255),
+    parsed_service_offering VARCHAR(255),
+
+    ip_list_json NVARCHAR(MAX),
+    url_list_json NVARCHAR(MAX),
+
+    created_at DATETIME2 DEFAULT GETDATE(),
+    created_by VARCHAR(100) DEFAULT 'email_pipeline',
+
+    updated_at DATETIME2 DEFAULT GETDATE(),
+    updated_by VARCHAR(100) DEFAULT 'email_pipeline'
+);
+GO
+
+CREATE TRIGGER trg_update_email_ticket_audit_raw
+ON email_ticket_audit_raw
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE t
+    SET updated_at = GETDATE()
+    FROM email_ticket_audit_raw t
+    INNER JOIN inserted i
+        ON t.record_id = i.record_id;
+END
+GO

@@ -1,0 +1,84 @@
+CREATE TABLE email_ticket_master (
+    record_id VARCHAR(100) PRIMARY KEY,
+    parent_id VARCHAR(100),
+    message_id VARCHAR(255),
+    email_date DATETIME2 NULL,
+
+    from_address VARCHAR(255),
+    to_address VARCHAR(255),
+    ticket_type VARCHAR(50),
+
+    request_number VARCHAR(100),
+    ritm_no VARCHAR(100),
+    inc_no VARCHAR(100),
+    itask_no VARCHAR(100),
+    ctask_no VARCHAR(100),
+
+    subject_clean NVARCHAR(MAX),
+    short_desc_clean NVARCHAR(MAX),
+    description_clean NVARCHAR(MAX),
+    description_for_model NVARCHAR(MAX),
+    related_env_raw NVARCHAR(MAX),
+    body_for_model NVARCHAR(MAX),
+
+    opened_by VARCHAR(255),
+    requested_for VARCHAR(255),
+    raised_by VARCHAR(255),
+    business_service VARCHAR(255),
+    service_offering VARCHAR(255),
+    priority VARCHAR(100),
+    urgency VARCHAR(100),
+    impact VARCHAR(100),
+    contact_email VARCHAR(255),
+
+    ip_list_json NVARCHAR(MAX),
+    url_list_json NVARCHAR(MAX),
+
+    has_aws_ip BIT,
+    has_gcp_ip BIT,
+    has_aws_keyword_header BIT,
+    has_gcp_keyword_header BIT,
+    has_aws_keyword_body BIT,
+    has_gcp_keyword_body BIT,
+    has_aws_keyword_desc BIT,
+    has_gcp_keyword_desc BIT,
+    env_has_aws BIT,
+    env_has_gcp BIT,
+
+    assigned_group_from_to VARCHAR(255),
+    route_scope VARCHAR(100),
+
+    sibling_task_count INT,
+    sibling_known_sub_team VARCHAR(255),
+    cross_task_inference_used BIT,
+
+    label_main_team VARCHAR(255),
+    label_sub_team VARCHAR(255),
+    label_source VARCHAR(100),
+    text_input NVARCHAR(MAX),
+
+    ml_confidence FLOAT NULL,
+    decision_mode VARCHAR(100) NULL,
+
+    created_at DATETIME2 DEFAULT GETDATE(),
+    created_by VARCHAR(100) DEFAULT 'email_pipeline',
+
+    updated_at DATETIME2 DEFAULT GETDATE(),
+    updated_by VARCHAR(100) DEFAULT 'email_pipeline'
+);
+GO
+
+CREATE TRIGGER trg_update_email_ticket_master
+ON email_ticket_master
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE t
+    SET updated_at = GETDATE()
+    FROM email_ticket_master t
+    INNER JOIN inserted i 
+        ON t.record_id = i.record_id;
+END
+GO
