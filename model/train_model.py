@@ -6,6 +6,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
+from datetime import datetime
 from collections import Counter
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple
@@ -76,6 +77,21 @@ SYSTEM_MAPPING = getattr(Config, "SYSTEM_MAPPING", {})
 # =========================================================
 # 3) UTILS
 # =========================================================
+def get_versioned_model_path(base_name, extension=".pkl"):
+    model_dir = os.path.dirname(Config.BEST_TICKET_CLASSIFIER_MODEL_PATH)
+    year_th = (datetime.now().year + 43) % 100
+    date_str = datetime.now().strftime(f"{year_th}_%m_%d")
+    version = 1
+
+    while True:
+        file_name = f"{base_name}_{date_str}_v{version}{extension}"
+        full_path = os.path.join(model_dir, file_name)
+        
+        if not os.path.exists(full_path):
+            return full_path
+        version += 1
+
+
 def safe_text(value) -> str:
     if pd.isna(value) or value is None:
         return ""
@@ -1023,6 +1039,10 @@ def main():
 
     joblib.dump(best_model, MODEL_OUTPUT_PATH)
     print(f"✅ Saved best single model: {best_model_name} -> {MODEL_OUTPUT_PATH}")
+
+    backup_path = get_versioned_model_path("best_ticket_classifier_model")
+    joblib.dump(best_model, backup_path)
+    print(f"📦 Backup model saved to: {backup_path}")
 
     # 1) importance จาก model จริงที่ train บน combined_features
     save_feature_importance(

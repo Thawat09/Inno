@@ -24,3 +24,8 @@ dist/
 *.log
 *.sqlite
 instance/
+
+# --- Models ---
+outputs/train/best_ticket_classifier_model_*
+best_vs_bundle_predictions.csv
+best_vs_bundle_report.csv

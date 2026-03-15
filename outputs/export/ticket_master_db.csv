@@ -1,4 +1,473 @@
 ﻿record_id,parent_id,message_id,email_date,from_address,to_address,ticket_type,request_number,ritm_no,inc_no,itask_no,ctask_no,subject_clean,short_desc_clean,description_clean,description_for_model,related_env_raw,body_for_model,opened_by,requested_for,raised_by,business_service,service_offering,priority,urgency,impact,contact_email,ip_list_json,url_list_json,has_aws_ip,has_gcp_ip,has_aws_keyword_header,has_gcp_keyword_header,has_aws_keyword_body,has_gcp_keyword_body,has_aws_keyword_desc,has_gcp_keyword_desc,env_has_aws,env_has_gcp,assigned_group_from_to,route_scope,sibling_task_count,sibling_known_sub_team,cross_task_inference_used,label_main_team,label_sub_team,label_source,text_input
+TASK1633277,RITM0841310,<2025121536.121377.1773451610930@app128016.sin301.service-now.com>,2026-03-13T18:26:50-07:00,SCG Ticket Systems <SCGTicketSystems@service-now.com>,inetmscloud@inetms.co.th,catalog_task,REQ0840318,RITM0841310,,,,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,Firewall Request : AWS Hub | Click | here | to view the task,ขอ allow port ให้ VPN User access ระบบ SAP SQL,ขอ allow port ให้ VPN User access ระบบ SAP SQL,IT One Services | AWS Hub | VPN User | Port 53075 คือ Web-based IDE for XSA Development (SAP Web IDE for SAP HANA) | Reference: | https://caldocs.cfapps.eu01.hana.ondemand.com/caldocs/help/Getting_started_HANA_Express.pdf | https://developers.sap.com/tutorials/xsa-connecting-webide.html | Attached file: | - DXC Request form for Firewall v3.7_RITM0841310.xlsx,"Request Number:
+REQ_ID
+Opened By:
+Wikorn Hemchuea
+Opened Date:
+2026-03-02 17:16:36 ICT
+Click
+here
+to view the request
+Requested For:
+Uriwan Angkhawey
+Email Address:
+URIWANAN@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-02 17:16:36 ICT
+Short Description:
+ขอ allow port ให้ VPN User access ระบบ SAP SQL
+Description:
+ขอ allow port ให้ VPN User access ระบบ SAP SQL
+Related environment:
+IT One Services
+AWS Hub
+VPN User
+Port 53075 คือ Web-based IDE for XSA Development (SAP Web IDE for SAP HANA)
+Reference:
+https://caldocs.cfapps.eu01.hana.ondemand.com/caldocs/help/Getting_started_HANA_Express.pdf
+https://developers.sap.com/tutorials/xsa-connecting-webide.html
+Attached file:
+- DXC Request form for Firewall v3.7_RITM0841310.xlsx
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+Firewall Request : AWS Hub
+Click
+here
+to view the task",Wikorn Hemchuea,Uriwan Angkhawey,,,,,,,URIWANAN@SCG.COM,,"[""https://caldocs.cfapps.eu01.hana.ondemand.com/caldocs/help/Getting_started_HANA_Express.pdf"", ""https://developers.sap.com/tutorials/xsa-connecting-webide.html""]",false,false,true,false,true,false,true,false,true,false,iNET Cloud Support Team,cloud_subteam,1,AWS Team,false,iNET Cloud Support Team,AWS Team,task_short_desc_hub,ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: Firewall Request : AWS Hub | Click | here | to view the task [SEP] description: ขอ allow port ให้ VPN User access ระบบ SAP SQL [SEP] related_env: IT One Services | AWS Hub | VPN User | Port 53075 คือ Web-based IDE for XSA Development (SAP Web IDE for SAP HANA) | Reference: | https://caldocs.cfapps.eu01.hana.ondemand.com/caldocs/help/Getting_started_HANA_Express.pdf | https://developers.sap.com/tutorials/xsa-connecting-webide.html | Attached file: | - DXC Request form for Firewall v3.7_RITM0841310.xlsx [SEP] body: Request Number: | REQ_ID | Opened By: | Wikorn Hemchuea | Opened Date: | 2026-03-02 17:16:36 ICT | Click | here | to view the request | Requested For: | Uriwan Angkhawey | Email Address: | URIWANAN@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-02 17:16:36 ICT | Short Description: | ขอ allow port ให้ VPN User access ระบบ SAP SQL | Description: | ขอ allow port ให้ VPN User access ระบบ SAP SQL | Related environment: | IT One Services | AWS Hub | VPN User | Port 53075 คือ Web-based IDE for XSA Development (SAP Web IDE for SAP HANA) | Reference: | https://caldocs.cfapps.eu01.hana.ondemand.com/caldocs/help/Getting_started_HANA_Express.pdf | https://developers.sap.com/tutorials/xsa-connecting-webide.html | Attached file: | - DXC Request form for Firewall v3.7_RITM0841310.xlsx | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | Firewall Request : AWS Hub | Click | here | to view the task
+TASK1633267,RITM0843646,<1672510409.121151.1773450106867@app128016.sin301.service-now.com>,2026-03-13T18:01:46-07:00,SCG Ticket Systems <SCGTicketSystems@service-now.com>,inetmscloud@inetms.co.th,catalog_task,REQ0842653,RITM0843646,,,,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,Firewall Request : AWS Hub | Click | here | to view the task,"ขอ Firewall เครื่อง CPOCloud.scg.co.th
+ทาง CIO มี Project ในการเอาข้อมูล Invoice/PO จาก SAP ทุกเครื่องมารวมที่เครื่อง CPO Cloud
+ซึ่งปัจจุบันมีอยู่ 7 Server แล้ว และกำลัง Rollout เครื่องที่ 8 LSP VN
+Status ปัจจุบันคือทาง LSP และ Vender ได้เอา Text files ออกจาก SAP แล้ว
+์
+Next Step คือการส่ง Files มารวมที่เครื่อง CPOCloud
+(ftp://cpocloud.scg.com/scglsp/PRD/SA/
+ftp://cpocloud.scg.com/scglsp/QA/SA/)
+ทาง Team จึงจะขอเปิด Firewall เพื่อให้สามารถส่ง Files มาได้
+โดยมีรายละเอียดตามเอกสารแนบ","ขอ Firewall เครื่อง CPOCloud.scg.co.th
+ทาง CIO มี Project ในการเอาข้อมูล Invoice/PO จาก SAP ทุกเครื่องมารวมที่เครื่อง CPO Cloud
+ซึ่งปัจจุบันมีอยู่ 7 Server แล้ว และกำลัง Rollout เครื่องที่ 8 LSP VN
+Status ปัจจุบันคือทาง LSP และ Vender ได้เอา Text files ออกจาก SAP แล้ว
+์
+Next Step คือการส่ง Files มารวมที่เครื่อง CPOCloud
+(ftp://cpocloud.scg.com/scglsp/PRD/SA/
+ftp://cpocloud.scg.com/scglsp/QA/SA/)
+ทาง Team จึงจะขอเปิด Firewall เพื่อให้สามารถส่ง Files มาได้
+โดยมีรายละเอียดตามเอกสารแนบ",IT One Services | AWS Hub | On-prem,"Request Number:
+REQ_ID
+Opened By:
+Thanapol Tophati
+Opened Date:
+2026-03-12 13:19:23 ICT
+Click
+here
+to view the request
+Requested For:
+Prinya Jarumanokul
+Business Phone:
+02-586-4495
+Email Address:
+PRINYAJ@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-12 13:19:23 ICT
+Short Description:
+ขอ Firewall เครื่อง CPOCloud.scg.co.th
+Description:
+ขอ Firewall เครื่อง CPOCloud.scg.co.th
+ทาง CIO มี Project ในการเอาข้อมูล Invoice/PO จาก SAP ทุกเครื่องมารวมที่เครื่อง CPO Cloud
+ซึ่งปัจจุบันมีอยู่ 7 Server แล้ว และกำลัง Rollout เครื่องที่ 8 LSP VN
+Status ปัจจุบันคือทาง LSP และ Vender ได้เอา Text files ออกจาก SAP แล้ว
+์
+Next Step คือการส่ง Files มารวมที่เครื่อง CPOCloud
+(ftp://cpocloud.scg.com/scglsp/PRD/SA/
+ftp://cpocloud.scg.com/scglsp/QA/SA/)
+ทาง Team จึงจะขอเปิด Firewall เพื่อให้สามารถส่ง Files มาได้
+โดยมีรายละเอียดตามเอกสารแนบ
+Related environment:
+IT One Services
+AWS Hub
+On-prem
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+Firewall Request : AWS Hub
+Click
+here
+to view the task",Thanapol Tophati,Prinya Jarumanokul,,,,,,,PRINYAJ@SCG.COM,,,false,false,true,false,true,false,true,false,true,false,iNET Cloud Support Team,cloud_subteam,1,AWS Team,false,iNET Cloud Support Team,AWS Team,task_short_desc_hub,ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: Firewall Request : AWS Hub | Click | here | to view the task [SEP] description: ขอ Firewall เครื่อง CPOCloud.scg.co.th | ทาง CIO มี Project ในการเอาข้อมูล Invoice/PO จาก SAP ทุกเครื่องมารวมที่เครื่อง CPO Cloud | ซึ่งปัจจุบันมีอยู่ 7 Server แล้ว และกำลัง Rollout เครื่องที่ 8 LSP VN | Status ปัจจุบันคือทาง LSP และ Vender ได้เอา Text files ออกจาก SAP แล้ว | ์ | Next Step คือการส่ง Files มารวมที่เครื่อง CPOCloud | (ftp://cpocloud.scg.com/scglsp/PRD/SA/ | ftp://cpocloud.scg.com/scglsp/QA/SA/) | ทาง Team จึงจะขอเปิด Firewall เพื่อให้สามารถส่ง Files มาได้ | โดยมีรายละเอียดตามเอกสารแนบ [SEP] related_env: IT One Services | AWS Hub | On-prem [SEP] body: Request Number: | REQ_ID | Opened By: | Thanapol Tophati | Opened Date: | 2026-03-12 13:19:23 ICT | Click | here | to view the request | Requested For: | Prinya Jarumanokul | Business Phone: | 02-586-4495 | Email Address: | PRINYAJ@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-12 13:19:23 ICT | Short Description: | ขอ Firewall เครื่อง CPOCloud.scg.co.th | Description: | ขอ Firewall เครื่อง CPOCloud.scg.co.th | ทาง CIO มี Project ในการเอาข้อมูล Invoice/PO จาก SAP ทุกเครื่องมารวมที่เครื่อง CPO Cloud | ซึ่งปัจจุบันมีอยู่ 7 Server แล้ว และกำลัง Rollout เครื่องที่ 8 LSP VN | Status ปัจจุบันคือทาง LSP และ Vender ได้เอา Text files ออกจาก SAP แล้ว | ์ | Next Step คือการส่ง Files มารวมที่เครื่อง CPOCloud | (ftp://cpocloud.scg.com/scglsp/PRD/SA/ | ftp://cpocloud.scg.com/scglsp/QA/SA/) | ทาง Team จึงจะขอเปิด Firewall เพื่อให้สามารถส่ง Files มาได้ | โดยมีรายละเอียดตามเอกสารแนบ | Related environment: | IT One Services | AWS Hub | On-prem | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | Firewall Request : AWS Hub | Click | here | to view the task
+TASK1632988,RITM0843395,<1520059848.80316.1773385177390@app128032.sin301.service-now.com>,2026-03-12T23:59:37-07:00,SCG Ticket Systems <SCGTicketSystems@service-now.com>,inetmscloud@inetms.co.th,catalog_task,REQ0842402,RITM0843395,,,,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP]ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment,"[GCP] ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment
+ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment (Production และ Non Production โดยให้ setup เฉพาะ Non-Production ก่อน)
+Service ที่ต้องการให้ provision ได้แก่
+Cloud Composer หรือ Apache Airflow
+BigQuery
+Databricks
+Attach File
+SCG GCP Cloud Platform Service Request_V2.8 - CGS Data Platform.xlsx
+โปรดส่งเคสนี้ให้ทีม Cloud Managed Service","[GCP] ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment
+ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment (Production และ Non Production โดยให้ setup เฉพาะ Non-Production ก่อน)
+Service ที่ต้องการให้ provision ได้แก่
+Cloud Composer หรือ Apache Airflow
+BigQuery
+Databricks
+Attach File
+SCG GCP Cloud Platform Service Request_V2.8 - CGS Data Platform.xlsx
+โปรดส่งเคสนี้ให้ทีม Cloud Managed Service",,"Request Number:
+REQ_ID
+Opened By:
+Somchai Phrom-oa
+Opened Date:
+2026-03-11 14:26:22 ICT
+Click
+here
+to view the request
+Requested For:
+Kullachart Phugsuwan
+Business Phone:
+02-586-2018
+Email Address:
+KULLACHP@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-11 14:26:22 ICT
+Short Description:
+[GCP]ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment
+Description:
+[GCP] ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment
+ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment (Production และ Non Production โดยให้ setup เฉพาะ Non-Production ก่อน)
+Service ที่ต้องการให้ provision ได้แก่
+Cloud Composer หรือ Apache Airflow
+BigQuery
+Databricks
+Attach File
+SCG GCP Cloud Platform Service Request_V2.8 - CGS Data Platform.xlsx
+โปรดส่งเคสนี้ให้ทีม Cloud Managed Service
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP]ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment
+Click
+here
+to view the task",Somchai Phrom-oa,Kullachart Phugsuwan,,,,,,,KULLACHP@SCG.COM,,,false,false,false,true,false,true,false,true,false,false,iNET Cloud Support Team,cloud_subteam,1,GCP Team,false,iNET Cloud Support Team,GCP Team,task_short_desc_prefix,ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP]ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment [SEP] description: [GCP] ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment | ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment (Production และ Non Production โดยให้ setup เฉพาะ Non-Production ก่อน) | Service ที่ต้องการให้ provision ได้แก่ | Cloud Composer หรือ Apache Airflow | BigQuery | Databricks | Attach File | SCG GCP Cloud Platform Service Request_V2.8 - CGS Data Platform.xlsx | โปรดส่งเคสนี้ให้ทีม Cloud Managed Service [SEP] body: Request Number: | REQ_ID | Opened By: | Somchai Phrom-oa | Opened Date: | 2026-03-11 14:26:22 ICT | Click | here | to view the request | Requested For: | Kullachart Phugsuwan | Business Phone: | 02-586-2018 | Email Address: | KULLACHP@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-11 14:26:22 ICT | Short Description: | [GCP]ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment | Description: | [GCP] ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment | ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment (Production และ Non Production โดยให้ setup เฉพาะ Non-Production ก่อน) | Service ที่ต้องการให้ provision ได้แก่ | Cloud Composer หรือ Apache Airflow | BigQuery | Databricks | Attach File | SCG GCP Cloud Platform Service Request_V2.8 - CGS Data Platform.xlsx | โปรดส่งเคสนี้ให้ทีม Cloud Managed Service | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP]ขอเปิดเคสให้สร้าง GCP Project สำหรับ CGS Data Platform จำนวน 2 Environment | Click | here | to view the task
+TASK1632664,RITM0843745,<1328227260.103747.1773327504212@app128016.sin301.service-now.com>,2026-03-12T07:58:24-07:00,SCG Ticket Systems <SCGTicketSystems@service-now.com>,inetmscloud@inetms.co.th,catalog_task,REQ0842752,RITM0843745,,,,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP]ขอเพิ่ม account เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google,"[GCP]ขอเพิ่ม account เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google
+Employee name (first name and last name): Purich Siritip
+SCG Email: 0150_purich_s@scg.com","[GCP]ขอเพิ่ม account เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google
+Employee name (first name and last name): Purich Siritip
+SCG Email: 0150_purich_s@scg.com",,"Request Number:
+REQ_ID
+Opened By:
+Arunya Trisamuchkul
+Opened Date:
+2026-03-12 16:08:49 ICT
+Click
+here
+to view the request
+Requested For:
+Pornphan Pathomaem
+Email Address:
+031C_pornpha_p@scg.com
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-12 16:08:49 ICT
+Short Description:
+[GCP]ขอเพิ่ม account เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google
+Description:
+[GCP]ขอเพิ่ม account เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google
+Employee name (first name and last name): Purich Siritip
+SCG Email: 0150_purich_s@scg.com
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP]ขอเพิ่ม account เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google
+Click
+here
+to view the task",Arunya Trisamuchkul,Pornphan Pathomaem,,,,,,,031C_pornpha_p@scg.com,,,false,false,false,true,false,true,false,true,false,false,iNET Cloud Support Team,cloud_subteam,1,GCP Team,false,iNET Cloud Support Team,GCP Team,task_short_desc_prefix,ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP]ขอเพิ่ม account เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google [SEP] description: [GCP]ขอเพิ่ม account เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google | Employee name (first name and last name): Purich Siritip | SCG Email: 0150_purich_s@scg.com [SEP] body: Request Number: | REQ_ID | Opened By: | Arunya Trisamuchkul | Opened Date: | 2026-03-12 16:08:49 ICT | Click | here | to view the request | Requested For: | Pornphan Pathomaem | Email Address: | 031C_pornpha_p@scg.com | Service Request Number: | RITM_ID | Opened Date: | 2026-03-12 16:08:49 ICT | Short Description: | [GCP]ขอเพิ่ม account เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google | Description: | [GCP]ขอเพิ่ม account เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google | Employee name (first name and last name): Purich Siritip | SCG Email: 0150_purich_s@scg.com | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP]ขอเพิ่ม account เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google | Click | here | to view the task
+TASK1632584,RITM0843702,<1988790555.101308.1773307938035@app128016.sin301.service-now.com>,2026-03-12T02:32:18-07:00,SCG Ticket Systems <SCGTicketSystems@service-now.com>,inetmscloud@inetms.co.th,catalog_task,REQ0842709,RITM0843702,,,,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP] Add GCP User จำนวน 5 user เพื่อใช้งาน Google Sheet,"[GCP] Add GCP User จำนวน 5 user เพื่อใช้งาน Google Sheet
+adminndc.service@scg.com
+Arichasr@scg.com
+Fueangme@scg.com
+Werawith@scg.com
+adminndc.warehouse@scg.com
+ติดต่อ 0659867640
+คลังสินค้าธัญบุรี","[GCP] Add GCP User จำนวน 5 user เพื่อใช้งาน Google Sheet
+adminndc.service@scg.com
+Arichasr@scg.com
+Fueangme@scg.com
+Werawith@scg.com
+adminndc.warehouse@scg.com
+ติดต่อ 0659867640
+คลังสินค้าธัญบุรี",,"Request Number:
+REQ_ID
+Opened By:
+Jirayus Laemthong
+Opened Date:
+2026-03-12 15:03:27 ICT
+Click
+here
+to view the request
+Requested For:
+Thanisara Kong-o-sot
+Business Phone:
+(065) 986-7640
+Email Address:
+THANISAK@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-12 15:03:27 ICT
+Short Description:
+[GCP] Add GCP User จำนวน 5 user เพื่อใช้งาน Google Sheet
+Description:
+[GCP] Add GCP User จำนวน 5 user เพื่อใช้งาน Google Sheet
+adminndc.service@scg.com
+Arichasr@scg.com
+Fueangme@scg.com
+Werawith@scg.com
+adminndc.warehouse@scg.com
+ติดต่อ 0659867640
+คลังสินค้าธัญบุรี
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP] Add GCP User จำนวน 5 user เพื่อใช้งาน Google Sheet
+Click
+here
+to view the task",Jirayus Laemthong,Thanisara Kong-o-sot,,,,,,,THANISAK@SCG.COM,,,false,false,false,true,false,true,false,true,false,false,iNET Cloud Support Team,cloud_subteam,1,GCP Team,false,iNET Cloud Support Team,GCP Team,task_short_desc_prefix,ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP] Add GCP User จำนวน 5 user เพื่อใช้งาน Google Sheet [SEP] description: [GCP] Add GCP User จำนวน 5 user เพื่อใช้งาน Google Sheet | adminndc.service@scg.com | Arichasr@scg.com | Fueangme@scg.com | Werawith@scg.com | adminndc.warehouse@scg.com | ติดต่อ 0659867640 | คลังสินค้าธัญบุรี [SEP] body: Request Number: | REQ_ID | Opened By: | Jirayus Laemthong | Opened Date: | 2026-03-12 15:03:27 ICT | Click | here | to view the request | Requested For: | Thanisara Kong-o-sot | Business Phone: | (065) 986-7640 | Email Address: | THANISAK@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-12 15:03:27 ICT | Short Description: | [GCP] Add GCP User จำนวน 5 user เพื่อใช้งาน Google Sheet | Description: | [GCP] Add GCP User จำนวน 5 user เพื่อใช้งาน Google Sheet | adminndc.service@scg.com | Arichasr@scg.com | Fueangme@scg.com | Werawith@scg.com | adminndc.warehouse@scg.com | ติดต่อ 0659867640 | คลังสินค้าธัญบุรี | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP] Add GCP User จำนวน 5 user เพื่อใช้งาน Google Sheet | Click | here | to view the task
+TASK1632568,RITM0843641,<975290452.100706.1773306690008@app128016.sin301.service-now.com>,2026-03-12T02:11:30-07:00,SCG Ticket Systems <SCGTicketSystems@service-now.com>,inetmscloud@inetms.co.th,catalog_task,REQ0842648,RITM0843641,,,,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP] ขอเพิ่ม accounts เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google,"[GCP] ขอเพิ่ม accounts เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google
+• 0150_purich_s@scg.com
+• sujindas@scg.com
+• wisani@scg.co.th
+• jatubhas@scg.com
+• phisiso@scg.com
+• tewantep@scg.com
+• nuttawud@scg.com
+• nuttapoh@scg.com
+• tunyapkj@scg.com
+• jakpapoc@scg.com
+• vipachkh@scg.com
+• wanchaja@scg.com
+• patpumko@scg.com
+• vithepri@scg.com","[GCP] ขอเพิ่ม accounts เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google
+• 0150_purich_s@scg.com
+• sujindas@scg.com
+• wisani@scg.co.th
+• jatubhas@scg.com
+• phisiso@scg.com
+• tewantep@scg.com
+• nuttawud@scg.com
+• nuttapoh@scg.com
+• tunyapkj@scg.com
+• jakpapoc@scg.com
+• vipachkh@scg.com
+• wanchaja@scg.com
+• patpumko@scg.com
+• vithepri@scg.com",,"Request Number:
+REQ_ID
+Opened By:
+Arunya Trisamuchkul
+Opened Date:
+2026-03-12 12:58:54 ICT
+Click
+here
+to view the request
+Requested For:
+Natakorn Thongdee
+Business Phone:
+(096) 171-5251
+Email Address:
+NATAKORT@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-12 12:58:54 ICT
+Short Description:
+[GCP] ขอเพิ่ม accounts เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google
+Description:
+[GCP] ขอเพิ่ม accounts เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google
+• 0150_purich_s@scg.com
+• sujindas@scg.com
+• wisani@scg.co.th
+• jatubhas@scg.com
+• phisiso@scg.com
+• tewantep@scg.com
+• nuttawud@scg.com
+• nuttapoh@scg.com
+• tunyapkj@scg.com
+• jakpapoc@scg.com
+• vipachkh@scg.com
+• wanchaja@scg.com
+• patpumko@scg.com
+• vithepri@scg.com
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP] ขอเพิ่ม accounts เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google
+Click
+here
+to view the task",Arunya Trisamuchkul,Natakorn Thongdee,,,,,,,NATAKORT@SCG.COM,,,false,false,false,true,false,true,false,true,false,false,iNET Cloud Support Team,cloud_subteam,1,GCP Team,false,iNET Cloud Support Team,GCP Team,task_short_desc_prefix,ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP] ขอเพิ่ม accounts เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google [SEP] description: [GCP] ขอเพิ่ม accounts เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google | • 0150_purich_s@scg.com | • sujindas@scg.com | • wisani@scg.co.th | • jatubhas@scg.com | • phisiso@scg.com | • tewantep@scg.com | • nuttawud@scg.com | • nuttapoh@scg.com | • tunyapkj@scg.com | • jakpapoc@scg.com | • vipachkh@scg.com | • wanchaja@scg.com | • patpumko@scg.com | • vithepri@scg.com [SEP] body: Request Number: | REQ_ID | Opened By: | Arunya Trisamuchkul | Opened Date: | 2026-03-12 12:58:54 ICT | Click | here | to view the request | Requested For: | Natakorn Thongdee | Business Phone: | (096) 171-5251 | Email Address: | NATAKORT@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-12 12:58:54 ICT | Short Description: | [GCP] ขอเพิ่ม accounts เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google | Description: | [GCP] ขอเพิ่ม accounts เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google | • 0150_purich_s@scg.com | • sujindas@scg.com | • wisani@scg.co.th | • jatubhas@scg.com | • phisiso@scg.com | • tewantep@scg.com | • nuttawud@scg.com | • nuttapoh@scg.com | • tunyapkj@scg.com | • jakpapoc@scg.com | • vipachkh@scg.com | • wanchaja@scg.com | • patpumko@scg.com | • vithepri@scg.com | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP] ขอเพิ่ม accounts เข้า google workspace เพื่อใช้งานฟังก์ชัน login ด้วย IAP ของ Google | Click | here | to view the task
+ITASK0722293,ITASK0722293,<121674530.89126.1773280741071@app128016.sin301.service-now.com>,2026-03-11T18:59:01-07:00,SCG Ticket Systems <SCGTicketSystems@service-now.com>,inetmscloud@inetms.co.th,incident_task,,,,ITASK0722293,,Incident task ITASK_ID has been assigned to group iNET Cloud | Support Team,,,,,"Number:
+ITASK_ID
+Raised by:
+Thitiphat Jaroenrit
+Phone No.:
+THITIPHJ@SCG.COM
+Email Address:
+THITIPHJ@SCG.COM
+Raised for:
+Thitiphat Jaroenrit
+Phone No.:
+THITIPHJ@SCG.COM
+Email Address:
+THITIPHJ@SCG.COM
+Client Group:
+SCG
+Business Unit:
+CGS
+Business Service:
+Network Management Services
+Service Offering:
+Firewall Management
+Category:
+Subcategory:
+Impact:
+Urgency:
+Low
+Priority:
+4 - Low
+Short Description:
+[GCP] ตรวจสอบปัญหาการใช้งานระหว่าง GCP - HPB Data Platform กับเครื่อง CPAC Bluenet Postgres Database Server พบว่ามีการเชื่อมต่อบ้างครั้งไม่สามารถใช้งานได้
+Description:
+[GCP] ตรวจสอบปัญหาการใช้งานระหว่าง GCP - HPB Data Platform กับเครื่อง CPAC Bluenet Postgres Database Server พบว่ามีการเชื่อมต่อบ้างครั้งไม่สามารถใช้งานได้
+Source IP / Location
+10.42.52.128/27
+10.42.236.0/24
+prd-cpac-operation.cluster-ro-cvsl8xcqfp8n.ap-southeast-1.rds.amazonaws.com
+Protocol : TCP: 5432
+10.42.237.192/27
+10.42.52.96/27
+prd-cpac-operation.cluster-ro-cvsl8xcqfp8n.ap-southeast-1.rds.amazonaws.com
+Protocal : TCP: 5432
+Click
+here
+to view the Incident Task record",,,,,,,,,,"[""10.42.52.128"", ""10.42.236.0"", ""10.42.237.192"", ""10.42.52.96""]",,false,true,false,false,true,true,false,false,false,false,iNET Cloud Support Team,cloud_subteam,1,GCP Team,false,iNET Cloud Support Team,GCP Team,ip_match,ticket_type: incident_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Incident task ITASK_ID has been assigned to group iNET Cloud | Support Team [SEP] body: Number: | ITASK_ID | Raised by: | Thitiphat Jaroenrit | Phone No.: | THITIPHJ@SCG.COM | Email Address: | THITIPHJ@SCG.COM | Raised for: | Thitiphat Jaroenrit | Phone No.: | THITIPHJ@SCG.COM | Email Address: | THITIPHJ@SCG.COM | Client Group: | SCG | Business Unit: | CGS | Business Service: | Network Management Services | Service Offering: | Firewall Management | Category: | Subcategory: | Impact: | Urgency: | Low | Priority: | 4 - Low | Short Description: | [GCP] ตรวจสอบปัญหาการใช้งานระหว่าง GCP - HPB Data Platform กับเครื่อง CPAC Bluenet Postgres Database Server พบว่ามีการเชื่อมต่อบ้างครั้งไม่สามารถใช้งานได้ | Description: | [GCP] ตรวจสอบปัญหาการใช้งานระหว่าง GCP - HPB Data Platform กับเครื่อง CPAC Bluenet Postgres Database Server พบว่ามีการเชื่อมต่อบ้างครั้งไม่สามารถใช้งานได้ | Source IP / Location | 10.42.52.128/27 | 10.42.236.0/24 | prd-cpac-operation.cluster-ro-cvsl8xcqfp8n.ap-southeast-1.rds.amazonaws.com | Protocol : TCP: 5432 | 10.42.237.192/27 | 10.42.52.96/27 | prd-cpac-operation.cluster-ro-cvsl8xcqfp8n.ap-southeast-1.rds.amazonaws.com | Protocal : TCP: 5432 | Click | here | to view the Incident Task record
+TASK1632122,RITM0843491,<35374966.87817.1773276755875@app128016.sin301.service-now.com>,2026-03-11T17:52:35-07:00,SCG Ticket Systems <SCGTicketSystems@service-now.com>,inetmscloud@inetms.co.th,catalog_task,REQ0842498,RITM0843491,,,,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP]ขอ Assign Billing Account สำหรับการ Create New Subscription สำหรับ SCG Chemicals ใน Google Cloud,"[GCP]ขอ Assign Billing Account สำหรับการ Create New Subscription สำหรับ SCG Chemicals ใน Google Cloud
+ขอ Assign Billing Account ให้กับ User kanitsur@scg.com
+สำหรับ GCP(Google Cloud) Project ""CHEM-Digital-Agentspace-Dev""
+เพื่อให้สามารถทำการ Create New Subscription ได้ ใน Billing Account ""GoPomeloX – SCG Chemical""","[GCP]ขอ Assign Billing Account สำหรับการ Create New Subscription สำหรับ SCG Chemicals ใน Google Cloud
+ขอ Assign Billing Account ให้กับ User kanitsur@scg.com
+สำหรับ GCP(Google Cloud) Project ""CHEM-Digital-Agentspace-Dev""
+เพื่อให้สามารถทำการ Create New Subscription ได้ ใน Billing Account ""GoPomeloX – SCG Chemical""",,"Request Number:
+REQ_ID
+Opened By:
+Surapol Chumram
+Opened Date:
+2026-03-11 17:52:41 ICT
+Click
+here
+to view the request
+Requested For:
+Tortrakool Manvisit
+Email Address:
+TORTRAKM@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-11 17:52:40 ICT
+Short Description:
+[GCP]ขอ Assign Billing Account สำหรับการ Create New Subscription สำหรับ SCG Chemicals ใน Google Cloud
+Description:
+[GCP]ขอ Assign Billing Account สำหรับการ Create New Subscription สำหรับ SCG Chemicals ใน Google Cloud
+ขอ Assign Billing Account ให้กับ User kanitsur@scg.com
+สำหรับ GCP(Google Cloud) Project ""CHEM-Digital-Agentspace-Dev""
+เพื่อให้สามารถทำการ Create New Subscription ได้ ใน Billing Account ""GoPomeloX – SCG Chemical""
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP]ขอ Assign Billing Account สำหรับการ Create New Subscription สำหรับ SCG Chemicals ใน Google Cloud
+Click
+here
+to view the task",Surapol Chumram,Tortrakool Manvisit,,,,,,,TORTRAKM@SCG.COM,,,false,false,false,true,false,true,false,true,false,false,iNET Cloud Support Team,cloud_subteam,1,GCP Team,false,iNET Cloud Support Team,GCP Team,task_short_desc_prefix,"ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP]ขอ Assign Billing Account สำหรับการ Create New Subscription สำหรับ SCG Chemicals ใน Google Cloud [SEP] description: [GCP]ขอ Assign Billing Account สำหรับการ Create New Subscription สำหรับ SCG Chemicals ใน Google Cloud | ขอ Assign Billing Account ให้กับ User kanitsur@scg.com | สำหรับ GCP(Google Cloud) Project ""CHEM-Digital-Agentspace-Dev"" | เพื่อให้สามารถทำการ Create New Subscription ได้ ใน Billing Account ""GoPomeloX – SCG Chemical"" [SEP] body: Request Number: | REQ_ID | Opened By: | Surapol Chumram | Opened Date: | 2026-03-11 17:52:41 ICT | Click | here | to view the request | Requested For: | Tortrakool Manvisit | Email Address: | TORTRAKM@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-11 17:52:40 ICT | Short Description: | [GCP]ขอ Assign Billing Account สำหรับการ Create New Subscription สำหรับ SCG Chemicals ใน Google Cloud | Description: | [GCP]ขอ Assign Billing Account สำหรับการ Create New Subscription สำหรับ SCG Chemicals ใน Google Cloud | ขอ Assign Billing Account ให้กับ User kanitsur@scg.com | สำหรับ GCP(Google Cloud) Project ""CHEM-Digital-Agentspace-Dev"" | เพื่อให้สามารถทำการ Create New Subscription ได้ ใน Billing Account ""GoPomeloX – SCG Chemical"" | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP]ขอ Assign Billing Account สำหรับการ Create New Subscription สำหรับ SCG Chemicals ใน Google Cloud | Click | here | to view the task"
 TASK1631813,RITM0843084,<1465753663.82108.1773214463883@app128016.sin301.service-now.com>,2026-03-11T00:34:23-07:00,SCG Ticket Systems <SCGTicketSystems@service-now.com>,inetmscloud@inetms.co.th,catalog_task,REQ0842091,RITM0843084,,,,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,ขอ Allow Firewall เพื่อดึงข้อมูล Time จาก LSP เข้า Data Warehouse HR,"ขอ Allow Firewall เพื่อดึงข้อมูล Time จาก LSP เข้า Data Warehouse HR
 Form : DXC Request form for Firewall v3.7 LSPTMS_HRDW.xlsx","ขอ Allow Firewall เพื่อดึงข้อมูล Time จาก LSP เข้า Data Warehouse HR
 Form : DXC Request form for Firewall v3.7 LSPTMS_HRDW.xlsx",,"Request Number:

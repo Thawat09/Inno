@@ -1,4 +1,4 @@
-import google.generativeai as genai
+from google import genai
 from app.config import Config
 
 def predict_with_gemini(text_input):
@@ -6,8 +6,7 @@ def predict_with_gemini(text_input):
         return None
 
     try:
-        genai.configure(api_key=Config.GOOGLE_API_KEY)
-        model = genai.GenerativeModel(Config.LLM_MODEL_NAME)
+        client = genai.Client(api_key=Config.GOOGLE_API_KEY)
         
         prompt = f"""
             คุณคือผู้เชี่ยวชาญด้าน IT Support ของทีม iNET Cloud Support 
@@ -35,8 +34,12 @@ def predict_with_gemini(text_input):
             - ตอบเพียงชื่อทีมเท่านั้น ห้ามมีคำบรรยายอื่นประกอบ: "AWS Team", "GCP Team" หรือ "GCP & AWS Team (Both)"
             """
         
-        response = model.generate_content(prompt)
-        return response.text.strip()
+        response = client.models.generate_content(
+            model=Config.LLM_MODEL_NAME,
+            contents=prompt,
+        )
+
+        return response.text.strip() if response.text else None
     except Exception as e:
         print(f"⚠️ Gemini API Error: {e}")
         return None

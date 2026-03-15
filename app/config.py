@@ -145,11 +145,6 @@ class Config:
         os.path.join(TRAIN_DIR, "best_ticket_classifier_model.pkl")
     )
 
-    BEST_MAIN_TEAM_MODEL_PATH = env_or_default(
-        "BEST_MAIN_TEAM_MODEL_PATH",
-        os.path.join(TRAIN_DIR, "best_main_team_model.pkl")
-    )
-
     ENSEMBLE_BUNDLE_PATH = env_or_default(
         "ENSEMBLE_BUNDLE_PATH",
         os.path.join(TRAIN_DIR, "ticket_ensemble_bundle.pkl")

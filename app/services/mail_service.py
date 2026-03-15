@@ -171,13 +171,14 @@ def decide_cloud_subteam_with_ml(info, clean_body, subject, to_address):
             "ml_confidence": None
         }
 
+    print(f"Google API key: {'set' if Config.GOOGLE_API_KEY else 'not set'}")
     if Config.GOOGLE_API_KEY:
         text_for_ai = rebuild_text_input_for_email(info, clean_body, subject, to_address)
         llm_predicted = predict_with_gemini(text_for_ai)
         valid_teams = ["AWS Team", "GCP Team", "GCP & AWS Team (Both)"]
+        print(f"LLM predicted: {llm_predicted}, valid options: {valid_teams}")
         
         if llm_predicted in valid_teams:
-            print(f"🤖 LLM predicted: {llm_predicted} | valid prediction")
             return llm_predicted, f"llm_{Config.LLM_MODEL_NAME}", {
                 "decision_mode": "llm_prediction",
                 "ml_used": True,
