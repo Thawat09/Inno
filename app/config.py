@@ -38,6 +38,9 @@ class Config:
         "scg_cloud_inet01@scg.com": "iNET Cloud Support Team",
     }
 
+    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+    LLM_MODEL_NAME = os.getenv("LLM_MODEL_NAME")
+
     MAILBOX_FOLDER = env_or_default("MAILBOX_FOLDER", "scg")
     DAYS_BACK = int(env_or_default("DAYS_BACK", 365))
     MAX_EMAILS = int(env_or_default("MAX_EMAILS", "0")) or None

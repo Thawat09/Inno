@@ -4,6 +4,7 @@ import email
 import imaplib
 import joblib
 from datetime import datetime, timedelta
+from app.services.llm_service import predict_with_gemini
 from app.config import Config
 from model.export_to_csv import (
     decode_mime_words,
@@ -169,6 +170,22 @@ def decide_cloud_subteam_with_ml(info, clean_body, subject, to_address):
             "ml_used": False,
             "ml_confidence": None
         }
+
+    if Config.GOOGLE_API_KEY:
+        text_for_ai = rebuild_text_input_for_email(info, clean_body, subject, to_address)
+        llm_predicted = predict_with_gemini(text_for_ai)
+        valid_teams = ["AWS Team", "GCP Team", "GCP & AWS Team (Both)"]
+        
+        if llm_predicted in valid_teams:
+            print(f"🤖 LLM predicted: {llm_predicted} | valid prediction")
+            return llm_predicted, f"llm_{Config.LLM_MODEL_NAME}", {
+                "decision_mode": "llm_prediction",
+                "ml_used": True,
+                "ml_confidence": 1.0,
+                "logic_candidate": logic_sub_team
+            }
+        else:
+            print(f"⚠️ LLM prediction invalid or low confidence: {llm_predicted}")
 
     ml_sub_team, ml_confidence, ml_source = predict_cloud_subteam_by_ml(
         info,
