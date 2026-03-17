@@ -1,4 +1,780 @@
 ﻿record_id,ticket_type,to_address,subject_clean,short_desc_clean,description_for_model,related_env_raw,body_for_model,text_input,label_sub_team
+TASK1634750,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,ลบ google project,"Subject: ลบ google project
+Additional Information: bingobox-dev-rg
+bingobox-prd-rg
+bingobox-staging-rg",,"Request Number:
+REQ_ID
+Opened By:
+Prapat Thanomsak
+Opened Date:
+2026-03-17 16:38:21 ICT
+Click
+here
+to view the request
+Requested For:
+Prapat Thanomsak
+Business Phone:
+(087) 101-7331
+Email Address:
+PRAPATHA@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-17 16:38:21 ICT
+Short Description:
+ลบ google project
+Description:
+Subject: ลบ google project
+Additional Information: bingobox-dev-rg
+bingobox-prd-rg
+bingobox-staging-rg
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+ลบ google project
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: ลบ google project [SEP] description: Subject: ลบ google project | Additional Information: bingobox-dev-rg | bingobox-prd-rg | bingobox-staging-rg [SEP] body: Request Number: | REQ_ID | Opened By: | Prapat Thanomsak | Opened Date: | 2026-03-17 16:38:21 ICT | Click | here | to view the request | Requested For: | Prapat Thanomsak | Business Phone: | (087) 101-7331 | Email Address: | PRAPATHA@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-17 16:38:21 ICT | Short Description: | ลบ google project | Description: | Subject: ลบ google project | Additional Information: bingobox-dev-rg | bingobox-prd-rg | bingobox-staging-rg | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | ลบ google project | Click | here | to view the task,GCP Team
+TASK1634740,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,ขอสร้าง folder สำหรับ SCGD และย้าย project,"Subject: ขอสร้าง folder สำหรับ SCGD และย้าย project
+Additional Information: ขอสร้าง folder สำหรับ SCGD และย้าย project ดังนี้ไปยัง SCGD folder
+- cbm-lhp-ssw-datawarehouse-dev
+- cbm-lhp-ssw-datawarehouse-prd
+- scgd-procurementplatform-prd",,"Request Number:
+REQ_ID
+Opened By:
+Prapat Thanomsak
+Opened Date:
+2026-03-17 16:32:19 ICT
+Click
+here
+to view the request
+Requested For:
+Prapat Thanomsak
+Business Phone:
+(087) 101-7331
+Email Address:
+PRAPATHA@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-17 16:32:18 ICT
+Short Description:
+ขอสร้าง folder สำหรับ SCGD และย้าย project
+Description:
+Subject: ขอสร้าง folder สำหรับ SCGD และย้าย project
+Additional Information: ขอสร้าง folder สำหรับ SCGD และย้าย project ดังนี้ไปยัง SCGD folder
+- cbm-lhp-ssw-datawarehouse-dev
+- cbm-lhp-ssw-datawarehouse-prd
+- scgd-procurementplatform-prd
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+ขอสร้าง folder สำหรับ SCGD และย้าย project
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: ขอสร้าง folder สำหรับ SCGD และย้าย project [SEP] description: Subject: ขอสร้าง folder สำหรับ SCGD และย้าย project | Additional Information: ขอสร้าง folder สำหรับ SCGD และย้าย project ดังนี้ไปยัง SCGD folder | - cbm-lhp-ssw-datawarehouse-dev | - cbm-lhp-ssw-datawarehouse-prd | - scgd-procurementplatform-prd [SEP] body: Request Number: | REQ_ID | Opened By: | Prapat Thanomsak | Opened Date: | 2026-03-17 16:32:19 ICT | Click | here | to view the request | Requested For: | Prapat Thanomsak | Business Phone: | (087) 101-7331 | Email Address: | PRAPATHA@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-17 16:32:18 ICT | Short Description: | ขอสร้าง folder สำหรับ SCGD และย้าย project | Description: | Subject: ขอสร้าง folder สำหรับ SCGD และย้าย project | Additional Information: ขอสร้าง folder สำหรับ SCGD และย้าย project ดังนี้ไปยัง SCGD folder | - cbm-lhp-ssw-datawarehouse-dev | - cbm-lhp-ssw-datawarehouse-prd | - scgd-procurementplatform-prd | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | ขอสร้าง folder สำหรับ SCGD และย้าย project | Click | here | to view the task,GCP & AWS Team (Both)
+TASK1634729,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,"[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio","[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET
+GCP project name: CBM-Regional-RMCNET
+Information Detail:
+ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod
+ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24
+ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET",,"Request Number:
+REQ_ID
+Opened By:
+Pattanan Sukkasem
+Opened Date:
+2026-03-17 16:03:28 ICT
+Click
+here
+to view the request
+Requested For:
+Methus Saengbua
+Email Address:
+METHUSSA@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-17 16:03:28 ICT
+Short Description:
+[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio
+Description:
+[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET
+GCP project name: CBM-Regional-RMCNET
+Information Detail:
+ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod
+ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24
+ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio
+Click
+here
+to view the task","ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio [SEP] description: [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET | GCP project name: CBM-Regional-RMCNET | Information Detail: | ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod | ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24 | ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET [SEP] body: Request Number: | REQ_ID | Opened By: | Pattanan Sukkasem | Opened Date: | 2026-03-17 16:03:28 ICT | Click | here | to view the request | Requested For: | Methus Saengbua | Email Address: | METHUSSA@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-17 16:03:28 ICT | Short Description: | [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio | Description: | [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET | GCP project name: CBM-Regional-RMCNET | Information Detail: | ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod | ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24 | ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio | Click | here | to view the task",GCP Team
+TASK1634723,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP] ขอทำ Private service connect ผ่าน Spokedist เพื่อทำ Datastream (Bigquery/SAAS) connection กับ SQL server (intranet),"[GCP] ขอทำ Private service connect ผ่าน Spokedist เพื่อทำ Datastream (Bigquery/SAAS) connection กับ SQL server (intranet)
+ส่งเคสไปยังทีม INET Cloud เพื่อ support config vpc > private services connect src.project : scg-cbm-datapipeline-qa
+services Bigquery Datastreamผ่าน spokedist ไปยัง Endpoint target
+เนื่องจากต้องการทำ POC ในการทำ datastream เพื่อเอาข้อมูลจาก SQL server เข้า BigQuery แบบ near real-time
+จึงต้องมีการขอ private connectivity เพื่อให้ BigQuery ที่ google cloud สามารถเข้าถึงข้อมูลที่ SQL server ภายใน SCG ได้
+1. GCP
+ชื่อโปรเจค : scg-cbm-datapipeline-qa
+Service ของ GCP ที่ใช้ต่อ intranet : Datastream
+2. SQL server ปลายทาง โดย ขอ 2 เครื่อง ดังนี้
+2.1 Project Best = เป็น Cloud SQL for SQL server บน GCP
+ชื่อโปรเจค: scg-cbm-dist-n2n-devqas
+ชื่อ Cloud SQL : SCGN2N-DEVQAS-RG
+IP: 10.42.27.38
+2.2 cbmbsdwh01 = VM อยู่ใน iNET
+IP: 172.18.8.57",,"Request Number:
+REQ_ID
+Opened By:
+Jakkarin Pratheebkiri
+Opened Date:
+2026-03-12 17:12:18 ICT
+Click
+here
+to view the request
+Requested For:
+Saharat Bunrit
+Email Address:
+SAHARABU@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-12 17:12:18 ICT
+Short Description:
+[GCP] ขอทำ Private service connect ผ่าน Spokedist เพื่อทำ Datastream (Bigquery/SAAS) connection กับ SQL server (intranet)
+Description:
+[GCP] ขอทำ Private service connect ผ่าน Spokedist เพื่อทำ Datastream (Bigquery/SAAS) connection กับ SQL server (intranet)
+ส่งเคสไปยังทีม INET Cloud เพื่อ support config vpc > private services connect src.project : scg-cbm-datapipeline-qa
+services Bigquery Datastreamผ่าน spokedist ไปยัง Endpoint target
+เนื่องจากต้องการทำ POC ในการทำ datastream เพื่อเอาข้อมูลจาก SQL server เข้า BigQuery แบบ near real-time
+จึงต้องมีการขอ private connectivity เพื่อให้ BigQuery ที่ google cloud สามารถเข้าถึงข้อมูลที่ SQL server ภายใน SCG ได้
+1. GCP
+ชื่อโปรเจค : scg-cbm-datapipeline-qa
+Service ของ GCP ที่ใช้ต่อ intranet : Datastream
+2. SQL server ปลายทาง โดย ขอ 2 เครื่อง ดังนี้
+2.1 Project Best = เป็น Cloud SQL for SQL server บน GCP
+ชื่อโปรเจค: scg-cbm-dist-n2n-devqas
+ชื่อ Cloud SQL : SCGN2N-DEVQAS-RG
+IP: 10.42.27.38
+2.2 cbmbsdwh01 = VM อยู่ใน iNET
+IP: 172.18.8.57
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP] ขอทำ Private service connect ผ่าน Spokedist เพื่อทำ Datastream (Bigquery/SAAS) connection กับ SQL server (intranet)
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP] ขอทำ Private service connect ผ่าน Spokedist เพื่อทำ Datastream (Bigquery/SAAS) connection กับ SQL server (intranet) [SEP] description: [GCP] ขอทำ Private service connect ผ่าน Spokedist เพื่อทำ Datastream (Bigquery/SAAS) connection กับ SQL server (intranet) | ส่งเคสไปยังทีม INET Cloud เพื่อ support config vpc > private services connect src.project : scg-cbm-datapipeline-qa | services Bigquery Datastreamผ่าน spokedist ไปยัง Endpoint target | เนื่องจากต้องการทำ POC ในการทำ datastream เพื่อเอาข้อมูลจาก SQL server เข้า BigQuery แบบ near real-time | จึงต้องมีการขอ private connectivity เพื่อให้ BigQuery ที่ google cloud สามารถเข้าถึงข้อมูลที่ SQL server ภายใน SCG ได้ | 1. GCP | ชื่อโปรเจค : scg-cbm-datapipeline-qa | Service ของ GCP ที่ใช้ต่อ intranet : Datastream | 2. SQL server ปลายทาง โดย ขอ 2 เครื่อง ดังนี้ | 2.1 Project Best = เป็น Cloud SQL for SQL server บน GCP | ชื่อโปรเจค: scg-cbm-dist-n2n-devqas | ชื่อ Cloud SQL : SCGN2N-DEVQAS-RG | IP: 10.42.27.38 | 2.2 cbmbsdwh01 = VM อยู่ใน iNET | IP: 172.18.8.57 [SEP] body: Request Number: | REQ_ID | Opened By: | Jakkarin Pratheebkiri | Opened Date: | 2026-03-12 17:12:18 ICT | Click | here | to view the request | Requested For: | Saharat Bunrit | Email Address: | SAHARABU@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-12 17:12:18 ICT | Short Description: | [GCP] ขอทำ Private service connect ผ่าน Spokedist เพื่อทำ Datastream (Bigquery/SAAS) connection กับ SQL server (intranet) | Description: | [GCP] ขอทำ Private service connect ผ่าน Spokedist เพื่อทำ Datastream (Bigquery/SAAS) connection กับ SQL server (intranet) | ส่งเคสไปยังทีม INET Cloud เพื่อ support config vpc > private services connect src.project : scg-cbm-datapipeline-qa | services Bigquery Datastreamผ่าน spokedist ไปยัง Endpoint target | เนื่องจากต้องการทำ POC ในการทำ datastream เพื่อเอาข้อมูลจาก SQL server เข้า BigQuery แบบ near real-time | จึงต้องมีการขอ private connectivity เพื่อให้ BigQuery ที่ google cloud สามารถเข้าถึงข้อมูลที่ SQL server ภายใน SCG ได้ | 1. GCP | ชื่อโปรเจค : scg-cbm-datapipeline-qa | Service ของ GCP ที่ใช้ต่อ intranet : Datastream | 2. SQL server ปลายทาง โดย ขอ 2 เครื่อง ดังนี้ | 2.1 Project Best = เป็น Cloud SQL for SQL server บน GCP | ชื่อโปรเจค: scg-cbm-dist-n2n-devqas | ชื่อ Cloud SQL : SCGN2N-DEVQAS-RG | IP: 10.42.27.38 | 2.2 cbmbsdwh01 = VM อยู่ใน iNET | IP: 172.18.8.57 | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP] ขอทำ Private service connect ผ่าน Spokedist เพื่อทำ Datastream (Bigquery/SAAS) connection กับ SQL server (intranet) | Click | here | to view the task,GCP Team
+TASK1634660,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,Firewall Request : AWS Hub | Click | here | to view the task,ขอ Allow IP : 203.154.91.105 เพื่อให้สามารถทำ VA Scan บน Website syssteel.com ได้,IT One Service | AWS Hub | On-prem | Form : DXC Request form for Firewall v3.7 For VA Scan.xlsx,"Request Number:
+REQ_ID
+Opened By:
+Thanapol Tophati
+Opened Date:
+2026-03-12 12:12:54 ICT
+Click
+here
+to view the request
+Requested For:
+Dinnuan Detsiriviset
+Business Phone:
+038-683723 (2482)
+Email Address:
+Dinnuan.Detsiriviset@syssteel.com
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-12 12:12:53 ICT
+Short Description:
+ขอ Allow IP : 203.154.91.105 เพื่อให้สามารถทำ VA Scan บน Website syssteel.com ได้
+Description:
+ขอ Allow IP : 203.154.91.105 เพื่อให้สามารถทำ VA Scan บน Website syssteel.com ได้
+Related environment:
+IT One Service
+AWS Hub
+On-prem
+Form : DXC Request form for Firewall v3.7 For VA Scan.xlsx
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+Firewall Request : AWS Hub
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: Firewall Request : AWS Hub | Click | here | to view the task [SEP] description: ขอ Allow IP : 203.154.91.105 เพื่อให้สามารถทำ VA Scan บน Website syssteel.com ได้ [SEP] related_env: IT One Service | AWS Hub | On-prem | Form : DXC Request form for Firewall v3.7 For VA Scan.xlsx [SEP] body: Request Number: | REQ_ID | Opened By: | Thanapol Tophati | Opened Date: | 2026-03-12 12:12:54 ICT | Click | here | to view the request | Requested For: | Dinnuan Detsiriviset | Business Phone: | 038-683723 (2482) | Email Address: | Dinnuan.Detsiriviset@syssteel.com | Service Request Number: | RITM_ID | Opened Date: | 2026-03-12 12:12:53 ICT | Short Description: | ขอ Allow IP : 203.154.91.105 เพื่อให้สามารถทำ VA Scan บน Website syssteel.com ได้ | Description: | ขอ Allow IP : 203.154.91.105 เพื่อให้สามารถทำ VA Scan บน Website syssteel.com ได้ | Related environment: | IT One Service | AWS Hub | On-prem | Form : DXC Request form for Firewall v3.7 For VA Scan.xlsx | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | Firewall Request : AWS Hub | Click | here | to view the task,AWS Team
+TASK1634566,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,Firewall Request : GCP Hub | Click | here | to view the task,"ขอ Allow firewall port: 515 เพื่อ print งาน sap cbmr
+รายละเอียดเพิ่มเติมตามไฟล์แนบ",VPN User | AWS Hub | IT One Services | GCP Hub | On-prem | ไฟล์ที่เกี่ยวข้อง | -RITM0841707_DXC Request form for Firewall v3.7.xlsx,"Request Number:
+REQ_ID
+Opened By:
+Supanya Srisuk
+Opened Date:
+2026-03-04 15:27:56 ICT
+Click
+here
+to view the request
+Requested For:
+Jeerawat Boonmee
+Email Address:
+JEERAWAB@SCGJWD.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-04 15:27:55 ICT
+Short Description:
+ขอ Allow firewall port: 515 เพื่อ print งาน sap cbmr
+Description:
+ขอ Allow firewall port: 515 เพื่อ print งาน sap cbmr
+รายละเอียดเพิ่มเติมตามไฟล์แนบ
+Related environment:
+VPN User
+AWS Hub
+IT One Services
+GCP Hub
+On-prem
+ไฟล์ที่เกี่ยวข้อง
+-RITM0841707_DXC Request form for Firewall v3.7.xlsx
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+Firewall Request : GCP Hub
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: Firewall Request : GCP Hub | Click | here | to view the task [SEP] description: ขอ Allow firewall port: 515 เพื่อ print งาน sap cbmr | รายละเอียดเพิ่มเติมตามไฟล์แนบ [SEP] related_env: VPN User | AWS Hub | IT One Services | GCP Hub | On-prem | ไฟล์ที่เกี่ยวข้อง | -RITM0841707_DXC Request form for Firewall v3.7.xlsx [SEP] body: Request Number: | REQ_ID | Opened By: | Supanya Srisuk | Opened Date: | 2026-03-04 15:27:56 ICT | Click | here | to view the request | Requested For: | Jeerawat Boonmee | Email Address: | JEERAWAB@SCGJWD.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-04 15:27:55 ICT | Short Description: | ขอ Allow firewall port: 515 เพื่อ print งาน sap cbmr | Description: | ขอ Allow firewall port: 515 เพื่อ print งาน sap cbmr | รายละเอียดเพิ่มเติมตามไฟล์แนบ | Related environment: | VPN User | AWS Hub | IT One Services | GCP Hub | On-prem | ไฟล์ที่เกี่ยวข้อง | -RITM0841707_DXC Request form for Firewall v3.7.xlsx | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | Firewall Request : GCP Hub | Click | here | to view the task,GCP Team
+TASK1634571,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,Firewall Request : AWS Hub | Click | here | to view the task,"ขอ Allow firewall port: 515 เพื่อ print งาน sap cbmr
+รายละเอียดเพิ่มเติมตามไฟล์แนบ",VPN User | AWS Hub | IT One Services | GCP Hub | On-prem | ไฟล์ที่เกี่ยวข้อง | -RITM0841707_DXC Request form for Firewall v3.7.xlsx,"Request Number:
+REQ_ID
+Opened By:
+Supanya Srisuk
+Opened Date:
+2026-03-04 15:27:56 ICT
+Click
+here
+to view the request
+Requested For:
+Jeerawat Boonmee
+Email Address:
+JEERAWAB@SCGJWD.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-04 15:27:55 ICT
+Short Description:
+ขอ Allow firewall port: 515 เพื่อ print งาน sap cbmr
+Description:
+ขอ Allow firewall port: 515 เพื่อ print งาน sap cbmr
+รายละเอียดเพิ่มเติมตามไฟล์แนบ
+Related environment:
+VPN User
+AWS Hub
+IT One Services
+GCP Hub
+On-prem
+ไฟล์ที่เกี่ยวข้อง
+-RITM0841707_DXC Request form for Firewall v3.7.xlsx
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+Firewall Request : AWS Hub
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: Firewall Request : AWS Hub | Click | here | to view the task [SEP] description: ขอ Allow firewall port: 515 เพื่อ print งาน sap cbmr | รายละเอียดเพิ่มเติมตามไฟล์แนบ [SEP] related_env: VPN User | AWS Hub | IT One Services | GCP Hub | On-prem | ไฟล์ที่เกี่ยวข้อง | -RITM0841707_DXC Request form for Firewall v3.7.xlsx [SEP] body: Request Number: | REQ_ID | Opened By: | Supanya Srisuk | Opened Date: | 2026-03-04 15:27:56 ICT | Click | here | to view the request | Requested For: | Jeerawat Boonmee | Email Address: | JEERAWAB@SCGJWD.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-04 15:27:55 ICT | Short Description: | ขอ Allow firewall port: 515 เพื่อ print งาน sap cbmr | Description: | ขอ Allow firewall port: 515 เพื่อ print งาน sap cbmr | รายละเอียดเพิ่มเติมตามไฟล์แนบ | Related environment: | VPN User | AWS Hub | IT One Services | GCP Hub | On-prem | ไฟล์ที่เกี่ยวข้อง | -RITM0841707_DXC Request form for Firewall v3.7.xlsx | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | Firewall Request : AWS Hub | Click | here | to view the task,AWS Team
+TASK1634502,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,Firewall Request : AWS Hub | Click | here | to view the task,,IT One Services | AWS Hub | GCP Hub | Chemicals Cloud | SCG Azure | On-prem | File : RITM0841675_DXC Request SCG to Splunk and tanium server form for Firewall v3.7 v.6.xlsx,"Request Number:
+REQ_ID
+Opened By:
+Lalita Truengchitvilas
+Opened Date:
+2026-03-04 14:54:21 ICT
+Click
+here
+to view the request
+Requested For:
+Pornpinit Thanasutives
+Email Address:
+PORNPINT@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-04 14:54:20 ICT
+Short Description:
+Request to add SCG to Splunk server and TaniumSRV Client Agent firewall
+Description:
+Related environment:
+IT One Services
+AWS Hub
+GCP Hub
+Chemicals Cloud
+SCG Azure
+On-prem
+File : RITM0841675_DXC Request SCG to Splunk and tanium server form for Firewall v3.7 v.6.xlsx
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+Firewall Request : AWS Hub
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: Firewall Request : AWS Hub | Click | here | to view the task [SEP] related_env: IT One Services | AWS Hub | GCP Hub | Chemicals Cloud | SCG Azure | On-prem | File : RITM0841675_DXC Request SCG to Splunk and tanium server form for Firewall v3.7 v.6.xlsx [SEP] body: Request Number: | REQ_ID | Opened By: | Lalita Truengchitvilas | Opened Date: | 2026-03-04 14:54:21 ICT | Click | here | to view the request | Requested For: | Pornpinit Thanasutives | Email Address: | PORNPINT@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-04 14:54:20 ICT | Short Description: | Request to add SCG to Splunk server and TaniumSRV Client Agent firewall | Description: | Related environment: | IT One Services | AWS Hub | GCP Hub | Chemicals Cloud | SCG Azure | On-prem | File : RITM0841675_DXC Request SCG to Splunk and tanium server form for Firewall v3.7 v.6.xlsx | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | Firewall Request : AWS Hub | Click | here | to view the task,AWS Team
+TASK1634497,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,Firewall Request : GCP Hub | Click | here | to view the task,,IT One Services | AWS Hub | GCP Hub | Chemicals Cloud | SCG Azure | On-prem | File : RITM0841675_DXC Request SCG to Splunk and tanium server form for Firewall v3.7 v.6.xlsx,"Request Number:
+REQ_ID
+Opened By:
+Lalita Truengchitvilas
+Opened Date:
+2026-03-04 14:54:21 ICT
+Click
+here
+to view the request
+Requested For:
+Pornpinit Thanasutives
+Email Address:
+PORNPINT@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-04 14:54:20 ICT
+Short Description:
+Request to add SCG to Splunk server and TaniumSRV Client Agent firewall
+Description:
+Related environment:
+IT One Services
+AWS Hub
+GCP Hub
+Chemicals Cloud
+SCG Azure
+On-prem
+File : RITM0841675_DXC Request SCG to Splunk and tanium server form for Firewall v3.7 v.6.xlsx
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+Firewall Request : GCP Hub
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: Firewall Request : GCP Hub | Click | here | to view the task [SEP] related_env: IT One Services | AWS Hub | GCP Hub | Chemicals Cloud | SCG Azure | On-prem | File : RITM0841675_DXC Request SCG to Splunk and tanium server form for Firewall v3.7 v.6.xlsx [SEP] body: Request Number: | REQ_ID | Opened By: | Lalita Truengchitvilas | Opened Date: | 2026-03-04 14:54:21 ICT | Click | here | to view the request | Requested For: | Pornpinit Thanasutives | Email Address: | PORNPINT@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-04 14:54:20 ICT | Short Description: | Request to add SCG to Splunk server and TaniumSRV Client Agent firewall | Description: | Related environment: | IT One Services | AWS Hub | GCP Hub | Chemicals Cloud | SCG Azure | On-prem | File : RITM0841675_DXC Request SCG to Splunk and tanium server form for Firewall v3.7 v.6.xlsx | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | Firewall Request : GCP Hub | Click | here | to view the task,GCP Team
+TASK1634287,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,ขอเพิ่ม user เพื่อเข้าใช้งาน GCP จำนวน 2 user,"ขอเพิ่ม user เพื่อเข้าใช้งาน GCP จำนวน 2 user
+เนื่องจากทีม POS มีแผนให้ทีมงานบันทึกเหตุผลที่ PO ยังอยู่ในสถานะ On Process ผ่าน Google Sheet ซึ่งเชื่อมต่อกับ Big Query และสามารถนำข้อมูลไปจัดทำรายงานในลำดับถัดไปได้ อย่างไรก็ตาม การเข้าถึง Google Sheet จำเป็นต้องมี User บนระบบ GCP (Google Cloud Platform) โดยปัจจุบันมีพนักงานในทีม POS จำนวน 2 ท่านที่ยังไม่มี User ดังกล่าว
+Employee name (first name and last name): รัตนากร บุญมา , อริศา พวกดี
+SCG Email: rattboon@scg.com , arisapua@scg.com",,"Request Number:
+REQ_ID
+Opened By:
+Chutimont Bunnag
+Opened Date:
+2026-03-16 17:21:54 ICT
+Click
+here
+to view the request
+Requested For:
+Pornpen Pollasit
+Business Phone:
+02-586-3588
+Email Address:
+PORNPENP@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-16 17:21:54 ICT
+Short Description:
+ขอเพิ่ม user เพื่อเข้าใช้งาน GCP จำนวน 2 user
+Description:
+ขอเพิ่ม user เพื่อเข้าใช้งาน GCP จำนวน 2 user
+เนื่องจากทีม POS มีแผนให้ทีมงานบันทึกเหตุผลที่ PO ยังอยู่ในสถานะ On Process ผ่าน Google Sheet ซึ่งเชื่อมต่อกับ Big Query และสามารถนำข้อมูลไปจัดทำรายงานในลำดับถัดไปได้ อย่างไรก็ตาม การเข้าถึง Google Sheet จำเป็นต้องมี User บนระบบ GCP (Google Cloud Platform) โดยปัจจุบันมีพนักงานในทีม POS จำนวน 2 ท่านที่ยังไม่มี User ดังกล่าว
+Employee name (first name and last name): รัตนากร บุญมา , อริศา พวกดี
+SCG Email: rattboon@scg.com , arisapua@scg.com
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+ขอเพิ่ม user เพื่อเข้าใช้งาน GCP จำนวน 2 user
+Click
+here
+to view the task","ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: ขอเพิ่ม user เพื่อเข้าใช้งาน GCP จำนวน 2 user [SEP] description: ขอเพิ่ม user เพื่อเข้าใช้งาน GCP จำนวน 2 user | เนื่องจากทีม POS มีแผนให้ทีมงานบันทึกเหตุผลที่ PO ยังอยู่ในสถานะ On Process ผ่าน Google Sheet ซึ่งเชื่อมต่อกับ Big Query และสามารถนำข้อมูลไปจัดทำรายงานในลำดับถัดไปได้ อย่างไรก็ตาม การเข้าถึง Google Sheet จำเป็นต้องมี User บนระบบ GCP (Google Cloud Platform) โดยปัจจุบันมีพนักงานในทีม POS จำนวน 2 ท่านที่ยังไม่มี User ดังกล่าว | Employee name (first name and last name): รัตนากร บุญมา , อริศา พวกดี | SCG Email: rattboon@scg.com , arisapua@scg.com [SEP] body: Request Number: | REQ_ID | Opened By: | Chutimont Bunnag | Opened Date: | 2026-03-16 17:21:54 ICT | Click | here | to view the request | Requested For: | Pornpen Pollasit | Business Phone: | 02-586-3588 | Email Address: | PORNPENP@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-16 17:21:54 ICT | Short Description: | ขอเพิ่ม user เพื่อเข้าใช้งาน GCP จำนวน 2 user | Description: | ขอเพิ่ม user เพื่อเข้าใช้งาน GCP จำนวน 2 user | เนื่องจากทีม POS มีแผนให้ทีมงานบันทึกเหตุผลที่ PO ยังอยู่ในสถานะ On Process ผ่าน Google Sheet ซึ่งเชื่อมต่อกับ Big Query และสามารถนำข้อมูลไปจัดทำรายงานในลำดับถัดไปได้ อย่างไรก็ตาม การเข้าถึง Google Sheet จำเป็นต้องมี User บนระบบ GCP (Google Cloud Platform) โดยปัจจุบันมีพนักงานในทีม POS จำนวน 2 ท่านที่ยังไม่มี User ดังกล่าว | Employee name (first name and last name): รัตนากร บุญมา , อริศา พวกดี | SCG Email: rattboon@scg.com , arisapua@scg.com | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | ขอเพิ่ม user เพื่อเข้าใช้งาน GCP จำนวน 2 user | Click | here | to view the task",GCP Team
+ITASK0726976,incident_task,inetmscloud@inetms.co.th,Incident task ITASK_ID has been assigned to group iNET Cloud | Support Team,,,,"Number:
+ITASK_ID
+Raised by:
+Satawas Plailaharn
+Phone No.:
+(062) 397-5000
+Email Address:
+satawas.plailaharn@dxc.com
+Raised for:
+Satawas Plailaharn
+Phone No.:
+(062) 397-5000
+Email Address:
+satawas.plailaharn@dxc.com
+Client Group:
+SCG
+Business Unit:
+Corporate
+Business Service:
+AWS Cloud
+Service Offering:
+Amazon Web Services Cloud
+Category:
+Subcategory:
+Impact:
+Urgency:
+Low
+Priority:
+4 - Low
+Short Description:
+SCG | Security | CTU066 Passthrough Traffic detection based on Ransomware or Backdoor Reputation
+Description:
+DXC CTAC Team has detected ""CTU066 Passthrough Traffic detection based on Ransomware or Backdoor Reputation"" initiated by malicious external Source IP: 87.120.186.37 towards internal destination IPs: 10.41.52.119/10.41.12.95. We have attached the logs for your reference.
+Stellar Cyber Ticket ID: 1313109
+Case Score Breakdown:
+Observed 1 XDR Kill Chain Stages: Persistent Foothold
+Involved 2 hosts: 172.30.1.73, 58.218.215.100.
+Alert Details:
+1. Source IP: 87.120.186.37
+Source Host: 87.120.186.37
+Source Port: 0
+Source Reputation: malware;backdoor;cnc;reversinglabs;late;rozena;as215439::gb::play2go-net;tcp-6666;tcp-55691
+Source Reputation Source: anomali threatstream,taxii-reversinglabs
+Source Country: Germany
+Destination IP: 10.41.52.119
+Destination Host: 10.41.52.119
+Action (VPCFlow): ACCEPT
+Log Group (VPCFlow): inbound-vpc-flowlog
+Message Class: aws_cloudwatch_vpcflow
+Message Origin Source: aws_cloudwatch
+Timestamp (UTC): 2026-03-16T15:35:02.000Z
+2. Source IP: 87.120.186.37
+Source Host: 87.120.186.37
+Source Port: 0
+Source Reputation: malware;backdoor;cnc;reversinglabs;late;rozena;as215439::gb::play2go-net;tcp-6666;tcp-55691
+Source Reputation Source: anomali threatstream,taxii-reversinglabs
+Source Country: Germany
+Destination IP: 10.41.12.95
+Destination Host: 10.41.12.95
+Action (VPCFlow): ACCEPT
+Log Group (VPCFlow): inbound-vpc-flowlog
+Message Class: aws_cloudwatch_vpcflow
+Message Origin Source: aws_cloudwatch
+Timestamp (UTC): 2026-03-16T15:42:55.000Z
+Recommended Containment Activities:
+• Isolating impacted systems and network segments from each other and/or from non-impacted systems and networks. If this is needed, consider the mission or business needs and how to provide services so missions can continue during this phase to the extent possible.
+• Capturing forensic images to preserve evidence for legal use (if applicable) and further investigation of the incident.
+• Updating firewall filtering.
+• Blocking (and logging) of unauthorized accesses; blocking malware sources.
+• Closing specific ports and mail servers or other relevant servers and services.
+• Changing system admin passwords, rotating private keys, and service/application account secrets where compromise is suspected and revocation of privileged access.
+Recommended Eradication Activities:
+• Remediating all infected IT environments (e.g., cloud, OT, hybrid, host, and network systems).
+• Reimaging affected systems (often from 'gold' sources), rebuilding systems from scratch.
+• Rebuilding hardware (required when the incident involves rootkits).
+• Replacing compromised files with clean versions.
+• Installing patches.
+• Resetting passwords on compromised accounts.
+• Monitoring for any signs of adversary response to containment activities.
+• Allowing adequate time to ensure all systems are clear of all possible threat actor persistence mechanisms (backdoors, etc.) as adversaries often use more than one mechanism.
+Click
+here
+to view the Incident Task record","ticket_type: incident_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Incident task ITASK_ID has been assigned to group iNET Cloud | Support Team [SEP] body: Number: | ITASK_ID | Raised by: | Satawas Plailaharn | Phone No.: | (062) 397-5000 | Email Address: | satawas.plailaharn@dxc.com | Raised for: | Satawas Plailaharn | Phone No.: | (062) 397-5000 | Email Address: | satawas.plailaharn@dxc.com | Client Group: | SCG | Business Unit: | Corporate | Business Service: | AWS Cloud | Service Offering: | Amazon Web Services Cloud | Category: | Subcategory: | Impact: | Urgency: | Low | Priority: | 4 - Low | Short Description: | SCG | Security | CTU066 Passthrough Traffic detection based on Ransomware or Backdoor Reputation | Description: | DXC CTAC Team has detected ""CTU066 Passthrough Traffic detection based on Ransomware or Backdoor Reputation"" initiated by malicious external Source IP: 87.120.186.37 towards internal destination IPs: 10.41.52.119/10.41.12.95. We have attached the logs for your reference. | Stellar Cyber Ticket ID: 1313109 | Case Score Breakdown: | Observed 1 XDR Kill Chain Stages: Persistent Foothold | Involved 2 hosts: 172.30.1.73, 58.218.215.100. | Alert Details: | 1. Source IP: 87.120.186.37 | Source Host: 87.120.186.37 | Source Port: 0 | Source Reputation: malware;backdoor;cnc;reversinglabs;late;rozena;as215439::gb::play2go-net;tcp-6666;tcp-55691 | Source Reputation Source: anomali threatstream,taxii-reversinglabs | Source Country: Germany | Destination IP: 10.41.52.119 | Destination Host: 10.41.52.119 | Action (VPCFlow): ACCEPT | Log Group (VPCFlow): inbound-vpc-flowlog | Message Class: aws_cloudwatch_vpcflow | Message Origin Source: aws_cloudwatch | Timestamp (UTC): 2026-03-16T15:35:02.000Z | 2. Source IP: 87.120.186.37 | Source Host: 87.120.186.37 | Source Port: 0 | Source Reputation: malware;backdoor;cnc;reversinglabs;late;rozena;as215439::gb::play2go-net;tcp-6666;tcp-55691 | Source Reputation Source: anomali threatstream,taxii-reversinglabs | Source Country: Germany | Destination IP: 10.41.12.95 | Destination Host: 10.41.12.95 | Action (VPCFlow): ACCEPT | Log Group (VPCFlow): inbound-vpc-flowlog | Message Class: aws_cloudwatch_vpcflow | Message Origin Source: aws_cloudwatch | Timestamp (UTC): 2026-03-16T15:42:55.000Z | Recommended Containment Activities: | • Isolating impacted systems and network segments from each other and/or from non-impacted systems and networks. If this is needed, consider the mission or business needs and how to provide services so missions can continue during this phase to the extent possible. | • Capturing forensic images to preserve evidence for legal use (if applicable) and further investigation of the incident. | • Updating firewall filtering. | • Blocking (and logging) of unauthorized accesses; blocking malware sources. | • Closing specific ports and mail servers or other relevant servers and services. | • Changing system admin passwords, rotating private keys, and service/application account secrets where compromise is suspected and revocation of privileged access. | Recommended Eradication Activities: | • Remediating all infected IT environments (e.g., cloud, OT, hybrid, host, and network systems). | • Reimaging affected systems (often from 'gold' sources), rebuilding systems from scratch. | • Rebuilding hardware (required when the incident involves rootkits). | • Replacing compromised files with clean versions. | • Installing patches. | • Resetting passwords on compromised accounts. | • Monitoring for any signs of adversary response to containment activities. | • Allowing adequate time to ensure all systems are clear of all possible threat actor persistence mechanisms (backdoors, etc.) as adversaries often use more than one mechanism. | Click | here | to view the Incident Task record",AWS Team
+TASK1633031,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP] ขอสร้างและย้าย folder บน gcp,"[GCP] ขอสร้างและย้าย folder บน gcp
+สร้างและย้าย folder บน gcp ครับ โดยมีรายละเอียดดังนี้
+1 สร้าง sub folder ใต้ folder SCG CBM ชื่อ CBM-BYPASS-POLICY,CBM-CGS,CBM-SL
+2 ดำเนินการย้าย project เข้า folder ตามไฟล์ excel ที่แนบไป
+3 ดำเนินการลบ sub folder เปล่า ใต้ SCG CBM ดังนี้ CBM SAP PI,CCS,CBM Corporate,LHP,Logistics,LSB",,"Request Number:
+REQ_ID
+Opened By:
+Surapol Chumram
+Opened Date:
+2026-03-12 19:10:24 ICT
+Click
+here
+to view the request
+Requested For:
+Methus Saengbua
+Email Address:
+METHUSSA@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-12 19:10:24 ICT
+Short Description:
+[GCP] ขอสร้างและย้าย folder บน gcp
+Description:
+[GCP] ขอสร้างและย้าย folder บน gcp
+สร้างและย้าย folder บน gcp ครับ โดยมีรายละเอียดดังนี้
+1 สร้าง sub folder ใต้ folder SCG CBM ชื่อ CBM-BYPASS-POLICY,CBM-CGS,CBM-SL
+2 ดำเนินการย้าย project เข้า folder ตามไฟล์ excel ที่แนบไป
+3 ดำเนินการลบ sub folder เปล่า ใต้ SCG CBM ดังนี้ CBM SAP PI,CCS,CBM Corporate,LHP,Logistics,LSB
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP] ขอสร้างและย้าย folder บน gcp
+Click
+here
+to view the task","ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP] ขอสร้างและย้าย folder บน gcp [SEP] description: [GCP] ขอสร้างและย้าย folder บน gcp | สร้างและย้าย folder บน gcp ครับ โดยมีรายละเอียดดังนี้ | 1 สร้าง sub folder ใต้ folder SCG CBM ชื่อ CBM-BYPASS-POLICY,CBM-CGS,CBM-SL | 2 ดำเนินการย้าย project เข้า folder ตามไฟล์ excel ที่แนบไป | 3 ดำเนินการลบ sub folder เปล่า ใต้ SCG CBM ดังนี้ CBM SAP PI,CCS,CBM Corporate,LHP,Logistics,LSB [SEP] body: Request Number: | REQ_ID | Opened By: | Surapol Chumram | Opened Date: | 2026-03-12 19:10:24 ICT | Click | here | to view the request | Requested For: | Methus Saengbua | Email Address: | METHUSSA@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-12 19:10:24 ICT | Short Description: | [GCP] ขอสร้างและย้าย folder บน gcp | Description: | [GCP] ขอสร้างและย้าย folder บน gcp | สร้างและย้าย folder บน gcp ครับ โดยมีรายละเอียดดังนี้ | 1 สร้าง sub folder ใต้ folder SCG CBM ชื่อ CBM-BYPASS-POLICY,CBM-CGS,CBM-SL | 2 ดำเนินการย้าย project เข้า folder ตามไฟล์ excel ที่แนบไป | 3 ดำเนินการลบ sub folder เปล่า ใต้ SCG CBM ดังนี้ CBM SAP PI,CCS,CBM Corporate,LHP,Logistics,LSB | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP] ขอสร้างและย้าย folder บน gcp | Click | here | to view the task",GCP Team
+TASK1633901,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP] ขอสอบถามวิธีการส่งอีเมลเข้า GCP Cloud เป็นการ Run แบบ Gmail SMTP ตั้งเวลา Run job ต้องดำเนินการอย่างไร เปิดสิทธิ์อะไรเพิ่มเติมหรือไม่,"[GCP] ขอสอบถามวิธีการส่งอีเมลเข้า GCP Cloud เป็นการ Run แบบ Gmail SMTP ตั้งเวลา Run job ต้องดำเนินการอย่างไร เปิดสิทธิ์อะไรเพิ่มเติมหรือไม่ ต้องดำเนินการอย่างไร เปิดสิทธิ์อะไรเพิ่มเติมหรือไม่
+(082) 943-7329",,"Request Number:
+REQ_ID
+Opened By:
+Thanapol Tophati
+Opened Date:
+2026-03-16 14:29:54 ICT
+Click
+here
+to view the request
+Requested For:
+Pitchaya Rattanaburee
+Business Phone:
+(082) 943-7329
+Email Address:
+PITCHAYR@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-16 14:29:54 ICT
+Short Description:
+[GCP] ขอสอบถามวิธีการส่งอีเมลเข้า GCP Cloud เป็นการ Run แบบ Gmail SMTP ตั้งเวลา Run job ต้องดำเนินการอย่างไร เปิดสิทธิ์อะไรเพิ่มเติมหรือไม่
+Description:
+[GCP] ขอสอบถามวิธีการส่งอีเมลเข้า GCP Cloud เป็นการ Run แบบ Gmail SMTP ตั้งเวลา Run job ต้องดำเนินการอย่างไร เปิดสิทธิ์อะไรเพิ่มเติมหรือไม่ ต้องดำเนินการอย่างไร เปิดสิทธิ์อะไรเพิ่มเติมหรือไม่
+(082) 943-7329
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP] ขอสอบถามวิธีการส่งอีเมลเข้า GCP Cloud เป็นการ Run แบบ Gmail SMTP ตั้งเวลา Run job ต้องดำเนินการอย่างไร เปิดสิทธิ์อะไรเพิ่มเติมหรือไม่
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP] ขอสอบถามวิธีการส่งอีเมลเข้า GCP Cloud เป็นการ Run แบบ Gmail SMTP ตั้งเวลา Run job ต้องดำเนินการอย่างไร เปิดสิทธิ์อะไรเพิ่มเติมหรือไม่ [SEP] description: [GCP] ขอสอบถามวิธีการส่งอีเมลเข้า GCP Cloud เป็นการ Run แบบ Gmail SMTP ตั้งเวลา Run job ต้องดำเนินการอย่างไร เปิดสิทธิ์อะไรเพิ่มเติมหรือไม่ ต้องดำเนินการอย่างไร เปิดสิทธิ์อะไรเพิ่มเติมหรือไม่ | (082) 943-7329 [SEP] body: Request Number: | REQ_ID | Opened By: | Thanapol Tophati | Opened Date: | 2026-03-16 14:29:54 ICT | Click | here | to view the request | Requested For: | Pitchaya Rattanaburee | Business Phone: | (082) 943-7329 | Email Address: | PITCHAYR@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-16 14:29:54 ICT | Short Description: | [GCP] ขอสอบถามวิธีการส่งอีเมลเข้า GCP Cloud เป็นการ Run แบบ Gmail SMTP ตั้งเวลา Run job ต้องดำเนินการอย่างไร เปิดสิทธิ์อะไรเพิ่มเติมหรือไม่ | Description: | [GCP] ขอสอบถามวิธีการส่งอีเมลเข้า GCP Cloud เป็นการ Run แบบ Gmail SMTP ตั้งเวลา Run job ต้องดำเนินการอย่างไร เปิดสิทธิ์อะไรเพิ่มเติมหรือไม่ ต้องดำเนินการอย่างไร เปิดสิทธิ์อะไรเพิ่มเติมหรือไม่ | (082) 943-7329 | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP] ขอสอบถามวิธีการส่งอีเมลเข้า GCP Cloud เป็นการ Run แบบ Gmail SMTP ตั้งเวลา Run job ต้องดำเนินการอย่างไร เปิดสิทธิ์อะไรเพิ่มเติมหรือไม่ | Click | here | to view the task,GCP Team
+TASK1633481,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[AWS] แจ้ง Map CloudFront เพื่อให้สามารถเข้า web จาก Internet ได้,"[AWS] แจ้ง Map CloudFront เพื่อให้สามารถเข้า web จาก Internet ได้
+e_waste_web.syssteel.com
+scrap-venderweb.syssteel.com
+แจ้งว่ามี Domain แล้ว และ Register External DNS แล้ว
+Server อยู่บน AWS
+คุณดินนวล เดชสิริวิเศษ (081) 839-9239",,"Request Number:
+REQ_ID
+Opened By:
+Nusara Pingmuen
+Opened Date:
+2026-03-13 14:33:57 ICT
+Click
+here
+to view the request
+Requested For:
+Dinnuan Detsiriviset
+Business Phone:
+038-683723 (2482)
+Email Address:
+Dinnuan.Detsiriviset@syssteel.com
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-13 14:33:57 ICT
+Short Description:
+[AWS] แจ้ง Map CloudFront เพื่อให้สามารถเข้า web จาก Internet ได้
+Description:
+[AWS] แจ้ง Map CloudFront เพื่อให้สามารถเข้า web จาก Internet ได้
+e_waste_web.syssteel.com
+scrap-venderweb.syssteel.com
+แจ้งว่ามี Domain แล้ว และ Register External DNS แล้ว
+Server อยู่บน AWS
+คุณดินนวล เดชสิริวิเศษ (081) 839-9239
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[AWS] แจ้ง Map CloudFront เพื่อให้สามารถเข้า web จาก Internet ได้
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [AWS] แจ้ง Map CloudFront เพื่อให้สามารถเข้า web จาก Internet ได้ [SEP] description: [AWS] แจ้ง Map CloudFront เพื่อให้สามารถเข้า web จาก Internet ได้ | e_waste_web.syssteel.com | scrap-venderweb.syssteel.com | แจ้งว่ามี Domain แล้ว และ Register External DNS แล้ว | Server อยู่บน AWS | คุณดินนวล เดชสิริวิเศษ (081) 839-9239 [SEP] body: Request Number: | REQ_ID | Opened By: | Nusara Pingmuen | Opened Date: | 2026-03-13 14:33:57 ICT | Click | here | to view the request | Requested For: | Dinnuan Detsiriviset | Business Phone: | 038-683723 (2482) | Email Address: | Dinnuan.Detsiriviset@syssteel.com | Service Request Number: | RITM_ID | Opened Date: | 2026-03-13 14:33:57 ICT | Short Description: | [AWS] แจ้ง Map CloudFront เพื่อให้สามารถเข้า web จาก Internet ได้ | Description: | [AWS] แจ้ง Map CloudFront เพื่อให้สามารถเข้า web จาก Internet ได้ | e_waste_web.syssteel.com | scrap-venderweb.syssteel.com | แจ้งว่ามี Domain แล้ว และ Register External DNS แล้ว | Server อยู่บน AWS | คุณดินนวล เดชสิริวิเศษ (081) 839-9239 | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [AWS] แจ้ง Map CloudFront เพื่อให้สามารถเข้า web จาก Internet ได้ | Click | here | to view the task,AWS Team
+TASK1633529,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[AWS] ขอเพิ่ม Permission ให้ User เพื่อเข้าใช้งาน AWS,"[AWS] ขอเพิ่ม Permission ให้ User เพื่อเข้าใช้งาน AWS
+1. Anusorn Boonthong
+anusorbo@syssteel.com
+2. Parinya Tosuwan
+Parinyat@syssteel.com
+อ้างอิงเคส RITM_ID ขอสิทธิ์เหมือน dinnuand@scgo365.onmicrosoft.com
+Ref
+-RITM_ID ขอ Re-Enabled ให้กับพนักงาน User : anusorbo เพื่อนำไปใช้งานกับระบบ AWS
+-RITM_ID ขอสร้าง User AD ให้กับพนักงาน User : Parinyat เพื่อนำไปใช้งานกับระบบ AWS
+- RITM_ID [AWS] ขอเพิ่ม Permission ให้ User เพื่อเข้าใช้งาน AWS",,"Request Number:
+REQ_ID
+Opened By:
+Prapapan Pinsuwan
+Opened Date:
+2026-02-24 13:48:07 ICT
+Click
+here
+to view the request
+Requested For:
+Dinnuan Detsiriviset
+Email Address:
+Dinnuan.Detsiriviset@syssteel.com
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-02-24 13:48:07 ICT
+Short Description:
+[AWS] ขอเพิ่ม Permission ให้ User เพื่อเข้าใช้งาน AWS
+Description:
+[AWS] ขอเพิ่ม Permission ให้ User เพื่อเข้าใช้งาน AWS
+1. Anusorn Boonthong
+anusorbo@syssteel.com
+2. Parinya Tosuwan
+Parinyat@syssteel.com
+อ้างอิงเคส RITM_ID ขอสิทธิ์เหมือน dinnuand@scgo365.onmicrosoft.com
+Ref
+-RITM_ID ขอ Re-Enabled ให้กับพนักงาน User : anusorbo เพื่อนำไปใช้งานกับระบบ AWS
+-RITM_ID ขอสร้าง User AD ให้กับพนักงาน User : Parinyat เพื่อนำไปใช้งานกับระบบ AWS
+- RITM_ID [AWS] ขอเพิ่ม Permission ให้ User เพื่อเข้าใช้งาน AWS
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[AWS] ขอเพิ่ม Permission ให้ User เพื่อเข้าใช้งาน AWS
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [AWS] ขอเพิ่ม Permission ให้ User เพื่อเข้าใช้งาน AWS [SEP] description: [AWS] ขอเพิ่ม Permission ให้ User เพื่อเข้าใช้งาน AWS | 1. Anusorn Boonthong | anusorbo@syssteel.com | 2. Parinya Tosuwan | Parinyat@syssteel.com | อ้างอิงเคส RITM_ID ขอสิทธิ์เหมือน dinnuand@scgo365.onmicrosoft.com | Ref | -RITM_ID ขอ Re-Enabled ให้กับพนักงาน User : anusorbo เพื่อนำไปใช้งานกับระบบ AWS | -RITM_ID ขอสร้าง User AD ให้กับพนักงาน User : Parinyat เพื่อนำไปใช้งานกับระบบ AWS | - RITM_ID [AWS] ขอเพิ่ม Permission ให้ User เพื่อเข้าใช้งาน AWS [SEP] body: Request Number: | REQ_ID | Opened By: | Prapapan Pinsuwan | Opened Date: | 2026-02-24 13:48:07 ICT | Click | here | to view the request | Requested For: | Dinnuan Detsiriviset | Email Address: | Dinnuan.Detsiriviset@syssteel.com | Service Request Number: | RITM_ID | Opened Date: | 2026-02-24 13:48:07 ICT | Short Description: | [AWS] ขอเพิ่ม Permission ให้ User เพื่อเข้าใช้งาน AWS | Description: | [AWS] ขอเพิ่ม Permission ให้ User เพื่อเข้าใช้งาน AWS | 1. Anusorn Boonthong | anusorbo@syssteel.com | 2. Parinya Tosuwan | Parinyat@syssteel.com | อ้างอิงเคส RITM_ID ขอสิทธิ์เหมือน dinnuand@scgo365.onmicrosoft.com | Ref | -RITM_ID ขอ Re-Enabled ให้กับพนักงาน User : anusorbo เพื่อนำไปใช้งานกับระบบ AWS | -RITM_ID ขอสร้าง User AD ให้กับพนักงาน User : Parinyat เพื่อนำไปใช้งานกับระบบ AWS | - RITM_ID [AWS] ขอเพิ่ม Permission ให้ User เพื่อเข้าใช้งาน AWS | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [AWS] ขอเพิ่ม Permission ให้ User เพื่อเข้าใช้งาน AWS | Click | here | to view the task,AWS Team
 TASK1633277,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,Firewall Request : AWS Hub | Click | here | to view the task,ขอ allow port ให้ VPN User access ระบบ SAP SQL,IT One Services | AWS Hub | VPN User | Port 53075 คือ Web-based IDE for XSA Development (SAP Web IDE for SAP HANA) | Reference: | https://caldocs.cfapps.eu01.hana.ondemand.com/caldocs/help/Getting_started_HANA_Express.pdf | https://developers.sap.com/tutorials/xsa-connecting-webide.html | Attached file: | - DXC Request form for Firewall v3.7_RITM0841310.xlsx,"Request Number:
 REQ_ID
 Opened By:

@@ -26,6 +26,9 @@ dist/
 instance/
 
 # --- Models ---
-outputs/train/best_ticket_classifier_model_*
+outputs/train/best_cloud_subteam_classifier_model_*.pkl
+outputs/train/best_main_team_classifier_model_*.pkl
+outputs/train/cloud_subteam_*.csv
+outputs/train/main_team_*.csv
 best_vs_bundle_predictions.csv
 best_vs_bundle_report.csv

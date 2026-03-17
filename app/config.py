@@ -40,6 +40,7 @@ class Config:
 
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
     LLM_MODEL_NAME = os.getenv("LLM_MODEL_NAME")
+    LLM_ENABLED = env_or_default("LLM_ENABLED", "false").lower() == "true"
 
     MAILBOX_FOLDER = env_or_default("MAILBOX_FOLDER", "scg")
     DAYS_BACK = int(env_or_default("DAYS_BACK", 365))
@@ -52,7 +53,7 @@ class Config:
     )
 
     AUDIT_RAW_CSV_FILENAME = env_or_default(
-        "AUDIT_RAW_CSV_FILENAME", 
+        "AUDIT_RAW_CSV_FILENAME",
         os.path.join(EXPORT_DIR, "ticket_audit_raw.csv")
     )
 
@@ -121,68 +122,6 @@ class Config:
         "APPENGINE", "GCP USER", "GOOGLE SHEET", "WORKSPACE",
     ]
 
-    TRAINING_CLOUD_SUBTEAM_DATASET_PATH = env_or_default(
-        "TRAINING_CLOUD_SUBTEAM_DATASET_PATH",
-        os.path.join(EXPORT_DIR, "ticket_training_cloud_sub_team.csv")
-    )
-
-    TRAINING_MAIN_TEAM_DATASET_PATH = env_or_default(
-        "TRAINING_MAIN_TEAM_DATASET_PATH",
-        os.path.join(EXPORT_DIR, "ticket_training_main_team.csv")
-    )
-
-    TRAINING_TARGET_COLUMN_CLOUD_SUBTEAM = env_or_default(
-        "TRAINING_TARGET_COLUMN_CLOUD_SUBTEAM",
-        "label_sub_team"
-    )
-    TRAINING_TARGET_COLUMN_MAIN_TEAM = env_or_default(
-        "TRAINING_TARGET_COLUMN_MAIN_TEAM",
-        "label_main_team"
-    )
-
-    BEST_TICKET_CLASSIFIER_MODEL_PATH = env_or_default(
-        "BEST_TICKET_CLASSIFIER_MODEL_PATH",
-        os.path.join(TRAIN_DIR, "best_ticket_classifier_model.pkl")
-    )
-
-    ENSEMBLE_BUNDLE_PATH = env_or_default(
-        "ENSEMBLE_BUNDLE_PATH",
-        os.path.join(TRAIN_DIR, "ticket_ensemble_bundle.pkl")
-    )
-
-    MODEL_COMPARISON_REPORT_PATH = env_or_default(
-        "MODEL_COMPARISON_REPORT_PATH",
-        os.path.join(TRAIN_DIR, "model_comparison_results.csv")
-    )
-    MAIN_TEAM_MODEL_COMPARISON_REPORT_PATH = env_or_default(
-        "MAIN_TEAM_MODEL_COMPARISON_REPORT_PATH",
-        os.path.join(TRAIN_DIR, "main_team_model_comparison_results.csv")
-    )
-
-    FEATURE_IMPORTANCE_OUTPUT_PATH = env_or_default(
-        "FEATURE_IMPORTANCE_OUTPUT_PATH",
-        os.path.join(TRAIN_DIR, "feature_importance_top200.csv")
-    )
-
-    EXPLAIN_FEATURE_IMPORTANCE_OUTPUT_PATH = env_or_default(
-        "EXPLAIN_FEATURE_IMPORTANCE_OUTPUT_PATH",
-        os.path.join(TRAIN_DIR, "explain_feature_importance_top200.csv")
-    )
-
-    RULE_UNMATCHED_CASES_PATH = env_or_default(
-        "RULE_UNMATCHED_CASES_PATH",
-        os.path.join(TRAIN_DIR, "rule_unmatched_cases.csv")
-    )
-
-    ML_RANDOM_STATE = int(env_or_default("ML_RANDOM_STATE", 42))
-    ML_TEST_SIZE = float(env_or_default("ML_TEST_SIZE", 0.2))
-    ML_CONFIDENCE_THRESHOLD = float(env_or_default("ML_CONFIDENCE_THRESHOLD", 0.75))
-
-    VALID_CLOUD_SUBTEAM_LABELS = env_or_default(
-        "VALID_CLOUD_SUBTEAM_LABELS",
-        "AWS Team,GCP Team"
-    )
-
     EXTRA_AWS_KEYWORDS = [
         "FIREWALL REQUEST : AWS HUB",
         "PHASSAKORN SEENIL",
@@ -195,4 +134,142 @@ class Config:
         "CLOUD RUN",
         "SPOKE01",
         "SHAREDSERVICES-PRD-RG",
+        "cbm-lhp-ssw-datawarehouse-dev",
+        "cbm-lhp-ssw-datawarehouse-prd",
+        "scgd-procurementplatform-prd",
     ]
+
+    # =========================================================
+    # DATASET
+    # =========================================================
+    TRAINING_CLOUD_SUBTEAM_DATASET_PATH = env_or_default(
+        "TRAINING_CLOUD_SUBTEAM_DATASET_PATH",
+        os.path.join(EXPORT_DIR, "ticket_training_cloud_sub_team.csv")
+    )
+
+    TRAINING_MAIN_TEAM_DATASET_PATH = env_or_default(
+        "TRAINING_MAIN_TEAM_DATASET_PATH",
+        os.path.join(EXPORT_DIR, "ticket_training_main_team.csv")
+    )
+
+    # =========================================================
+    # TARGET COLUMN
+    # =========================================================
+    TRAINING_TARGET_COLUMN_CLOUD_SUBTEAM = env_or_default(
+        "TRAINING_TARGET_COLUMN_CLOUD_SUBTEAM",
+        "label_sub_team"
+    )
+
+    TRAINING_TARGET_COLUMN_MAIN_TEAM = env_or_default(
+        "TRAINING_TARGET_COLUMN_MAIN_TEAM",
+        "label_main_team"
+    )
+
+    # =========================================================
+    # VALID LABELS
+    # =========================================================
+    VALID_CLOUD_SUBTEAM_LABELS = env_or_default(
+        "VALID_CLOUD_SUBTEAM_LABELS",
+        "AWS Team,GCP Team"
+    )
+
+    VALID_MAIN_TEAM_LABELS = env_or_default(
+        "VALID_MAIN_TEAM_LABELS",
+        "iNET Cloud Support Team,iNET Network Team,iNET Operation Team"
+    )
+
+    # =========================================================
+    # MODEL OUTPUT
+    # =========================================================
+    BEST_CLOUD_SUBTEAM_CLASSIFIER_MODEL_PATH = env_or_default(
+        "BEST_CLOUD_SUBTEAM_CLASSIFIER_MODEL_PATH",
+        os.path.join(TRAIN_DIR, "best_cloud_subteam_classifier_model.pkl")
+    )
+
+    BEST_MAIN_TEAM_CLASSIFIER_MODEL_PATH = env_or_default(
+        "BEST_MAIN_TEAM_CLASSIFIER_MODEL_PATH",
+        os.path.join(TRAIN_DIR, "best_main_team_classifier_model.pkl")
+    )
+
+    ENSEMBLE_CLOUD_SUBTEAM_BUNDLE_PATH = env_or_default(
+        "ENSEMBLE_CLOUD_SUBTEAM_BUNDLE_PATH",
+        os.path.join(TRAIN_DIR, "ensemble_cloud_subteam_bundle.pkl")
+    )
+
+    ENSEMBLE_MAIN_TEAM_BUNDLE_PATH = env_or_default(
+        "ENSEMBLE_MAIN_TEAM_BUNDLE_PATH",
+        os.path.join(TRAIN_DIR, "ensemble_main_team_bundle.pkl")
+    )
+
+    # =========================================================
+    # REPORT OUTPUT - CLOUD SUBTEAM
+    # =========================================================
+    CLOUD_SUBTEAM_MODEL_COMPARISON_REPORT_PATH = env_or_default(
+        "CLOUD_SUBTEAM_MODEL_COMPARISON_REPORT_PATH",
+        os.path.join(TRAIN_DIR, "cloud_subteam_model_comparison_results.csv")
+    )
+
+    CLOUD_SUBTEAM_FEATURE_IMPORTANCE_OUTPUT_PATH = env_or_default(
+        "CLOUD_SUBTEAM_FEATURE_IMPORTANCE_OUTPUT_PATH",
+        os.path.join(TRAIN_DIR, "cloud_subteam_feature_importance_top200.csv")
+    )
+
+    CLOUD_SUBTEAM_EXPLAIN_FEATURE_IMPORTANCE_OUTPUT_PATH = env_or_default(
+        "CLOUD_SUBTEAM_EXPLAIN_FEATURE_IMPORTANCE_OUTPUT_PATH",
+        os.path.join(TRAIN_DIR, "cloud_subteam_explain_feature_importance_top200.csv")
+    )
+
+    CLOUD_SUBTEAM_RULE_UNMATCHED_CASES_PATH = env_or_default(
+        "CLOUD_SUBTEAM_RULE_UNMATCHED_CASES_PATH",
+        os.path.join(TRAIN_DIR, "cloud_subteam_rule_unmatched_cases.csv")
+    )
+
+    CLOUD_SUBTEAM_BEST_VS_BUNDLE_REPORT_OUTPUT_PATH = env_or_default(
+        "CLOUD_SUBTEAM_BEST_VS_BUNDLE_REPORT_OUTPUT_PATH",
+        os.path.join(TRAIN_DIR, "cloud_subteam_best_vs_bundle_report.csv")
+    )
+
+    CLOUD_SUBTEAM_BEST_VS_BUNDLE_PREDICTIONS_OUTPUT_PATH = env_or_default(
+        "CLOUD_SUBTEAM_BEST_VS_BUNDLE_PREDICTIONS_OUTPUT_PATH",
+        os.path.join(TRAIN_DIR, "cloud_subteam_best_vs_bundle_predictions.csv")
+    )
+
+    # =========================================================
+    # REPORT OUTPUT - MAIN TEAM
+    # =========================================================
+    MAIN_TEAM_MODEL_COMPARISON_REPORT_PATH = env_or_default(
+        "MAIN_TEAM_MODEL_COMPARISON_REPORT_PATH",
+        os.path.join(TRAIN_DIR, "main_team_model_comparison_results.csv")
+    )
+
+    MAIN_TEAM_FEATURE_IMPORTANCE_OUTPUT_PATH = env_or_default(
+        "MAIN_TEAM_FEATURE_IMPORTANCE_OUTPUT_PATH",
+        os.path.join(TRAIN_DIR, "main_team_feature_importance_top200.csv")
+    )
+
+    MAIN_TEAM_EXPLAIN_FEATURE_IMPORTANCE_OUTPUT_PATH = env_or_default(
+        "MAIN_TEAM_EXPLAIN_FEATURE_IMPORTANCE_OUTPUT_PATH",
+        os.path.join(TRAIN_DIR, "main_team_explain_feature_importance_top200.csv")
+    )
+
+    MAIN_TEAM_RULE_UNMATCHED_CASES_PATH = env_or_default(
+        "MAIN_TEAM_RULE_UNMATCHED_CASES_PATH",
+        os.path.join(TRAIN_DIR, "main_team_rule_unmatched_cases.csv")
+    )
+
+    MAIN_TEAM_BEST_VS_BUNDLE_REPORT_OUTPUT_PATH = env_or_default(
+        "MAIN_TEAM_BEST_VS_BUNDLE_REPORT_OUTPUT_PATH",
+        os.path.join(TRAIN_DIR, "main_team_best_vs_bundle_report.csv")
+    )
+
+    MAIN_TEAM_BEST_VS_BUNDLE_PREDICTIONS_OUTPUT_PATH = env_or_default(
+        "MAIN_TEAM_BEST_VS_BUNDLE_PREDICTIONS_OUTPUT_PATH",
+        os.path.join(TRAIN_DIR, "main_team_best_vs_bundle_predictions.csv")
+    )
+
+    # =========================================================
+    # ML SETTING
+    # =========================================================
+    ML_RANDOM_STATE = int(env_or_default("ML_RANDOM_STATE", 42))
+    ML_TEST_SIZE = float(env_or_default("ML_TEST_SIZE", 0.2))
+    ML_CONFIDENCE_THRESHOLD = float(env_or_default("ML_CONFIDENCE_THRESHOLD", 0.75))

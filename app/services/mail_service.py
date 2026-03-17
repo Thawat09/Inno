@@ -33,7 +33,7 @@ from sqlalchemy import text
 ML_MODEL = None
 
 try:
-    model_path = Config.BEST_TICKET_CLASSIFIER_MODEL_PATH
+    model_path = Config.BEST_CLOUD_SUBTEAM_CLASSIFIER_MODEL_PATH
     if os.path.exists(model_path):
         ML_MODEL = joblib.load(model_path)
         print(f"✅ Loaded ML model: {model_path}")
@@ -171,23 +171,6 @@ def decide_cloud_subteam_with_ml(info, clean_body, subject, to_address):
             "ml_confidence": None
         }
 
-    print(f"Google API key: {'set' if Config.GOOGLE_API_KEY else 'not set'}")
-    if Config.GOOGLE_API_KEY:
-        text_for_ai = rebuild_text_input_for_email(info, clean_body, subject, to_address)
-        llm_predicted = predict_with_gemini(text_for_ai)
-        valid_teams = ["AWS Team", "GCP Team", "GCP & AWS Team (Both)"]
-        print(f"LLM predicted: {llm_predicted}, valid options: {valid_teams}")
-        
-        if llm_predicted in valid_teams:
-            return llm_predicted, f"llm_{Config.LLM_MODEL_NAME}", {
-                "decision_mode": "llm_prediction",
-                "ml_used": True,
-                "ml_confidence": 1.0,
-                "logic_candidate": logic_sub_team
-            }
-        else:
-            print(f"⚠️ LLM prediction invalid or low confidence: {llm_predicted}")
-
     ml_sub_team, ml_confidence, ml_source = predict_cloud_subteam_by_ml(
         info,
         clean_body,
@@ -225,6 +208,64 @@ def decide_cloud_subteam_with_ml(info, clean_body, subject, to_address):
         "logic_candidate": logic_sub_team,
         "logic_source": logic_label_source
     }
+
+
+def decide_cloud_subteam_with_llm(info, clean_body, subject, to_address):
+    logic_sub_team, logic_label_source, logic_extra = decide_cloud_subteam(
+        info,
+        clean_body,
+        subject
+    )
+
+    explicit_logic_sources = {
+        "task_short_desc_prefix",
+        "ritm_short_desc_prefix",
+        "subject_prefix",
+        "task_short_desc_hub",
+        "ip_match",
+    }
+
+    if logic_label_source in explicit_logic_sources:
+        return logic_sub_team, logic_label_source, {
+            "decision_mode": "logic_explicit_rule",
+            "ml_used": False,
+            "ml_confidence": None
+        }
+
+    text_for_ai = rebuild_text_input_for_email(info, clean_body, subject, to_address)
+    llm_predicted = predict_with_gemini(text_for_ai)
+
+    valid_teams = ["AWS Team", "GCP Team", "GCP & AWS Team (Both)"]
+
+    print(f"🤖 LLM predicted: {llm_predicted}")
+
+    if llm_predicted in valid_teams:
+        return llm_predicted, f"llm_{Config.LLM_MODEL_NAME}", {
+            "decision_mode": "llm_prediction",
+            "ml_used": False,
+            "ml_confidence": 1.0,
+            "logic_candidate": logic_sub_team,
+            "logic_source": logic_label_source
+        }
+
+    print("⚠️ LLM invalid or unavailable, fallback to logic")
+
+    return logic_sub_team, f"{logic_label_source}_fallback_llm_invalid", {
+        "decision_mode": "logic_fallback_after_llm",
+        "ml_used": False,
+        "ml_confidence": None,
+        "logic_candidate": logic_sub_team,
+        "logic_source": logic_label_source
+    }
+
+
+def decide_cloud_subteam_runtime(info, clean_body, subject, to_address):
+    if Config.LLM_ENABLED:
+        print("🧠 Routing mode: LLM")
+        return decide_cloud_subteam_with_llm(info, clean_body, subject, to_address)
+
+    print("🤖 Routing mode: ML")
+    return decide_cloud_subteam_with_ml(info, clean_body, subject, to_address)
 
 
 # =========================================================
@@ -391,7 +432,7 @@ def fetch_and_group_tasks(save_to_db=True):
                 elif assigned_team_key == "iNET Cloud Support Team":
                     main_team = "iNET Cloud Support Team"
 
-                    sub_team, label_source, decision_info = decide_cloud_subteam_with_ml(
+                    sub_team, label_source, decision_info = decide_cloud_subteam_runtime(
                         info,
                         clean_body,
                         subject,

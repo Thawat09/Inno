@@ -1,7 +1,6 @@
 import os
 import re
 import sys
-import json
 import joblib
 import numpy as np
 import pandas as pd
@@ -9,12 +8,12 @@ import pandas as pd
 from datetime import datetime
 from collections import Counter
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Set
 
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import StratifiedKFold, cross_validate
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import accuracy_score, f1_score, classification_report
+from sklearn.metrics import accuracy_score, f1_score
 from sklearn.linear_model import LogisticRegression, SGDClassifier, RidgeClassifier
 from sklearn.svm import LinearSVC
 from sklearn.naive_bayes import MultinomialNB, ComplementNB, BernoulliNB
@@ -32,61 +31,35 @@ from app.utils.ml_utils import thai_tokenizer
 
 
 # =========================================================
-# 1) CONFIG
+# 1) GLOBAL CONFIG
 # =========================================================
-DATASET_PATH = Config.TRAINING_CLOUD_SUBTEAM_DATASET_PATH
-print(f"🔧 Configured dataset path: {DATASET_PATH}")
-TARGET_COLUMN = Config.TRAINING_TARGET_COLUMN_CLOUD_SUBTEAM
-MODEL_OUTPUT_PATH = Config.BEST_TICKET_CLASSIFIER_MODEL_PATH
-ENSEMBLE_OUTPUT_PATH = Config.ENSEMBLE_BUNDLE_PATH
-REPORT_OUTPUT_PATH = Config.MODEL_COMPARISON_REPORT_PATH
-FEATURE_IMPORTANCE_OUTPUT_PATH = Config.FEATURE_IMPORTANCE_OUTPUT_PATH
-EXPLAIN_FEATURE_IMPORTANCE_OUTPUT_PATH = Config.EXPLAIN_FEATURE_IMPORTANCE_OUTPUT_PATH
-
 TEST_SIZE = Config.ML_TEST_SIZE
 RANDOM_STATE = Config.ML_RANDOM_STATE
 CONFIDENCE_THRESHOLD = Config.ML_CONFIDENCE_THRESHOLD
 
-VALID_LABELS = {
-    x.strip()
-    for x in Config.VALID_CLOUD_SUBTEAM_LABELS.split(",")
-    if x.strip()
-}
-
-BEST_VS_BUNDLE_REPORT_OUTPUT_PATH = getattr(
-    Config,
-    "BEST_VS_BUNDLE_REPORT_OUTPUT_PATH",
-    os.path.join(PROJECT_ROOT, "best_vs_bundle_report.csv")
-)
-
-BEST_VS_BUNDLE_PREDICTIONS_OUTPUT_PATH = getattr(
-    Config,
-    "BEST_VS_BUNDLE_PREDICTIONS_OUTPUT_PATH",
-    os.path.join(PROJECT_ROOT, "best_vs_bundle_predictions.csv")
-)
-
-
-# =========================================================
-# 2) RULE CONFIG
-# =========================================================
 AWS_KEYWORDS = list(Config.AWS_KEYWORDS) + list(Config.EXTRA_AWS_KEYWORDS)
 GCP_KEYWORDS = list(Config.GCP_KEYWORDS) + list(Config.EXTRA_GCP_KEYWORDS)
 SYSTEM_MAPPING = getattr(Config, "SYSTEM_MAPPING", {})
 
 
 # =========================================================
-# 3) UTILS
+# 2) UTILS
 # =========================================================
-def get_versioned_model_path(base_name, extension=".pkl"):
-    model_dir = os.path.dirname(Config.BEST_TICKET_CLASSIFIER_MODEL_PATH)
-    year_th = (datetime.now().year + 43) % 100
+def get_series(df: pd.DataFrame, col: str) -> pd.Series:
+    if col in df.columns:
+        return df[col].fillna("").astype(str)
+    return pd.Series([""] * len(df), index=df.index, dtype="object")
+
+
+def get_versioned_model_path(base_name: str, target_model_path: str, extension: str = ".pkl") -> str:
+    model_dir = os.path.dirname(target_model_path)
+    year_th = (datetime.now().year + 543) % 100
     date_str = datetime.now().strftime(f"{year_th}_%m_%d")
     version = 1
 
     while True:
         file_name = f"{base_name}_{date_str}_v{version}{extension}"
         full_path = os.path.join(model_dir, file_name)
-        
         if not os.path.exists(full_path):
             return full_path
         version += 1
@@ -96,13 +69,6 @@ def safe_text(value) -> str:
     if pd.isna(value) or value is None:
         return ""
     return str(value).strip()
-
-
-def contains_any_loose(text: str, keywords: List[str]) -> bool:
-    if not text:
-        return False
-    text_upper = text.upper()
-    return any(str(k).upper() in text_upper for k in keywords)
 
 
 def normalize_for_logic(text: str) -> str:
@@ -119,19 +85,23 @@ def count_keyword_hits(text: str, keywords: List[str]) -> int:
     return sum(1 for k in keywords if str(k).upper() in text_upper)
 
 
-def detect_system_mapping_label(text: str) -> Tuple[Optional[str], Optional[str]]:
+def detect_system_mapping_label(text: str, valid_labels: Set[str]) -> Tuple[Optional[str], Optional[str]]:
     norm_text = normalize_for_logic(text)
     if not norm_text:
         return None, None
 
     for domain, team in SYSTEM_MAPPING.items():
-        if str(domain).upper() in norm_text:
+        if str(domain).upper() in norm_text and team in valid_labels:
             return team, f"rule_system_mapping:{domain}"
 
     return None, None
 
 
-def detect_rule_label(row: pd.Series) -> Tuple[Optional[str], Optional[str]]:
+def detect_rule_label(row: pd.Series, valid_labels: Set[str]) -> Tuple[Optional[str], Optional[str]]:
+    """
+    Rule นี้ออกแบบมาสำหรับ cloud subteam เป็นหลัก
+    จะคืนได้แค่ AWS Team / GCP Team ถ้าค่านั้นอยู่ใน valid_labels
+    """
     subject = normalize_for_logic(row.get("subject_clean"))
     short_desc = normalize_for_logic(row.get("short_desc_clean"))
     related_env = normalize_for_logic(row.get("related_env_raw"))
@@ -141,44 +111,41 @@ def detect_rule_label(row: pd.Series) -> Tuple[Optional[str], Optional[str]]:
 
     merged = " || ".join([subject, short_desc, related_env, description, body, text_input])
 
-    # 1) strongest explicit rules
-    if "FIREWALL REQUEST : GCP HUB" in short_desc:
-        return "GCP Team", "rule_task_short_desc_gcp_hub"
-    if "FIREWALL REQUEST : AWS HUB" in short_desc:
-        return "AWS Team", "rule_task_short_desc_aws_hub"
+    if "AWS Team" in valid_labels:
+        if "FIREWALL REQUEST : AWS HUB" in short_desc:
+            return "AWS Team", "rule_task_short_desc_aws_hub"
+        if "[AWS]" in merged:
+            return "AWS Team", "rule_prefix_aws"
+        if "10.41." in merged and "10.42." not in merged:
+            return "AWS Team", "rule_ip_aws"
 
-    if "[GCP]" in merged:
-        return "GCP Team", "rule_prefix_gcp"
-    if "[AWS]" in merged:
-        return "AWS Team", "rule_prefix_aws"
+    if "GCP Team" in valid_labels:
+        if "FIREWALL REQUEST : GCP HUB" in short_desc:
+            return "GCP Team", "rule_task_short_desc_gcp_hub"
+        if "[GCP]" in merged:
+            return "GCP Team", "rule_prefix_gcp"
+        if "10.42." in merged and "10.41." not in merged:
+            return "GCP Team", "rule_ip_gcp"
 
-    system_label, system_source = detect_system_mapping_label(merged)
-    if system_label in VALID_LABELS:
+    system_label, system_source = detect_system_mapping_label(merged, valid_labels)
+    if system_label:
         return system_label, system_source
 
-    # 2) IP signals
-    if "10.42." in merged and "10.41." not in merged:
-        return "GCP Team", "rule_ip_gcp"
-    if "10.41." in merged and "10.42." not in merged:
-        return "AWS Team", "rule_ip_aws"
-
-    # 3) keyword dominance in short_desc/subject first
     header_text = " || ".join([subject, short_desc])
     gcp_header_hits = count_keyword_hits(header_text, GCP_KEYWORDS)
     aws_header_hits = count_keyword_hits(header_text, AWS_KEYWORDS)
 
-    if gcp_header_hits > 0 and aws_header_hits == 0:
+    if "GCP Team" in valid_labels and gcp_header_hits > 0 and aws_header_hits == 0:
         return "GCP Team", "rule_header_keywords"
-    if aws_header_hits > 0 and gcp_header_hits == 0:
+    if "AWS Team" in valid_labels and aws_header_hits > 0 and gcp_header_hits == 0:
         return "AWS Team", "rule_header_keywords"
 
-    # 4) body/env dominance
     gcp_body_hits = count_keyword_hits(merged, GCP_KEYWORDS)
     aws_body_hits = count_keyword_hits(merged, AWS_KEYWORDS)
 
-    if gcp_body_hits > 0 and aws_body_hits == 0:
+    if "GCP Team" in valid_labels and gcp_body_hits > 0 and aws_body_hits == 0:
         return "GCP Team", "rule_body_keywords"
-    if aws_body_hits > 0 and gcp_body_hits == 0:
+    if "AWS Team" in valid_labels and aws_body_hits > 0 and gcp_body_hits == 0:
         return "AWS Team", "rule_body_keywords"
 
     return None, None
@@ -187,23 +154,23 @@ def detect_rule_label(row: pd.Series) -> Tuple[Optional[str], Optional[str]]:
 def build_logic_features(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
 
-    out["subject_clean"] = out.get("subject_clean", "").fillna("").astype(str)
-    out["short_desc_clean"] = out.get("short_desc_clean", "").fillna("").astype(str)
-    out["related_env_raw"] = out.get("related_env_raw", "").fillna("").astype(str)
-    out["description_for_model"] = out.get("description_for_model", "").fillna("").astype(str)
-    out["body_for_model"] = out.get("body_for_model", "").fillna("").astype(str)
-    out["ticket_type"] = out.get("ticket_type", "").fillna("").astype(str)
-    out["to_address"] = out.get("to_address", "").fillna("").astype(str)
+    out["subject_clean"] = get_series(out, "subject_clean")
+    out["short_desc_clean"] = get_series(out, "short_desc_clean")
+    out["related_env_raw"] = get_series(out, "related_env_raw")
+    out["description_for_model"] = get_series(out, "description_for_model")
+    out["body_for_model"] = get_series(out, "body_for_model")
+    out["ticket_type"] = get_series(out, "ticket_type")
+    out["to_address"] = get_series(out, "to_address")
 
     merged_header = (
-        out["subject_clean"].astype(str) + " || " +
-        out["short_desc_clean"].astype(str)
+        out["subject_clean"] + " || " +
+        out["short_desc_clean"]
     )
 
     merged_body = (
-        out["related_env_raw"].astype(str) + " || " +
-        out["description_for_model"].astype(str) + " || " +
-        out["body_for_model"].astype(str)
+        out["related_env_raw"] + " || " +
+        out["description_for_model"] + " || " +
+        out["body_for_model"]
     )
 
     out["rule_has_gcp_hub"] = out["short_desc_clean"].str.upper().str.contains("GCP HUB", regex=False).astype(int)
@@ -246,21 +213,26 @@ def build_logic_features(df: pd.DataFrame) -> pd.DataFrame:
 
 
 # =========================================================
-# 4) DATA PREP
+# 3) DATA PREP
 # =========================================================
 def build_text_input(df: pd.DataFrame) -> pd.Series:
     return (
-        "TICKET_TYPE: " + df.get("ticket_type", "").fillna("").astype(str) + " ||| " +
-        "TO_ADDRESS: " + df.get("to_address", "").fillna("").astype(str) + " ||| " +
-        "SUBJECT: " + df.get("subject_clean", "").fillna("").astype(str) + " ||| " +
-        "SHORT_DESC: " + df.get("short_desc_clean", "").fillna("").astype(str) + " ||| " +
-        "DETAIL: " + df.get("description_for_model", "").fillna("").astype(str) + " ||| " +
-        "ENV: " + df.get("related_env_raw", "").fillna("").astype(str) + " ||| " +
-        "BODY: " + df.get("body_for_model", "").fillna("").astype(str)
+        "TICKET_TYPE: " + get_series(df, "ticket_type") + " ||| " +
+        "TO_ADDRESS: " + get_series(df, "to_address") + " ||| " +
+        "SUBJECT: " + get_series(df, "subject_clean") + " ||| " +
+        "SHORT_DESC: " + get_series(df, "short_desc_clean") + " ||| " +
+        "DETAIL: " + get_series(df, "description_for_model") + " ||| " +
+        "ENV: " + get_series(df, "related_env_raw") + " ||| " +
+        "BODY: " + get_series(df, "body_for_model")
     )
 
 
-def load_dataset(dataset_path: str, target_column: str):
+def load_dataset(
+    dataset_path: str,
+    target_column: str,
+    valid_labels: Set[str],
+    enable_rules: bool = True
+):
     if not os.path.exists(dataset_path):
         raise FileNotFoundError(f"ไม่พบไฟล์ dataset: {dataset_path}")
 
@@ -274,38 +246,46 @@ def load_dataset(dataset_path: str, target_column: str):
 
     df = df.dropna(subset=[target_column]).copy()
     df[target_column] = df[target_column].astype(str).str.strip()
-    df = df[df[target_column].isin(VALID_LABELS)].copy()
+    df = df[df[target_column].isin(valid_labels)].copy()
 
-    # ใช้ text_input เดิมถ้ามี ไม่งั้นสร้างใหม่
+    if df.empty:
+        raise ValueError(
+            f"ไม่มีข้อมูลหลัง filter valid labels สำหรับ target '{target_column}'. "
+            f"valid_labels={sorted(valid_labels)}"
+        )
+
     if "text_input" not in df.columns:
         df["text_input"] = build_text_input(df)
 
     df["text_input"] = df["text_input"].fillna("").astype(str).str.strip()
     df = df[df["text_input"] != ""].copy()
 
-    # สร้าง logic feature text
+    if df.empty:
+        raise ValueError("ไม่มีข้อมูลหลังจากตัดแถวที่ text_input ว่าง")
+
     df = build_logic_features(df)
 
-    # สร้างคอลัมน์ rule label
-    rule_outputs = df.apply(detect_rule_label, axis=1)
-    df["rule_label"] = [x[0] for x in rule_outputs]
-    df["rule_source"] = [x[1] for x in rule_outputs]
+    if enable_rules:
+        rule_outputs = df.apply(lambda row: detect_rule_label(row, valid_labels), axis=1)
+        df["rule_label"] = [x[0] for x in rule_outputs]
+        df["rule_source"] = [x[1] for x in rule_outputs]
+    else:
+        df["rule_label"] = None
+        df["rule_source"] = None
 
-    # ใช้ train จริง
     df["combined_features"] = (
         df["text_input"].fillna("").astype(str) + " ||| " +
         df["logic_text"].fillna("").astype(str)
     )
 
-    # ใช้ explain / feature importance แบบอ่านง่าย
     df["explain_text_features"] = (
-        "TICKET_TYPE: " + df.get("ticket_type", "").fillna("").astype(str) + " ||| " +
-        "TO_ADDRESS: " + df.get("to_address", "").fillna("").astype(str) + " ||| " +
-        "SUBJECT: " + df.get("subject_clean", "").fillna("").astype(str) + " ||| " +
-        "SHORT_DESC: " + df.get("short_desc_clean", "").fillna("").astype(str) + " ||| " +
-        "DETAIL: " + df.get("description_for_model", "").fillna("").astype(str) + " ||| " +
-        "ENV: " + df.get("related_env_raw", "").fillna("").astype(str) + " ||| " +
-        "BODY: " + df.get("body_for_model", "").fillna("").astype(str)
+        "TICKET_TYPE: " + get_series(df, "ticket_type") + " ||| " +
+        "TO_ADDRESS: " + get_series(df, "to_address") + " ||| " +
+        "SUBJECT: " + get_series(df, "subject_clean") + " ||| " +
+        "SHORT_DESC: " + get_series(df, "short_desc_clean") + " ||| " +
+        "DETAIL: " + get_series(df, "description_for_model") + " ||| " +
+        "ENV: " + get_series(df, "related_env_raw") + " ||| " +
+        "BODY: " + get_series(df, "body_for_model")
     )
 
     X = df["combined_features"]
@@ -315,7 +295,7 @@ def load_dataset(dataset_path: str, target_column: str):
 
 
 # =========================================================
-# 5) MODEL FACTORIES
+# 4) MODEL FACTORIES
 # =========================================================
 def build_models():
     common_tfidf = {
@@ -338,7 +318,7 @@ def build_models():
         "sublinear_tf": True,
     }
 
-    models = {
+    return {
         "logistic_regression_balanced": Pipeline([
             ("tfidf", TfidfVectorizer(**common_tfidf)),
             ("clf", LogisticRegression(
@@ -449,11 +429,31 @@ def build_models():
         ]),
     }
 
-    return models
+
+def build_default_model():
+    common_tfidf = {
+        "tokenizer": thai_tokenizer,
+        "token_pattern": None,
+        "ngram_range": (1, 3),
+        "min_df": 2,
+        "max_df": 0.97,
+        "use_idf": True,
+        "sublinear_tf": True,
+    }
+
+    return Pipeline([
+        ("tfidf", TfidfVectorizer(**common_tfidf)),
+        ("clf", LogisticRegression(
+            class_weight="balanced",
+            C=2.0,
+            max_iter=3000,
+            random_state=RANDOM_STATE
+        ))
+    ])
 
 
 # =========================================================
-# 6) EVALUATE SINGLE MODELS
+# 5) TRAIN / EVALUATE
 # =========================================================
 def evaluate_models(X, y):
     models = build_models()
@@ -543,8 +543,73 @@ def evaluate_models(X, y):
     return results_df, best_model_name, best_model, trained_models
 
 
+@dataclass
+class SingleLabelModel:
+    label: str
+
+    def predict(self, X):
+        return np.array([self.label] * len(X))
+
+    def predict_proba(self, X):
+        return np.array([[1.0] for _ in range(len(X))])
+
+
+def train_single_model(X, y):
+    print("📦 Dataset summary")
+    print(f"Rows: {len(X)}")
+    print(f"Classes: {y.nunique()}")
+    print("\n📊 Label distribution:")
+    print(y.value_counts())
+    print("-" * 80)
+
+    unique_labels = sorted(y.astype(str).unique().tolist())
+
+    if len(unique_labels) == 1:
+        only_label = unique_labels[0]
+        print(f"⚠️ พบข้อมูลเพียง class เดียว: {only_label}")
+        print("ℹ️ ใช้ SingleLabelModel แทน sklearn classifier")
+
+        model = SingleLabelModel(label=only_label)
+        trained_models = {"single_label_model": model}
+
+        results_df = pd.DataFrame([{
+            "model_name": "single_label_model",
+            "rows": len(X),
+            "num_classes": 1,
+            "train_accuracy": 1.0,
+            "train_macro_f1": 1.0,
+            "train_weighted_f1": 1.0,
+            "note": f"only one class found: {only_label}"
+        }])
+
+        return results_df, "single_label_model", model, trained_models
+
+    model = build_default_model()
+    print("🚀 Training single model: logistic_regression_balanced")
+    model.fit(X, y)
+
+    y_pred = model.predict(X)
+    train_acc = accuracy_score(y, y_pred)
+    train_macro_f1 = f1_score(y, y_pred, average="macro")
+    train_weighted_f1 = f1_score(y, y_pred, average="weighted")
+
+    trained_models = {"logistic_regression_balanced": model}
+
+    results_df = pd.DataFrame([{
+        "model_name": "logistic_regression_balanced",
+        "rows": len(X),
+        "num_classes": y.nunique(),
+        "train_accuracy": train_acc,
+        "train_macro_f1": train_macro_f1,
+        "train_weighted_f1": train_weighted_f1,
+        "note": "trained without cross-validation"
+    }])
+
+    return results_df, "logistic_regression_balanced", model, trained_models
+
+
 # =========================================================
-# 7) ENSEMBLE / HYBRID BUNDLE
+# 6) ENSEMBLE / HYBRID BUNDLE
 # =========================================================
 @dataclass
 class HybridBundle:
@@ -555,27 +620,82 @@ class HybridBundle:
     labels: List[str]
 
 
-def build_hybrid_bundle(results_df: pd.DataFrame, trained_models: Dict[str, object], best_model_name: str, best_model) -> HybridBundle:
-    top_model_names = results_df.head(min(5, len(results_df)))["model_name"].tolist()
-    top_models = {name: trained_models[name] for name in top_model_names}
+def build_hybrid_bundle(
+    results_df: pd.DataFrame,
+    trained_models: Dict[str, object],
+    best_model_name: str,
+    best_model,
+    labels: List[str]
+) -> HybridBundle:
+    top_model_names = [name for name in results_df["model_name"].tolist() if name in trained_models]
 
-    labels = sorted(list(VALID_LABELS))
+    if not top_model_names:
+        top_model_names = [best_model_name]
+
+    top_models = {name: trained_models[name] for name in top_model_names}
 
     return HybridBundle(
         best_model_name=best_model_name,
         best_model=best_model,
         top_model_names=top_model_names,
         top_models=top_models,
-        labels=labels
+        labels=sorted(labels)
     )
 
 
 # =========================================================
-# 8) FUTURE INFERENCE HELPERS
+# 7) FUTURE INFERENCE HELPERS
 # =========================================================
+def rebuild_text_input_for_row(row_dict: Dict) -> str:
+    return (
+        "TICKET_TYPE: " + safe_text(row_dict.get("ticket_type")) + " ||| " +
+        "TO_ADDRESS: " + safe_text(row_dict.get("to_address")) + " ||| " +
+        "SUBJECT: " + safe_text(row_dict.get("subject_clean")) + " ||| " +
+        "SHORT_DESC: " + safe_text(row_dict.get("short_desc_clean")) + " ||| " +
+        "DETAIL: " + safe_text(row_dict.get("description_for_model")) + " ||| " +
+        "ENV: " + safe_text(row_dict.get("related_env_raw")) + " ||| " +
+        "BODY: " + safe_text(row_dict.get("body_for_model"))
+    )
+
+
+def predict_best_single_model_row(row_dict: Dict, best_model) -> Dict:
+    row_copy = dict(row_dict)
+
+    if not safe_text(row_copy.get("text_input")):
+        row_copy["text_input"] = rebuild_text_input_for_row(row_copy)
+
+    logic_df = build_logic_features(pd.DataFrame([row_copy]))
+    combined_text = (
+        safe_text(row_copy.get("text_input")) + " ||| " +
+        safe_text(logic_df.iloc[0]["logic_text"])
+    )
+
+    predicted_label = best_model.predict([combined_text])[0]
+
+    confidence = None
+    is_low_confidence = None
+
+    if hasattr(best_model, "predict_proba"):
+        try:
+            probs = best_model.predict_proba([combined_text])[0]
+            confidence = float(np.max(probs))
+            is_low_confidence = confidence < CONFIDENCE_THRESHOLD
+        except Exception:
+            confidence = None
+            is_low_confidence = None
+
+    return {
+        "predicted_label": predicted_label,
+        "prediction_source": "best_single_model",
+        "confidence": confidence,
+        "is_low_confidence": is_low_confidence
+    }
+
+
 def predict_with_rules_first(row_dict: Dict, bundle: HybridBundle):
     row = pd.Series(row_dict)
-    rule_label, rule_source = detect_rule_label(row)
+    valid_labels = set(bundle.labels)
+    rule_label, rule_source = detect_rule_label(row, valid_labels)
 
     if rule_label:
         return {
@@ -599,7 +719,6 @@ def predict_with_rules_first(row_dict: Dict, bundle: HybridBundle):
         pred = model.predict([combined_text])[0]
         votes.append(pred)
 
-        # ถ้ามี predict_proba ใช้ confidence ได้
         if hasattr(model, "predict_proba"):
             try:
                 probs = model.predict_proba([combined_text])[0]
@@ -667,13 +786,11 @@ def resolve_two_task_case(records: List[Dict], bundle: HybridBundle):
         conf1 = row1["pred"].get("confidence", 0.0)
         conf2 = row2["pred"].get("confidence", 0.0)
 
-        # keyword score เพิ่มเติม
         row1_aws_score = score_row_for_team(row1["row"], "AWS Team")
         row1_gcp_score = score_row_for_team(row1["row"], "GCP Team")
         row2_aws_score = score_row_for_team(row2["row"], "AWS Team")
         row2_gcp_score = score_row_for_team(row2["row"], "GCP Team")
 
-        # 1) ถ้ามี explicit rule แค่ตัวเดียว -> อีกตัวเป็น opposite ทันที
         if used_rule1 and not used_rule2:
             row2["pred"]["predicted_label"] = "AWS Team" if pred1 == "GCP Team" else "GCP Team"
             row2["pred"]["prediction_source"] = "two_task_opposite_inference_from_rule"
@@ -682,7 +799,6 @@ def resolve_two_task_case(records: List[Dict], bundle: HybridBundle):
             row1["pred"]["predicted_label"] = "AWS Team" if pred2 == "GCP Team" else "GCP Team"
             row1["pred"]["prediction_source"] = "two_task_opposite_inference_from_rule"
 
-        # 2) ถ้าทั้งคู่เป็น rule แต่เหมือนกันผิดธรรมชาติ ให้ดู keyword score แล้ว flip ตัวที่อ่อนกว่า
         elif used_rule1 and used_rule2 and pred1 == pred2:
             if pred1 == "AWS Team":
                 if row1_aws_score <= row2_aws_score:
@@ -699,7 +815,6 @@ def resolve_two_task_case(records: List[Dict], bundle: HybridBundle):
                     row2["pred"]["predicted_label"] = "AWS Team"
                     row2["pred"]["prediction_source"] = "two_task_rule_conflict_flip"
 
-        # 3) ถ้าทั้งคู่ไม่ใช่ rule และทายเหมือนกัน -> ดู score ก่อน, ถ้ายังเสมอค่อยใช้ confidence flip
         elif not used_rule1 and not used_rule2 and pred1 == pred2:
             if pred1 == "AWS Team":
                 aws_gap1 = row1_aws_score - row1_gcp_score
@@ -735,7 +850,6 @@ def resolve_two_task_case(records: List[Dict], bundle: HybridBundle):
                         row2["pred"]["predicted_label"] = "AWS Team"
                         row2["pred"]["prediction_source"] = "two_task_confidence_flip"
 
-        # 4) ถ้าคนหนึ่ง confidence ต่ำ อีกคนสูงมาก ใช้ opposite
         elif not used_rule1 and not used_rule2:
             if conf1 < CONFIDENCE_THRESHOLD <= conf2:
                 row1["pred"]["predicted_label"] = "AWS Team" if pred2 == "GCP Team" else "GCP Team"
@@ -785,7 +899,7 @@ def save_feature_importance(best_model_name: str, best_model, output_path: str, 
 
 
 # =========================================================
-# 9) MAIN
+# 8) TRAIN EXPLAIN MODEL
 # =========================================================
 def train_explain_model(df: pd.DataFrame, target_column: str):
     explain_X = df["explain_text_features"].fillna("").astype(str)
@@ -812,275 +926,228 @@ def train_explain_model(df: pd.DataFrame, target_column: str):
     explain_model.fit(explain_X, explain_y)
     return explain_model
 
-def rebuild_text_input_for_row(row_dict: Dict) -> str:
-    return (
-        "TICKET_TYPE: " + safe_text(row_dict.get("ticket_type")) + " ||| " +
-        "TO_ADDRESS: " + safe_text(row_dict.get("to_address")) + " ||| " +
-        "SUBJECT: " + safe_text(row_dict.get("subject_clean")) + " ||| " +
-        "SHORT_DESC: " + safe_text(row_dict.get("short_desc_clean")) + " ||| " +
-        "DETAIL: " + safe_text(row_dict.get("description_for_model")) + " ||| " +
-        "ENV: " + safe_text(row_dict.get("related_env_raw")) + " ||| " +
-        "BODY: " + safe_text(row_dict.get("body_for_model"))
-    )
 
-
-def predict_best_single_model_row(row_dict: Dict, best_model) -> Dict:
-    row_copy = dict(row_dict)
-
-    if not safe_text(row_copy.get("text_input")):
-        row_copy["text_input"] = rebuild_text_input_for_row(row_copy)
-
-    logic_df = build_logic_features(pd.DataFrame([row_copy]))
-    combined_text = (
-        safe_text(row_copy.get("text_input")) + " ||| " +
-        safe_text(logic_df.iloc[0]["logic_text"])
-    )
-
-    predicted_label = best_model.predict([combined_text])[0]
-
-    confidence = None
-    is_low_confidence = None
-
-    if hasattr(best_model, "predict_proba"):
-        try:
-            probs = best_model.predict_proba([combined_text])[0]
-            confidence = float(np.max(probs))
-            is_low_confidence = confidence < CONFIDENCE_THRESHOLD
-        except Exception:
-            confidence = None
-            is_low_confidence = None
-
-    return {
-        "predicted_label": predicted_label,
-        "prediction_source": "best_single_model",
-        "confidence": confidence,
-        "is_low_confidence": is_low_confidence
-    }
-
-
-def compute_metrics(y_true: List[str], y_pred: List[str], approach_name: str) -> Dict:
-    return {
-        "approach": approach_name,
-        "accuracy": accuracy_score(y_true, y_pred),
-        "macro_f1": f1_score(y_true, y_pred, average="macro"),
-        "weighted_f1": f1_score(y_true, y_pred, average="weighted"),
-        "rows": len(y_true)
-    }
-
-
-def evaluate_best_vs_bundle(df: pd.DataFrame, target_column: str):
-    print("\n🧪 Evaluate: best single model vs ensemble bundle")
+# =========================================================
+# 9) TRAIN PIPELINE - CLOUD SUBTEAM
+# =========================================================
+def run_training_pipeline_cloud(
+    dataset_path: str,
+    target_column: str,
+    valid_labels: Set[str],
+    model_output_path: str,
+    ensemble_output_path: str,
+    report_output_path: str,
+    feature_importance_output_path: str,
+    explain_feature_importance_output_path: str,
+    unmatched_cases_output_path: str,
+    model_base_name: str,
+    enable_rules: bool = True,
+):
+    print("🚀 Start training CLOUD SUBTEAM model")
+    print(f"Dataset: {dataset_path}")
+    print(f"Target: {target_column}")
+    print(f"Valid labels: {sorted(valid_labels)}")
+    print(f"Enable rules: {enable_rules}")
     print("-" * 80)
 
-    y_all = df[target_column].astype(str)
-
-    min_class_count = y_all.value_counts().min()
-    if min_class_count < 2:
-        raise ValueError("มีบาง class ข้อมูลน้อยกว่า 2 แถว ไม่สามารถทำ StratifiedKFold ได้")
-
-    n_splits = min(10, min_class_count)
-    if n_splits < 2:
-        raise ValueError("ข้อมูลต่อ class น้อยเกินไปสำหรับ cross-validation")
-
-    cv = StratifiedKFold(
-        n_splits=n_splits,
-        shuffle=True,
-        random_state=RANDOM_STATE
+    df, X, y = load_dataset(
+        dataset_path=dataset_path,
+        target_column=target_column,
+        valid_labels=valid_labels,
+        enable_rules=enable_rules
     )
-
-    best_model_true = []
-    best_model_pred = []
-
-    bundle_true = []
-    bundle_pred = []
-
-    prediction_rows = []
-
-    fold_no = 0
-
-    for train_idx, valid_idx in cv.split(df, y_all):
-        fold_no += 1
-        print(f"\n🔁 Fold {fold_no}/{n_splits}")
-
-        train_df = df.iloc[train_idx].copy().reset_index(drop=True)
-        valid_df = df.iloc[valid_idx].copy().reset_index(drop=True)
-
-        X_train = train_df["combined_features"]
-        y_train = train_df[target_column].astype(str)
-
-        # 1) train all models บน train fold
-        models = build_models()
-        trained_models = {}
-        fold_results = []
-
-        for model_name, model in models.items():
-            model.fit(X_train, y_train)
-            trained_models[model_name] = model
-
-            valid_pred = model.predict(valid_df["combined_features"])
-
-            fold_results.append({
-                "model_name": model_name,
-                "accuracy": accuracy_score(valid_df[target_column], valid_pred),
-                "macro_f1": f1_score(valid_df[target_column], valid_pred, average="macro"),
-                "weighted_f1": f1_score(valid_df[target_column], valid_pred, average="weighted"),
-            })
-
-        fold_results_df = (
-            pd.DataFrame(fold_results)
-            .sort_values(by=["macro_f1", "accuracy"], ascending=False)
-            .reset_index(drop=True)
-        )
-
-        best_model_name = fold_results_df.iloc[0]["model_name"]
-        best_model = trained_models[best_model_name]
-
-        bundle = build_hybrid_bundle(
-            results_df=fold_results_df.rename(columns={
-                "accuracy": "accuracy_mean",
-                "macro_f1": "macro_f1_mean",
-                "weighted_f1": "weighted_f1_mean"
-            }),
-            trained_models=trained_models,
-            best_model_name=best_model_name,
-            best_model=best_model
-        )
-
-        print(f"🏆 Fold best single model: {best_model_name}")
-
-        # 2) predict valid fold ด้วย best single model
-        for row_idx, row in valid_df.iterrows():
-            row_dict = row.to_dict()
-            actual_label = str(row[target_column])
-
-            single_result = predict_best_single_model_row(row_dict, best_model)
-            bundle_result = predict_with_rules_first(row_dict, bundle)
-
-            best_model_true.append(actual_label)
-            best_model_pred.append(single_result["predicted_label"])
-
-            bundle_true.append(actual_label)
-            bundle_pred.append(bundle_result["predicted_label"])
-
-            prediction_rows.append({
-                "fold": fold_no,
-                "actual_label": actual_label,
-
-                "best_model_name": best_model_name,
-                "best_model_predicted_label": single_result["predicted_label"],
-                "best_model_prediction_source": single_result["prediction_source"],
-                "best_model_confidence": single_result.get("confidence"),
-                "best_model_is_low_confidence": single_result.get("is_low_confidence"),
-
-                "bundle_best_model_name": bundle.best_model_name,
-                "bundle_predicted_label": bundle_result["predicted_label"],
-                "bundle_prediction_source": bundle_result["prediction_source"],
-                "bundle_confidence": bundle_result.get("confidence"),
-                "bundle_is_low_confidence": bundle_result.get("is_low_confidence"),
-                "bundle_used_rule": bundle_result.get("used_rule", False),
-
-                "ticket_type": safe_text(row_dict.get("ticket_type")),
-                "subject_clean": safe_text(row_dict.get("subject_clean")),
-                "short_desc_clean": safe_text(row_dict.get("short_desc_clean")),
-                "related_env_raw": safe_text(row_dict.get("related_env_raw")),
-            })
-
-    summary_rows = [
-        compute_metrics(best_model_true, best_model_pred, "best_single_model"),
-        compute_metrics(bundle_true, bundle_pred, "ensemble_bundle"),
-    ]
-
-    summary_df = pd.DataFrame(summary_rows).sort_values(
-        by=["macro_f1", "accuracy"],
-        ascending=False
-    ).reset_index(drop=True)
-
-    predictions_df = pd.DataFrame(prediction_rows)
-
-    print("\n📊 Comparison summary")
-    print(summary_df)
-
-    print("\n📄 Classification report: best_single_model")
-    print(classification_report(best_model_true, best_model_pred, digits=4))
-
-    print("\n📄 Classification report: ensemble_bundle")
-    print(classification_report(bundle_true, bundle_pred, digits=4))
-
-    return summary_df, predictions_df
-
-def main():
-    print("🚀 Start training model comparison")
-    print(f"Dataset: {DATASET_PATH}")
-    print(f"Target: {TARGET_COLUMN}")
-    print("-" * 80)
-
-    df, X, y = load_dataset(DATASET_PATH, TARGET_COLUMN)
 
     if len(df) < 10:
         raise ValueError("ข้อมูลน้อยเกินไปสำหรับ training")
 
-    print("\n📌 Rule coverage on training data")
-    unmatched_df = df[df["rule_label"].isna()].copy()
-    if not unmatched_df.empty:
-        unmatched_df.to_csv(Config.RULE_UNMATCHED_CASES_PATH, index=False, encoding="utf-8-sig")
-        print(f"🧩 Saved unmatched rule cases -> {Config.RULE_UNMATCHED_CASES_PATH} ({len(unmatched_df)} rows)")
-    rule_covered = df["rule_label"].notna().sum()
-    print(f"Rows matched by rules: {rule_covered}/{len(df)} ({rule_covered/len(df):.2%})")
-    if rule_covered > 0:
-        print(df["rule_source"].value_counts(dropna=False).head(20))
+    if enable_rules:
+        print("\n📌 Rule coverage on training data")
+        unmatched_df = df[df["rule_label"].isna()].copy()
+        if not unmatched_df.empty:
+            unmatched_df.to_csv(unmatched_cases_output_path, index=False, encoding="utf-8-sig")
+            print(f"🧩 Saved unmatched rule cases -> {unmatched_cases_output_path} ({len(unmatched_df)} rows)")
+
+        rule_covered = df["rule_label"].notna().sum()
+        print(f"Rows matched by rules: {rule_covered}/{len(df)} ({rule_covered / len(df):.2%})")
+        if rule_covered > 0:
+            print(df["rule_source"].value_counts(dropna=False).head(20))
 
     results_df, best_model_name, best_model, trained_models = evaluate_models(X, y)
 
     print("\n🏆 Model comparison summary")
     print(results_df)
 
-    results_df.to_csv(REPORT_OUTPUT_PATH, index=False, encoding="utf-8-sig")
-    print(f"\n📝 Saved comparison report to: {REPORT_OUTPUT_PATH}")
+    results_df.to_csv(report_output_path, index=False, encoding="utf-8-sig")
+    print(f"\n📝 Saved comparison report to: {report_output_path}")
 
-    joblib.dump(best_model, MODEL_OUTPUT_PATH)
-    print(f"✅ Saved best single model: {best_model_name} -> {MODEL_OUTPUT_PATH}")
+    joblib.dump(best_model, model_output_path)
+    print(f"✅ Saved best single model: {best_model_name} -> {model_output_path}")
 
-    backup_path = get_versioned_model_path("best_ticket_classifier_model")
+    backup_path = get_versioned_model_path(model_base_name, model_output_path)
     joblib.dump(best_model, backup_path)
     print(f"📦 Backup model saved to: {backup_path}")
 
-    # 1) importance จาก model จริงที่ train บน combined_features
     save_feature_importance(
-        best_model_name,
-        best_model,
-        FEATURE_IMPORTANCE_OUTPUT_PATH,
+        best_model_name=best_model_name,
+        best_model=best_model,
+        output_path=feature_importance_output_path,
         top_k=200
     )
 
-    # 2) importance จาก explain model ที่ train บน text จริงล้วน
-    explain_model = train_explain_model(df, TARGET_COLUMN)
+    explain_model = train_explain_model(df, target_column)
     save_feature_importance(
-        "extra_trees",
-        explain_model,
-        EXPLAIN_FEATURE_IMPORTANCE_OUTPUT_PATH,
+        best_model_name="extra_trees",
+        best_model=explain_model,
+        output_path=explain_feature_importance_output_path,
         top_k=200
     )
 
-    bundle = build_hybrid_bundle(results_df, trained_models, best_model_name, best_model)
-    joblib.dump(bundle, ENSEMBLE_OUTPUT_PATH)
-    print(f"✅ Saved hybrid ensemble bundle -> {ENSEMBLE_OUTPUT_PATH}")
-
-    # 3) evaluate best single model vs ensemble bundle
-    comparison_summary_df, comparison_predictions_df = evaluate_best_vs_bundle(df, TARGET_COLUMN)
-
-    comparison_summary_df.to_csv(
-        BEST_VS_BUNDLE_REPORT_OUTPUT_PATH,
-        index=False,
-        encoding="utf-8-sig"
+    bundle = build_hybrid_bundle(
+        results_df=results_df,
+        trained_models=trained_models,
+        best_model_name=best_model_name,
+        best_model=best_model,
+        labels=list(valid_labels)
     )
-    print(f"✅ Saved best-vs-bundle summary -> {BEST_VS_BUNDLE_REPORT_OUTPUT_PATH}")
+    joblib.dump(bundle, ensemble_output_path)
+    print(f"✅ Saved hybrid ensemble bundle -> {ensemble_output_path}")
 
-    comparison_predictions_df.to_csv(
-        BEST_VS_BUNDLE_PREDICTIONS_OUTPUT_PATH,
-        index=False,
-        encoding="utf-8-sig"
+    print("✅ Skip best-vs-bundle evaluation for speed")
+
+
+# =========================================================
+# 10) TRAIN PIPELINE - MAIN TEAM
+# =========================================================
+def run_training_pipeline_main(
+    dataset_path: str,
+    target_column: str,
+    valid_labels: Set[str],
+    model_output_path: str,
+    ensemble_output_path: str,
+    report_output_path: str,
+    feature_importance_output_path: str,
+    explain_feature_importance_output_path: str,
+    unmatched_cases_output_path: str,
+    model_base_name: str,
+    enable_rules: bool = False,
+):
+    print("🚀 Start training MAIN TEAM model")
+    print(f"Dataset: {dataset_path}")
+    print(f"Target: {target_column}")
+    print(f"Valid labels: {sorted(valid_labels)}")
+    print(f"Enable rules: {enable_rules}")
+    print("-" * 80)
+
+    df, X, y = load_dataset(
+        dataset_path=dataset_path,
+        target_column=target_column,
+        valid_labels=valid_labels,
+        enable_rules=enable_rules
     )
-    print(f"✅ Saved best-vs-bundle predictions -> {BEST_VS_BUNDLE_PREDICTIONS_OUTPUT_PATH}")
+
+    if len(df) < 1:
+        raise ValueError("ไม่มีข้อมูลสำหรับ training")
+
+    print("\n📌 Rule coverage skipped for main team pipeline")
+
+    results_df, best_model_name, best_model, trained_models = train_single_model(X, y)
+
+    print("\n🏆 Training summary")
+    print(results_df)
+
+    results_df.to_csv(report_output_path, index=False, encoding="utf-8-sig")
+    print(f"\n📝 Saved training report to: {report_output_path}")
+
+    joblib.dump(best_model, model_output_path)
+    print(f"✅ Saved model: {best_model_name} -> {model_output_path}")
+
+    backup_path = get_versioned_model_path(model_base_name, model_output_path)
+    joblib.dump(best_model, backup_path)
+    print(f"📦 Backup model saved to: {backup_path}")
+
+    if best_model_name in ["extra_trees", "random_forest"]:
+        save_feature_importance(
+            best_model_name=best_model_name,
+            best_model=best_model,
+            output_path=feature_importance_output_path,
+            top_k=200
+        )
+    else:
+        print(f"ℹ️ Skip feature importance for model: {best_model_name}")
+
+    if y.nunique() >= 2:
+        explain_model = train_explain_model(df, target_column)
+        save_feature_importance(
+            best_model_name="extra_trees",
+            best_model=explain_model,
+            output_path=explain_feature_importance_output_path,
+            top_k=200
+        )
+    else:
+        print("ℹ️ Skip explain model because dataset has only one class")
+
+    bundle = build_hybrid_bundle(
+        results_df=results_df,
+        trained_models=trained_models,
+        best_model_name=best_model_name,
+        best_model=best_model,
+        labels=list(valid_labels)
+    )
+    joblib.dump(bundle, ensemble_output_path)
+    print(f"✅ Saved bundle -> {ensemble_output_path}")
+
+    print("✅ Main team pipeline trained without cross-validation")
+
+
+# =========================================================
+# 11) MAIN
+# =========================================================
+def main():
+    cloud_valid_labels = {
+        x.strip()
+        for x in Config.VALID_CLOUD_SUBTEAM_LABELS.split(",")
+        if x.strip()
+    }
+
+    main_valid_labels = {
+        x.strip()
+        for x in getattr(
+            Config,
+            "VALID_MAIN_TEAM_LABELS",
+            "iNET Cloud Support Team,iNET Network Team,iNET Operation Team"
+        ).split(",")
+        if x.strip()
+    }
+
+    print("========== TRAIN CLOUD SUBTEAM ==========")
+    run_training_pipeline_cloud(
+        dataset_path=Config.TRAINING_CLOUD_SUBTEAM_DATASET_PATH,
+        target_column=Config.TRAINING_TARGET_COLUMN_CLOUD_SUBTEAM,
+        valid_labels=cloud_valid_labels,
+        model_output_path=Config.BEST_CLOUD_SUBTEAM_CLASSIFIER_MODEL_PATH,
+        ensemble_output_path=Config.ENSEMBLE_CLOUD_SUBTEAM_BUNDLE_PATH,
+        report_output_path=Config.CLOUD_SUBTEAM_MODEL_COMPARISON_REPORT_PATH,
+        feature_importance_output_path=Config.CLOUD_SUBTEAM_FEATURE_IMPORTANCE_OUTPUT_PATH,
+        explain_feature_importance_output_path=Config.CLOUD_SUBTEAM_EXPLAIN_FEATURE_IMPORTANCE_OUTPUT_PATH,
+        unmatched_cases_output_path=Config.CLOUD_SUBTEAM_RULE_UNMATCHED_CASES_PATH,
+        model_base_name="best_cloud_subteam_classifier_model",
+        enable_rules=True,
+    )
+
+    print("\n========== TRAIN MAIN TEAM ==========")
+    run_training_pipeline_main(
+        dataset_path=Config.TRAINING_MAIN_TEAM_DATASET_PATH,
+        target_column=Config.TRAINING_TARGET_COLUMN_MAIN_TEAM,
+        valid_labels=main_valid_labels,
+        model_output_path=Config.BEST_MAIN_TEAM_CLASSIFIER_MODEL_PATH,
+        ensemble_output_path=Config.ENSEMBLE_MAIN_TEAM_BUNDLE_PATH,
+        report_output_path=Config.MAIN_TEAM_MODEL_COMPARISON_REPORT_PATH,
+        feature_importance_output_path=Config.MAIN_TEAM_FEATURE_IMPORTANCE_OUTPUT_PATH,
+        explain_feature_importance_output_path=Config.MAIN_TEAM_EXPLAIN_FEATURE_IMPORTANCE_OUTPUT_PATH,
+        unmatched_cases_output_path=Config.MAIN_TEAM_RULE_UNMATCHED_CASES_PATH,
+        model_base_name="best_main_team_classifier_model",
+        enable_rules=False,
+    )
 
 
 if __name__ == "__main__":

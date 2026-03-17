@@ -1,0 +1,39 @@
+IF OBJECT_ID('dbo.line_users', 'U') IS NOT NULL
+    DROP TABLE dbo.line_users;
+GO
+
+CREATE TABLE dbo.line_users (
+    id BIGINT IDENTITY(1,1) NOT NULL,
+    user_id NVARCHAR(100) NOT NULL,
+    display_name NVARCHAR(255) NULL,
+    picture_url NVARCHAR(1000) NULL,
+    status_message NVARCHAR(1000) NULL,
+    language NVARCHAR(50) NULL,
+
+    user_pk BIGINT NULL,
+    is_friend BIT NOT NULL CONSTRAINT DF_line_users_is_friend DEFAULT (0),
+    status NVARCHAR(50) NOT NULL CONSTRAINT DF_line_users_status DEFAULT ('active'),
+    last_seen_at DATETIME2 NULL,
+
+    created_at DATETIME2 NOT NULL CONSTRAINT DF_line_users_created_at DEFAULT (SYSUTCDATETIME()),
+    updated_at DATETIME2 NOT NULL CONSTRAINT DF_line_users_updated_at DEFAULT (SYSUTCDATETIME()),
+
+    CONSTRAINT PK_line_users PRIMARY KEY (id),
+    CONSTRAINT FK_line_users_users FOREIGN KEY (user_pk) REFERENCES dbo.users(id)
+);
+GO
+
+CREATE OR ALTER TRIGGER trg_line_users_updated_at
+ON dbo.line_users
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE t
+    SET t.updated_at = SYSUTCDATETIME()
+    FROM dbo.line_users t
+    INNER JOIN inserted i
+        ON t.id = i.id;
+END
+GO

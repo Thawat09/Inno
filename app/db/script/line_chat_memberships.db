@@ -1,0 +1,37 @@
+IF OBJECT_ID('dbo.line_chat_memberships', 'U') IS NOT NULL
+    DROP TABLE dbo.line_chat_memberships;
+GO
+
+CREATE TABLE dbo.line_chat_memberships (
+    id BIGINT IDENTITY(1,1) NOT NULL,
+    chat_pk BIGINT NOT NULL,
+    line_user_pk BIGINT NOT NULL,
+
+    status NVARCHAR(50) NOT NULL CONSTRAINT DF_line_chat_memberships_status DEFAULT ('active'),
+    joined_at DATETIME2 NULL,
+    left_at DATETIME2 NULL,
+    last_seen_at DATETIME2 NULL,
+
+    created_at DATETIME2 NOT NULL CONSTRAINT DF_line_chat_memberships_created_at DEFAULT (SYSUTCDATETIME()),
+    updated_at DATETIME2 NOT NULL CONSTRAINT DF_line_chat_memberships_updated_at DEFAULT (SYSUTCDATETIME()),
+
+    CONSTRAINT PK_line_chat_memberships PRIMARY KEY (id),
+    CONSTRAINT FK_line_chat_memberships_line_chats FOREIGN KEY (chat_pk) REFERENCES dbo.line_chats(id),
+    CONSTRAINT FK_line_chat_memberships_line_users FOREIGN KEY (line_user_pk) REFERENCES dbo.line_users(id)
+);
+GO
+
+CREATE OR ALTER TRIGGER trg_line_chat_memberships_updated_at
+ON dbo.line_chat_memberships
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE t
+    SET t.updated_at = SYSUTCDATETIME()
+    FROM dbo.line_chat_memberships t
+    INNER JOIN inserted i
+        ON t.id = i.id;
+END
+GO

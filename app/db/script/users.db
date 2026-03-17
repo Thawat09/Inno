@@ -1,0 +1,42 @@
+IF OBJECT_ID('dbo.users', 'U') IS NOT NULL
+    DROP TABLE dbo.users;
+GO
+
+CREATE TABLE dbo.users (
+    id BIGINT IDENTITY(1,1) NOT NULL,
+    employee_code NVARCHAR(100) NULL,
+    first_name NVARCHAR(255) NULL,
+    last_name NVARCHAR(255) NULL,
+    nickname NVARCHAR(255) NULL,
+    phone NVARCHAR(50) NULL,
+    email NVARCHAR(255) NULL,
+    main_team NVARCHAR(255) NULL,
+    sub_team NVARCHAR(255) NULL,
+
+    password_hash NVARCHAR(500) NULL,
+    password_salt NVARCHAR(255) NULL,
+    failed_login_count INT NOT NULL CONSTRAINT DF_users_failed_login_count DEFAULT (0),
+    last_login_at DATETIME2 NULL,
+    is_active BIT NOT NULL CONSTRAINT DF_users_is_active DEFAULT (1),
+
+    created_at DATETIME2 NOT NULL CONSTRAINT DF_users_created_at DEFAULT (SYSUTCDATETIME()),
+    updated_at DATETIME2 NOT NULL CONSTRAINT DF_users_updated_at DEFAULT (SYSUTCDATETIME()),
+
+    CONSTRAINT PK_users PRIMARY KEY (id)
+);
+GO
+
+CREATE OR ALTER TRIGGER trg_users_updated_at
+ON dbo.users
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE t
+    SET t.updated_at = SYSUTCDATETIME()
+    FROM dbo.users t
+    INNER JOIN inserted i
+        ON t.id = i.id;
+END
+GO

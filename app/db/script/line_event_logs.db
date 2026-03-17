@@ -1,0 +1,17 @@
+IF OBJECT_ID('dbo.line_event_logs', 'U') IS NOT NULL
+    DROP TABLE dbo.line_event_logs;
+GO
+
+CREATE TABLE dbo.line_event_logs (
+    id BIGINT IDENTITY(1,1) NOT NULL,
+    event_type NVARCHAR(100) NOT NULL,
+    chat_type NVARCHAR(20) NULL,
+    chat_id NVARCHAR(100) NULL,
+    line_user_id NVARCHAR(100) NULL,
+    event_timestamp BIGINT NULL,
+    raw_json NVARCHAR(MAX) NOT NULL,
+    created_at DATETIME2 NOT NULL CONSTRAINT DF_line_event_logs_created_at DEFAULT (SYSUTCDATETIME()),
+
+    CONSTRAINT PK_line_event_logs PRIMARY KEY (id)
+);
+GO
