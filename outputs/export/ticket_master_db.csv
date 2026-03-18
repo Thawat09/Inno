@@ -1,4 +1,49 @@
 ﻿record_id,parent_id,message_id,email_date,from_address,to_address,ticket_type,request_number,ritm_no,inc_no,itask_no,ctask_no,subject_clean,short_desc_clean,description_clean,description_for_model,related_env_raw,body_for_model,opened_by,requested_for,raised_by,business_service,service_offering,priority,urgency,impact,contact_email,ip_list_json,url_list_json,has_aws_ip,has_gcp_ip,has_aws_keyword_header,has_gcp_keyword_header,has_aws_keyword_body,has_gcp_keyword_body,has_aws_keyword_desc,has_gcp_keyword_desc,env_has_aws,env_has_gcp,assigned_group_from_to,route_scope,sibling_task_count,sibling_known_sub_team,cross_task_inference_used,label_main_team,label_sub_team,label_source,text_input
+TASK1635011,RITM0844841,<356831037.160138.1773799048123@app128032.sin301.service-now.com>,2026-03-17T18:57:28-07:00,SCG Ticket Systems <SCGTicketSystems@service-now.com>,inetmscloud@inetms.co.th,catalog_task,REQ0843848,RITM0844841,,,,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP] ขอ Register GCP SSO เพื่อใช้บน GCP สำหรับ User: AMWE@scg.com,"[GCP] ขอ Register GCP SSO เพื่อใช้บน GCP สำหรับ User: AMWE@scg.com
+Employee name (first name and last name): Suparat Jaidech
+SCG Email: AMWE@scg.com","[GCP] ขอ Register GCP SSO เพื่อใช้บน GCP สำหรับ User: AMWE@scg.com
+Employee name (first name and last name): Suparat Jaidech
+SCG Email: AMWE@scg.com",,"Request Number:
+REQ_ID
+Opened By:
+Supanya Srisuk
+Opened Date:
+2026-03-17 17:33:20 ICT
+Click
+here
+to view the request
+Requested For:
+Vendor AMWE
+Email Address:
+AMWE@scg.com
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-17 17:33:20 ICT
+Short Description:
+[GCP] ขอ Register GCP SSO เพื่อใช้บน GCP สำหรับ User: AMWE@scg.com
+Description:
+[GCP] ขอ Register GCP SSO เพื่อใช้บน GCP สำหรับ User: AMWE@scg.com
+Employee name (first name and last name): Suparat Jaidech
+SCG Email: AMWE@scg.com
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP] ขอ Register GCP SSO เพื่อใช้บน GCP สำหรับ User: AMWE@scg.com
+Click
+here
+to view the task",Supanya Srisuk,Vendor AMWE,,,,,,,AMWE@scg.com,,,false,false,false,true,false,true,false,true,false,false,iNET Cloud Support Team,cloud_subteam,1,GCP Team,false,iNET Cloud Support Team,GCP Team,task_short_desc_prefix,ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP] ขอ Register GCP SSO เพื่อใช้บน GCP สำหรับ User: AMWE@scg.com [SEP] description: [GCP] ขอ Register GCP SSO เพื่อใช้บน GCP สำหรับ User: AMWE@scg.com | Employee name (first name and last name): Suparat Jaidech | SCG Email: AMWE@scg.com [SEP] body: Request Number: | REQ_ID | Opened By: | Supanya Srisuk | Opened Date: | 2026-03-17 17:33:20 ICT | Click | here | to view the request | Requested For: | Vendor AMWE | Email Address: | AMWE@scg.com | Service Request Number: | RITM_ID | Opened Date: | 2026-03-17 17:33:20 ICT | Short Description: | [GCP] ขอ Register GCP SSO เพื่อใช้บน GCP สำหรับ User: AMWE@scg.com | Description: | [GCP] ขอ Register GCP SSO เพื่อใช้บน GCP สำหรับ User: AMWE@scg.com | Employee name (first name and last name): Suparat Jaidech | SCG Email: AMWE@scg.com | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP] ขอ Register GCP SSO เพื่อใช้บน GCP สำหรับ User: AMWE@scg.com | Click | here | to view the task
 TASK1634750,RITM0844818,<1300607512.185037.1773740347142@app128016.sin301.service-now.com>,2026-03-17T02:39:07-07:00,SCG Ticket Systems <SCGTicketSystems@service-now.com>,inetmscloud@inetms.co.th,catalog_task,REQ0843825,RITM0844818,,,,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,ลบ google project,"Subject: ลบ google project
 Additional Information: bingobox-dev-rg
 bingobox-prd-rg

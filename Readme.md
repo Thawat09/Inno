@@ -1,5 +1,5 @@
 # Library
-1. pip install flask requests python-dotenv beautifulsoup4 pythainlp sqlalchemy pyodbc google-genai
+1. pip install flask requests python-dotenv beautifulsoup4 pythainlp sqlalchemy pyodbc
 
 # Run Project
 1. python run.py
@@ -18,8 +18,3 @@
 1. docker run -d --name ollama -v ollama:/root/.ollama -p 11434:11434 ollama/ollama
 2. docker exec -it ollama ollama pull llama3.2
 3. docker exec -it ollama ollama run llama3.2
-
-<!-- curl http://localhost:11434/api/generate -d '{
-  "model": "llama3.2",
-  "prompt": "สรุป AWS IAM เป็นภาษาไทยแบบเข้าใจง่าย"
-}' -->

@@ -4,7 +4,7 @@ import email
 import imaplib
 import joblib
 from datetime import datetime, timedelta
-from app.services.llm_service import predict_with_gemini
+from app.services.llm_service import predict_with_ollama_rag
 from app.config import Config
 from model.export_to_csv import (
     decode_mime_words,
@@ -210,7 +210,7 @@ def decide_cloud_subteam_with_ml(info, clean_body, subject, to_address):
     }
 
 
-def decide_cloud_subteam_with_llm(info, clean_body, subject, to_address):
+def decide_cloud_subteam_with_rag(info, clean_body, subject, to_address, task_id=None):
     logic_sub_team, logic_label_source, logic_extra = decide_cloud_subteam(
         info,
         clean_body,
@@ -229,40 +229,51 @@ def decide_cloud_subteam_with_llm(info, clean_body, subject, to_address):
         return logic_sub_team, logic_label_source, {
             "decision_mode": "logic_explicit_rule",
             "ml_used": False,
-            "ml_confidence": None
+            "ml_confidence": None,
+            "rag_context_count": 0
         }
 
     text_for_ai = rebuild_text_input_for_email(info, clean_body, subject, to_address)
-    llm_predicted = predict_with_gemini(text_for_ai)
+    rag_contexts = retrieve_rag_contexts(
+        info=info,
+        clean_body=clean_body,
+        subject=subject,
+        to_address=to_address,
+        exclude_task_id=task_id
+    )
+
+    rag_predicted = predict_with_ollama_rag(text_for_ai, rag_contexts)
 
     valid_teams = ["AWS Team", "GCP Team", "GCP & AWS Team (Both)"]
 
-    print(f"🤖 LLM predicted: {llm_predicted}")
+    print(f"🤖 RAG predicted: {rag_predicted}")
 
-    if llm_predicted in valid_teams:
-        return llm_predicted, f"llm_{Config.LLM_MODEL_NAME}", {
-            "decision_mode": "llm_prediction",
+    if rag_predicted in valid_teams:
+        return rag_predicted, f"rag_{Config.LLM_MODEL_NAME}", {
+            "decision_mode": "rag_prediction",
             "ml_used": False,
             "ml_confidence": 1.0,
             "logic_candidate": logic_sub_team,
-            "logic_source": logic_label_source
+            "logic_source": logic_label_source,
+            "rag_context_count": len(rag_contexts)
         }
 
-    print("⚠️ LLM invalid or unavailable, fallback to logic")
+    print("⚠️ RAG invalid or unavailable, fallback to logic")
 
-    return logic_sub_team, f"{logic_label_source}_fallback_llm_invalid", {
-        "decision_mode": "logic_fallback_after_llm",
+    return logic_sub_team, f"{logic_label_source}_fallback_rag_invalid", {
+        "decision_mode": "logic_fallback_after_rag",
         "ml_used": False,
         "ml_confidence": None,
         "logic_candidate": logic_sub_team,
-        "logic_source": logic_label_source
+        "logic_source": logic_label_source,
+        "rag_context_count": len(rag_contexts)
     }
 
 
-def decide_cloud_subteam_runtime(info, clean_body, subject, to_address):
+def decide_cloud_subteam_runtime(info, clean_body, subject, to_address, task_id=None):
     if Config.LLM_ENABLED:
-        print("🧠 Routing mode: LLM")
-        return decide_cloud_subteam_with_llm(info, clean_body, subject, to_address)
+        print("🧠 Routing mode: RAG")
+        return decide_cloud_subteam_with_rag(info, clean_body, subject, to_address, task_id=task_id)
 
     print("🤖 Routing mode: ML")
     return decide_cloud_subteam_with_ml(info, clean_body, subject, to_address)
@@ -271,6 +282,144 @@ def decide_cloud_subteam_runtime(info, clean_body, subject, to_address):
 # =========================================================
 # 3) DB HELPERS
 # =========================================================
+def extract_ips_for_rag(text_value):
+    if not text_value:
+        return []
+    return re.findall(r"\b(?:10\.41\.\d{1,3}\.\d{1,3}|10\.42\.\d{1,3}\.\d{1,3})\b", str(text_value))
+
+
+def retrieve_rag_contexts(info, clean_body, subject, to_address, exclude_task_id=None):
+    session = db.get_session()
+
+    try:
+        top_k = int(getattr(Config, "RAG_TOP_K", 5))
+
+        short_desc = safe_text(get_short_desc_from_info(info))
+        related_env = safe_text(info.get("related_env"))
+        description = safe_text(info.get("description"))
+        body_text = safe_text(clean_body)
+        subject_text = safe_text(subject)
+
+        merged_text = " || ".join([subject_text, short_desc, related_env, description, body_text])
+        ips = extract_ips_for_rag(merged_text)
+
+        has_aws_ip = 1 if "10.41." in merged_text else 0
+        has_gcp_ip = 1 if "10.42." in merged_text else 0
+
+        subject_like = f"%{subject_text[:120]}%" if subject_text else "%"
+        short_desc_like = f"%{short_desc[:120]}%" if short_desc else "%"
+        env_like = f"%{related_env[:120]}%" if related_env else "%"
+        body_like = f"%{body_text[:120]}%" if body_text else "%"
+
+        ip_like_1 = f"%{ips[0]}%" if len(ips) >= 1 else None
+        ip_like_2 = f"%{ips[1]}%" if len(ips) >= 2 else None
+
+        sql = text(f"""
+            SELECT TOP {top_k}
+                record_id,
+                parent_id,
+                label_sub_team,
+                label_source,
+                decision_mode,
+                email_date,
+                related_env_raw,
+                subject_clean,
+                short_desc_clean,
+                description_clean,
+                (
+                    CASE
+                        WHEN :related_env <> '' AND related_env_raw = :related_env THEN 50
+                        WHEN :related_env <> '' AND related_env_raw LIKE :env_like THEN 25
+                        ELSE 0
+                    END
+                    +
+                    CASE
+                        WHEN :subject_text <> '' AND subject_clean LIKE :subject_like THEN 20
+                        ELSE 0
+                    END
+                    +
+                    CASE
+                        WHEN :short_desc <> '' AND short_desc_clean LIKE :short_desc_like THEN 20
+                        ELSE 0
+                    END
+                    +
+                    CASE
+                        WHEN :body_text <> '' AND description_clean LIKE :body_like THEN 10
+                        ELSE 0
+                    END
+                    +
+                    CASE
+                        WHEN :has_aws_ip = 1 AND has_aws_ip = 1 THEN 15
+                        ELSE 0
+                    END
+                    +
+                    CASE
+                        WHEN :has_gcp_ip = 1 AND has_gcp_ip = 1 THEN 15
+                        ELSE 0
+                    END
+                    +
+                    CASE
+                        WHEN :ip_like_1 IS NOT NULL AND body_for_model LIKE :ip_like_1 THEN 30
+                        ELSE 0
+                    END
+                    +
+                    CASE
+                        WHEN :ip_like_2 IS NOT NULL AND body_for_model LIKE :ip_like_2 THEN 30
+                        ELSE 0
+                    END
+                ) AS retrieval_score
+            FROM email_ticket_master
+            WHERE label_sub_team IN ('AWS Team', 'GCP Team', 'GCP & AWS Team (Both)')
+              AND (:exclude_task_id IS NULL OR record_id <> :exclude_task_id)
+              AND (
+                    (:related_env <> '' AND (related_env_raw = :related_env OR related_env_raw LIKE :env_like))
+                    OR (:subject_text <> '' AND subject_clean LIKE :subject_like)
+                    OR (:short_desc <> '' AND short_desc_clean LIKE :short_desc_like)
+                    OR (:body_text <> '' AND description_clean LIKE :body_like)
+                    OR (:has_aws_ip = 1 AND has_aws_ip = 1)
+                    OR (:has_gcp_ip = 1 AND has_gcp_ip = 1)
+                    OR (:ip_like_1 IS NOT NULL AND body_for_model LIKE :ip_like_1)
+                    OR (:ip_like_2 IS NOT NULL AND body_for_model LIKE :ip_like_2)
+              )
+            ORDER BY retrieval_score DESC, email_date DESC
+        """)
+
+        rows = session.execute(sql, {
+            "related_env": related_env,
+            "env_like": env_like,
+            "subject_text": subject_text,
+            "subject_like": subject_like,
+            "short_desc": short_desc,
+            "short_desc_like": short_desc_like,
+            "body_text": body_text,
+            "body_like": body_like,
+            "has_aws_ip": has_aws_ip,
+            "has_gcp_ip": has_gcp_ip,
+            "ip_like_1": ip_like_1,
+            "ip_like_2": ip_like_2,
+            "exclude_task_id": exclude_task_id,
+        }).mappings().all()
+
+        results = [dict(row) for row in rows if row.get("retrieval_score", 0) > 0]
+
+        print(f"📚 RAG retrieved contexts: {len(results)}")
+        for item in results:
+            print(
+                f"   - {item.get('record_id')} | "
+                f"score={item.get('retrieval_score')} | "
+                f"route={item.get('label_sub_team')}"
+            )
+
+        return results
+
+    except Exception as e:
+        print(f"⚠️ retrieve_rag_contexts error: {e}")
+        return []
+
+    finally:
+        session.close()
+
+
 def task_already_recorded(task_id):
     if not task_id:
         print("⚠️ task_already_recorded: task_id is empty")
@@ -436,7 +585,8 @@ def fetch_and_group_tasks(save_to_db=True):
                         info,
                         clean_body,
                         subject,
-                        to_address
+                        to_address,
+                        task_id=task_id
                     )
 
                     ml_confidence = decision_info.get("ml_confidence")

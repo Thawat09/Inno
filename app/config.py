@@ -38,8 +38,9 @@ class Config:
         "scg_cloud_inet01@scg.com": "iNET Cloud Support Team",
     }
 
-    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-    LLM_MODEL_NAME = os.getenv("LLM_MODEL_NAME")
+    OLLAMA_URL = os.getenv("OLLAMA_URL")
+    OLLAMA_MODEL_NAME = os.getenv("OLLAMA_MODEL_NAME")
+    OLLAMA_TIMEOUT = int(env_or_default("OLLAMA_TIMEOUT", 120))
     LLM_ENABLED = env_or_default("LLM_ENABLED", "false").lower() == "true"
 
     MAILBOX_FOLDER = env_or_default("MAILBOX_FOLDER", "scg")
