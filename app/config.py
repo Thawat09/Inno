@@ -38,11 +38,6 @@ class Config:
         "scg_cloud_inet01@scg.com": "iNET Cloud Support Team",
     }
 
-    OLLAMA_URL = os.getenv("OLLAMA_URL")
-    OLLAMA_MODEL_NAME = os.getenv("OLLAMA_MODEL_NAME")
-    OLLAMA_TIMEOUT = int(env_or_default("OLLAMA_TIMEOUT", 120))
-    LLM_ENABLED = env_or_default("LLM_ENABLED", "false").lower() == "true"
-
     MAILBOX_FOLDER = env_or_default("MAILBOX_FOLDER", "scg")
     DAYS_BACK = int(env_or_default("DAYS_BACK", 365))
     MAX_EMAILS = int(env_or_default("MAX_EMAILS", "0")) or None
