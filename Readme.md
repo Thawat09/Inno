@@ -8,7 +8,7 @@
 
 # Run Model
 1. python -m model.export_to_csv
-2. python -m model.train_model
+2. python -m model.train_pipeline
 
 # Install Database
 1. docker pull mcr.microsoft.com/mssql/server:2022-latest

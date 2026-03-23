@@ -1,4 +1,677 @@
 ﻿record_id,ticket_type,to_address,subject_clean,short_desc_clean,description_for_model,related_env_raw,body_for_model,text_input,label_sub_team
+TASK1637397,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,"[GCP]New GCP Cloud Project SCG-Heim-NONPROD , SCG-HEIM-PROD","[GCP]New GCP Cloud Project SCG-Heim-NONPROD , SCG-HEIM-PROD
+Form : SCG-Heim-DO - Service Request_V2.7.xlsx",,"Request Number:
+REQ_ID
+Opened By:
+Chutimont Bunnag
+Opened Date:
+2026-03-23 13:12:33 ICT
+Click
+here
+to view the request
+Requested For:
+Satapol Chatpahol
+Business Phone:
+(094) 262-6295
+Email Address:
+SATAPOLC@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-23 13:12:33 ICT
+Short Description:
+[GCP]New GCP Cloud Project SCG-Heim-NONPROD , SCG-HEIM-PROD
+Description:
+[GCP]New GCP Cloud Project SCG-Heim-NONPROD , SCG-HEIM-PROD
+Form : SCG-Heim-DO - Service Request_V2.7.xlsx
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP]New GCP Cloud Project SCG-Heim-NONPROD , SCG-HEIM-PROD
+Click
+here
+to view the task","ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP]New GCP Cloud Project SCG-Heim-NONPROD , SCG-HEIM-PROD [SEP] description: [GCP]New GCP Cloud Project SCG-Heim-NONPROD , SCG-HEIM-PROD | Form : SCG-Heim-DO - Service Request_V2.7.xlsx [SEP] body: Request Number: | REQ_ID | Opened By: | Chutimont Bunnag | Opened Date: | 2026-03-23 13:12:33 ICT | Click | here | to view the request | Requested For: | Satapol Chatpahol | Business Phone: | (094) 262-6295 | Email Address: | SATAPOLC@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-23 13:12:33 ICT | Short Description: | [GCP]New GCP Cloud Project SCG-Heim-NONPROD , SCG-HEIM-PROD | Description: | [GCP]New GCP Cloud Project SCG-Heim-NONPROD , SCG-HEIM-PROD | Form : SCG-Heim-DO - Service Request_V2.7.xlsx | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP]New GCP Cloud Project SCG-Heim-NONPROD , SCG-HEIM-PROD | Click | here | to view the task",GCP Team
+TASK1637313,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[AWS] ขอทำการ ปิด AWS Account,"[AWS] ขอทำการ ปิด AWS Account ตามรายละเอียดด้านล่างนี้
+1. Account ID: 963009733624
+Account Name: AWS-CBM-DO-inno-nonprod
+2. Account ID: 398367130252
+Account Name: AWS-CBM-DO-inno-prod
+ทั้งนี้ ทางผู้ใช้งาน (User) ได้ยืนยันการยกเลิกการใช้งาน AWS Accounts ดังกล่าวเรียบร้อยแล้ว",,"Request Number:
+REQ_ID
+Opened By:
+Chutimont Bunnag
+Opened Date:
+2026-03-23 11:10:45 ICT
+Click
+here
+to view the request
+Requested For:
+Fonthap Ponlawat
+Email Address:
+FONTHAPP@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-23 11:10:45 ICT
+Short Description:
+[AWS] ขอทำการ ปิด AWS Account
+Description:
+[AWS] ขอทำการ ปิด AWS Account ตามรายละเอียดด้านล่างนี้
+1. Account ID: 963009733624
+Account Name: AWS-CBM-DO-inno-nonprod
+2. Account ID: 398367130252
+Account Name: AWS-CBM-DO-inno-prod
+ทั้งนี้ ทางผู้ใช้งาน (User) ได้ยืนยันการยกเลิกการใช้งาน AWS Accounts ดังกล่าวเรียบร้อยแล้ว
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[AWS] ขอทำการ ปิด AWS Account
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [AWS] ขอทำการ ปิด AWS Account [SEP] description: [AWS] ขอทำการ ปิด AWS Account ตามรายละเอียดด้านล่างนี้ | 1. Account ID: 963009733624 | Account Name: AWS-CBM-DO-inno-nonprod | 2. Account ID: 398367130252 | Account Name: AWS-CBM-DO-inno-prod | ทั้งนี้ ทางผู้ใช้งาน (User) ได้ยืนยันการยกเลิกการใช้งาน AWS Accounts ดังกล่าวเรียบร้อยแล้ว [SEP] body: Request Number: | REQ_ID | Opened By: | Chutimont Bunnag | Opened Date: | 2026-03-23 11:10:45 ICT | Click | here | to view the request | Requested For: | Fonthap Ponlawat | Email Address: | FONTHAPP@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-23 11:10:45 ICT | Short Description: | [AWS] ขอทำการ ปิด AWS Account | Description: | [AWS] ขอทำการ ปิด AWS Account ตามรายละเอียดด้านล่างนี้ | 1. Account ID: 963009733624 | Account Name: AWS-CBM-DO-inno-nonprod | 2. Account ID: 398367130252 | Account Name: AWS-CBM-DO-inno-prod | ทั้งนี้ ทางผู้ใช้งาน (User) ได้ยืนยันการยกเลิกการใช้งาน AWS Accounts ดังกล่าวเรียบร้อยแล้ว | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [AWS] ขอทำการ ปิด AWS Account | Click | here | to view the task,AWS Team
+TASK1636390,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP] ขอเพิ่มสิทธ์ให้ mail: nutcha.punjawasaruch@accenture.com ใน project: scgcbmr-spoke01-rg,"[GCP] ขอเพิ่มสิทธ์ให้ mail: nutcha.punjawasaruch@accenture.com ใน project: scgcbmr-spoke01-rg
+GCP project name: scgcbmr-spoke01-rg
+IAM Role: viewer ,Compute Network User
+Information Detail:
+[GCP] ขอเพิ่มสิทธ์ให้ mail: nutcha.punjawasaruch@accenture.com ใน project: scgcbmr-spoke01-rg
+สิทธ์ดังนี้ : viewer
+Compute Network User
+เพื่อ support ในงานการเปลี่ยนวง ip ให้กับ pod ที่ gke",,"Request Number:
+REQ_ID
+Opened By:
+Pattanan Sukkasem
+Opened Date:
+2026-03-18 17:14:45 ICT
+Click
+here
+to view the request
+Requested For:
+Methus Saengbua
+Email Address:
+METHUSSA@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-18 17:14:45 ICT
+Short Description:
+[GCP] ขอเพิ่มสิทธ์ให้ mail: nutcha.punjawasaruch@accenture.com ใน project: scgcbmr-spoke01-rg
+Description:
+[GCP] ขอเพิ่มสิทธ์ให้ mail: nutcha.punjawasaruch@accenture.com ใน project: scgcbmr-spoke01-rg
+GCP project name: scgcbmr-spoke01-rg
+IAM Role: viewer ,Compute Network User
+Information Detail:
+[GCP] ขอเพิ่มสิทธ์ให้ mail: nutcha.punjawasaruch@accenture.com ใน project: scgcbmr-spoke01-rg
+สิทธ์ดังนี้ : viewer
+Compute Network User
+เพื่อ support ในงานการเปลี่ยนวง ip ให้กับ pod ที่ gke
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP] ขอเพิ่มสิทธ์ให้ mail: nutcha.punjawasaruch@accenture.com ใน project: scgcbmr-spoke01-rg
+Click
+here
+to view the task","ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP] ขอเพิ่มสิทธ์ให้ mail: nutcha.punjawasaruch@accenture.com ใน project: scgcbmr-spoke01-rg [SEP] description: [GCP] ขอเพิ่มสิทธ์ให้ mail: nutcha.punjawasaruch@accenture.com ใน project: scgcbmr-spoke01-rg | GCP project name: scgcbmr-spoke01-rg | IAM Role: viewer ,Compute Network User | Information Detail: | [GCP] ขอเพิ่มสิทธ์ให้ mail: nutcha.punjawasaruch@accenture.com ใน project: scgcbmr-spoke01-rg | สิทธ์ดังนี้ : viewer | Compute Network User | เพื่อ support ในงานการเปลี่ยนวง ip ให้กับ pod ที่ gke [SEP] body: Request Number: | REQ_ID | Opened By: | Pattanan Sukkasem | Opened Date: | 2026-03-18 17:14:45 ICT | Click | here | to view the request | Requested For: | Methus Saengbua | Email Address: | METHUSSA@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-18 17:14:45 ICT | Short Description: | [GCP] ขอเพิ่มสิทธ์ให้ mail: nutcha.punjawasaruch@accenture.com ใน project: scgcbmr-spoke01-rg | Description: | [GCP] ขอเพิ่มสิทธ์ให้ mail: nutcha.punjawasaruch@accenture.com ใน project: scgcbmr-spoke01-rg | GCP project name: scgcbmr-spoke01-rg | IAM Role: viewer ,Compute Network User | Information Detail: | [GCP] ขอเพิ่มสิทธ์ให้ mail: nutcha.punjawasaruch@accenture.com ใน project: scgcbmr-spoke01-rg | สิทธ์ดังนี้ : viewer | Compute Network User | เพื่อ support ในงานการเปลี่ยนวง ip ให้กับ pod ที่ gke | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP] ขอเพิ่มสิทธ์ให้ mail: nutcha.punjawasaruch@accenture.com ใน project: scgcbmr-spoke01-rg | Click | here | to view the task",GCP Team
+TASK1634730,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[DXC] Create new VPC,"[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET
+GCP project name: CBM-Regional-RMCNET
+Information Detail:
+ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod
+ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24
+ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET",,"Request Number:
+REQ_ID
+Opened By:
+Pattanan Sukkasem
+Opened Date:
+2026-03-17 16:03:28 ICT
+Click
+here
+to view the request
+Requested For:
+Methus Saengbua
+Email Address:
+METHUSSA@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-17 16:03:28 ICT
+Short Description:
+[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio
+Description:
+[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET
+GCP project name: CBM-Regional-RMCNET
+Information Detail:
+ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod
+ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24
+ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET
+State:
+Pending
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[DXC] Create new VPC
+Click
+here
+to view the task","ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [DXC] Create new VPC [SEP] description: [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET | GCP project name: CBM-Regional-RMCNET | Information Detail: | ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod | ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24 | ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET [SEP] body: Request Number: | REQ_ID | Opened By: | Pattanan Sukkasem | Opened Date: | 2026-03-17 16:03:28 ICT | Click | here | to view the request | Requested For: | Methus Saengbua | Email Address: | METHUSSA@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-17 16:03:28 ICT | Short Description: | [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio | Description: | [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET | GCP project name: CBM-Regional-RMCNET | Information Detail: | ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod | ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24 | ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET | State: | Pending | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [DXC] Create new VPC | Click | here | to view the task",GCP Team
+TASK1634729,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,"[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio","[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET
+GCP project name: CBM-Regional-RMCNET
+Information Detail:
+ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod
+ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24
+ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET",,"Request Number:
+REQ_ID
+Opened By:
+Pattanan Sukkasem
+Opened Date:
+2026-03-17 16:03:28 ICT
+Click
+here
+to view the request
+Requested For:
+Methus Saengbua
+Email Address:
+METHUSSA@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-17 16:03:28 ICT
+Short Description:
+[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio
+Description:
+[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET
+GCP project name: CBM-Regional-RMCNET
+Information Detail:
+ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod
+ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24
+ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio
+Click
+here
+to view the task","ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio [SEP] description: [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET | GCP project name: CBM-Regional-RMCNET | Information Detail: | ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod | ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24 | ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET [SEP] body: Request Number: | REQ_ID | Opened By: | Pattanan Sukkasem | Opened Date: | 2026-03-17 16:03:28 ICT | Click | here | to view the request | Requested For: | Methus Saengbua | Email Address: | METHUSSA@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-17 16:03:28 ICT | Short Description: | [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio | Description: | [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET | GCP project name: CBM-Regional-RMCNET | Information Detail: | ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod | ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24 | ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio | Click | here | to view the task",GCP Team
+TASK1636528,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP] ขอสิทธิ์ในการเข้า google console ให้กับ account : charunc,"[GCP] ขอสิทธิ์ในการเข้า google console ให้กับ account : charunc
+Employee name (first name and last name): Charun Chomngam
+SCG Email: CHARUNC@SCG.COM",,"Request Number:
+REQ_ID
+Opened By:
+Piyawan Laingern
+Opened Date:
+2026-03-12 16:24:37 ICT
+Click
+here
+to view the request
+Requested For:
+Charun Chomngam
+Email Address:
+CHARUNC@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-12 16:24:37 ICT
+Short Description:
+[GCP] ขอสิทธิ์ในการเข้า google console ให้กับ account : charunc
+Description:
+[GCP] ขอสิทธิ์ในการเข้า google console ให้กับ account : charunc
+Employee name (first name and last name): Charun Chomngam
+SCG Email: CHARUNC@SCG.COM
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP] ขอสิทธิ์ในการเข้า google console ให้กับ account : charunc
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP] ขอสิทธิ์ในการเข้า google console ให้กับ account : charunc [SEP] description: [GCP] ขอสิทธิ์ในการเข้า google console ให้กับ account : charunc | Employee name (first name and last name): Charun Chomngam | SCG Email: CHARUNC@SCG.COM [SEP] body: Request Number: | REQ_ID | Opened By: | Piyawan Laingern | Opened Date: | 2026-03-12 16:24:37 ICT | Click | here | to view the request | Requested For: | Charun Chomngam | Email Address: | CHARUNC@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-12 16:24:37 ICT | Short Description: | [GCP] ขอสิทธิ์ในการเข้า google console ให้กับ account : charunc | Description: | [GCP] ขอสิทธิ์ในการเข้า google console ให้กับ account : charunc | Employee name (first name and last name): Charun Chomngam | SCG Email: CHARUNC@SCG.COM | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP] ขอสิทธิ์ในการเข้า google console ให้กับ account : charunc | Click | here | to view the task,GCP Team
+TASK1636285,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,Firewall Request : GCP Hub | Click | here | to view the task,,VPN User | IT One Services | GCP Hub | On-prem | iNET On-prem | ไฟล์ | - RITM0843946 Request form for VPN user and Bastion to NFS server Firewall v3.7.xlsx,"Request Number:
+REQ_ID
+Opened By:
+Pimpaka Panyasod
+Opened Date:
+2026-03-13 14:50:56 ICT
+Click
+here
+to view the request
+Requested For:
+Nipon Lerthirunwong
+Business Phone:
+(083) 090-2630
+Email Address:
+NIPONLER@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-13 14:50:56 ICT
+Short Description:
+Request form for VPN user and Bastion to NFS server Firewall
+Description:
+Related environment:
+VPN User
+IT One Services
+GCP Hub
+On-prem
+iNET On-prem
+ไฟล์
+- RITM_ID Request form for VPN user and Bastion to NFS server Firewall v3.7.xlsx
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+Firewall Request : GCP Hub
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: Firewall Request : GCP Hub | Click | here | to view the task [SEP] related_env: VPN User | IT One Services | GCP Hub | On-prem | iNET On-prem | ไฟล์ | - RITM0843946 Request form for VPN user and Bastion to NFS server Firewall v3.7.xlsx [SEP] body: Request Number: | REQ_ID | Opened By: | Pimpaka Panyasod | Opened Date: | 2026-03-13 14:50:56 ICT | Click | here | to view the request | Requested For: | Nipon Lerthirunwong | Business Phone: | (083) 090-2630 | Email Address: | NIPONLER@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-13 14:50:56 ICT | Short Description: | Request form for VPN user and Bastion to NFS server Firewall | Description: | Related environment: | VPN User | IT One Services | GCP Hub | On-prem | iNET On-prem | ไฟล์ | - RITM_ID Request form for VPN user and Bastion to NFS server Firewall v3.7.xlsx | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | Firewall Request : GCP Hub | Click | here | to view the task,GCP Team
+TASK1636206,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,"[ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure)","[ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure)
+Form : DXC Request form for Firewall v3.7 - EDR Broker VM additional 2 _ Final.xlsx",,"Request Number:
+REQ_ID
+Opened By:
+Thanapol Tophati
+Opened Date:
+2026-03-19 18:15:03 ICT
+Click
+here
+to view the request
+Requested For:
+Netipat Suksai
+Business Phone:
+(087) 791-1507
+Email Address:
+NETIPASU@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-19 18:15:03 ICT
+Short Description:
+[ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure)
+Description:
+[ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure)
+Form : DXC Request form for Firewall v3.7 - EDR Broker VM additional 2 _ Final.xlsx
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure)
+Click
+here
+to view the task","ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure) [SEP] description: [ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure) | Form : DXC Request form for Firewall v3.7 - EDR Broker VM additional 2 _ Final.xlsx [SEP] body: Request Number: | REQ_ID | Opened By: | Thanapol Tophati | Opened Date: | 2026-03-19 18:15:03 ICT | Click | here | to view the request | Requested For: | Netipat Suksai | Business Phone: | (087) 791-1507 | Email Address: | NETIPASU@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-19 18:15:03 ICT | Short Description: | [ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure) | Description: | [ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure) | Form : DXC Request form for Firewall v3.7 - EDR Broker VM additional 2 _ Final.xlsx | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure) | Click | here | to view the task",AWS Team
+TASK1636203,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,Firewall Request : GCP Hub | Click | here | to view the task,"[ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure)
+Form : DXC Request form for Firewall v3.7 - EDR Broker VM additional 2 _ Final.xlsx",,"Request Number:
+REQ_ID
+Opened By:
+Thanapol Tophati
+Opened Date:
+2026-03-19 18:15:03 ICT
+Click
+here
+to view the request
+Requested For:
+Netipat Suksai
+Business Phone:
+(087) 791-1507
+Email Address:
+NETIPASU@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-19 18:15:03 ICT
+Short Description:
+[ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure)
+Description:
+[ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure)
+Form : DXC Request form for Firewall v3.7 - EDR Broker VM additional 2 _ Final.xlsx
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+Firewall Request : GCP Hub
+Click
+here
+to view the task","ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: Firewall Request : GCP Hub | Click | here | to view the task [SEP] description: [ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure) | Form : DXC Request form for Firewall v3.7 - EDR Broker VM additional 2 _ Final.xlsx [SEP] body: Request Number: | REQ_ID | Opened By: | Thanapol Tophati | Opened Date: | 2026-03-19 18:15:03 ICT | Click | here | to view the request | Requested For: | Netipat Suksai | Business Phone: | (087) 791-1507 | Email Address: | NETIPASU@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-19 18:15:03 ICT | Short Description: | [ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure) | Description: | [ด่วนนอกรอบ 20/03/26] ขอเปิดเคส Allow Firewall เพิ่มเติมสำหรับ Project EDR Replacement #2 (Cloud AWS, Cloud Azure) | Form : DXC Request form for Firewall v3.7 - EDR Broker VM additional 2 _ Final.xlsx | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | Firewall Request : GCP Hub | Click | here | to view the task",GCP Team
+ITASK0728052,incident_task,inetmscloud@inetms.co.th,Incident task ITASK_ID has been assigned to group iNET Cloud | Support Team,,,,"Number:
+ITASK_ID
+Raised by:
+Suthisa Nuanpenyai
+Phone No.:
+SUTHISNU@SCG.COM
+Email Address:
+SUTHISNU@SCG.COM
+Raised for:
+Suthisa Nuanpenyai
+Phone No.:
+SUTHISNU@SCG.COM
+Email Address:
+SUTHISNU@SCG.COM
+Client Group:
+SCG
+Business Unit:
+SL
+Company:
+SCG Living and Housing Solution Co., Ltd.
+Business Service:
+AWS Cloud
+Service Offering:
+Amazon Web Services Cloud
+Category:
+Subcategory:
+Impact:
+Urgency:
+Low
+Priority:
+4 - Low
+Short Description:
+[Ref.RITM_ID] ไม่สามารถเข้าใช้งานเว็ป AWS ได้
+Description:
+[Ref.RITM_ID] ไม่สามารถเข้าใช้งานเว็ป AWS ได้ ปัจจุบันทาง Wedo ได้ทำการเพิ่ม User ให้เรียบร้อยแล้ว แต่ยังไม่สามารถเข้าใช้งานได้
+Error
+Authentication failed
+Your authentication information is
+incorrect. Please try again.
+Click
+here
+to view the Incident Task record","ticket_type: incident_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Incident task ITASK_ID has been assigned to group iNET Cloud | Support Team [SEP] body: Number: | ITASK_ID | Raised by: | Suthisa Nuanpenyai | Phone No.: | SUTHISNU@SCG.COM | Email Address: | SUTHISNU@SCG.COM | Raised for: | Suthisa Nuanpenyai | Phone No.: | SUTHISNU@SCG.COM | Email Address: | SUTHISNU@SCG.COM | Client Group: | SCG | Business Unit: | SL | Company: | SCG Living and Housing Solution Co., Ltd. | Business Service: | AWS Cloud | Service Offering: | Amazon Web Services Cloud | Category: | Subcategory: | Impact: | Urgency: | Low | Priority: | 4 - Low | Short Description: | [Ref.RITM_ID] ไม่สามารถเข้าใช้งานเว็ป AWS ได้ | Description: | [Ref.RITM_ID] ไม่สามารถเข้าใช้งานเว็ป AWS ได้ ปัจจุบันทาง Wedo ได้ทำการเพิ่ม User ให้เรียบร้อยแล้ว แต่ยังไม่สามารถเข้าใช้งานได้ | Error | Authentication failed | Your authentication information is | incorrect. Please try again. | Click | here | to view the Incident Task record",AWS Team
+ITASK0727966,incident_task,inetmscloud@inetms.co.th,Incident task ITASK_ID has been assigned to group iNET Cloud | Support Team,,,,"Number:
+ITASK_ID
+Raised by:
+Satawas Plailaharn
+Phone No.:
+(062) 397-5000
+Email Address:
+satawas.plailaharn@dxc.com
+Raised for:
+Satawas Plailaharn
+Phone No.:
+(062) 397-5000
+Email Address:
+satawas.plailaharn@dxc.com
+Client Group:
+SCG
+Business Unit:
+Corporate
+Business Service:
+AWS Cloud
+Service Offering:
+Amazon Web Services Cloud
+Category:
+Subcategory:
+Impact:
+Urgency:
+Low
+Priority:
+4 - Low
+Short Description:
+SCG | Security | CTU062 Manual Threat Intel Detection
+Description:
+DXC CTAC Team has observed an alert pertaining ""CTU062 Manual Threat Intel Detection"", from source: 94.204.253.203, inbound traffic initiated by a known malicious source IPs: towards internal Destination IP: 10.41.12.44. Reputation sites reported this IP was previously involved in port scan and brute force activities. We have attached the alert log and respective IP_Reputation for your reference.
+Stellar Case ID: 1309203
+Observed 1 XDR Kill Chain Stages: Exfiltration & Impact
+Involved 2 hosts: 94.204.253.203, 10.41.12.44.
+Stage: Exfiltration & Impact
+Tactic: Exfiltration (TA0010)
+Technique: Exfiltration Over Other Network Medium (T1011)
+Alert Details:
+Tenant: SCG_TH
+Threat Intel Score: 24
+Device Type:
+Source IP: 94.204.253.203
+Source Host: 94.204.253.203
+Source Port: 25695
+Source Reputation: scan;source:file_import;iran_war_apt
+Source Reputation Source: dxc_ctac
+Source Country: United Arab Emirates
+Source Username:
+Destination IP: 10.41.12.44
+Destination Host: 10.41.12.44
+Destination Port: 23
+Destination Reputation: Good
+Destination Reputation Source:
+Destination Country:
+Firewall Policy:
+Action:
+Action (VPCFlow): ACCEPT
+Log Group (VPCFlow): inbound-vpc-flowlog
+Message Class: aws_cloudwatch_vpcflow
+Message Origin Source: aws_cloudwatch
+Timestamp (UTC): 2026-03-13T17:20:55.000Z
+Recommendation:
+1.) Please investigate this unusual Traffic, if indeed malicious please escalate to Network Team for IP blocking, block the malicious IoCs: 94.204.253.203 .
+Click
+here
+to view the Incident Task record","ticket_type: incident_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Incident task ITASK_ID has been assigned to group iNET Cloud | Support Team [SEP] body: Number: | ITASK_ID | Raised by: | Satawas Plailaharn | Phone No.: | (062) 397-5000 | Email Address: | satawas.plailaharn@dxc.com | Raised for: | Satawas Plailaharn | Phone No.: | (062) 397-5000 | Email Address: | satawas.plailaharn@dxc.com | Client Group: | SCG | Business Unit: | Corporate | Business Service: | AWS Cloud | Service Offering: | Amazon Web Services Cloud | Category: | Subcategory: | Impact: | Urgency: | Low | Priority: | 4 - Low | Short Description: | SCG | Security | CTU062 Manual Threat Intel Detection | Description: | DXC CTAC Team has observed an alert pertaining ""CTU062 Manual Threat Intel Detection"", from source: 94.204.253.203, inbound traffic initiated by a known malicious source IPs: towards internal Destination IP: 10.41.12.44. Reputation sites reported this IP was previously involved in port scan and brute force activities. We have attached the alert log and respective IP_Reputation for your reference. | Stellar Case ID: 1309203 | Observed 1 XDR Kill Chain Stages: Exfiltration & Impact | Involved 2 hosts: 94.204.253.203, 10.41.12.44. | Stage: Exfiltration & Impact | Tactic: Exfiltration (TA0010) | Technique: Exfiltration Over Other Network Medium (T1011) | Alert Details: | Tenant: SCG_TH | Threat Intel Score: 24 | Device Type: | Source IP: 94.204.253.203 | Source Host: 94.204.253.203 | Source Port: 25695 | Source Reputation: scan;source:file_import;iran_war_apt | Source Reputation Source: dxc_ctac | Source Country: United Arab Emirates | Source Username: | Destination IP: 10.41.12.44 | Destination Host: 10.41.12.44 | Destination Port: 23 | Destination Reputation: Good | Destination Reputation Source: | Destination Country: | Firewall Policy: | Action: | Action (VPCFlow): ACCEPT | Log Group (VPCFlow): inbound-vpc-flowlog | Message Class: aws_cloudwatch_vpcflow | Message Origin Source: aws_cloudwatch | Timestamp (UTC): 2026-03-13T17:20:55.000Z | Recommendation: | 1.) Please investigate this unusual Traffic, if indeed malicious please escalate to Network Team for IP blocking, block the malicious IoCs: 94.204.253.203 . | Click | here | to view the Incident Task record",AWS Team
+TASK1635693,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,"[AWS][SCG-METRO-CSOC] ดำเนินการสร้าง S3 Bucket สำหรับ Route53 , SQS service , Add Policy permission ใน S3+ IAM METRO บน AWS account AWS-Corp-Infra-SecurityPRD","[AWS][SCG-METRO-CSOC] ดำเนินการสร้าง S3 Bucket สำหรับ Route53 , SQS service , Add Policy permission ใน S3+ IAM METRO บน AWS account AWS-Corp-Infra-SecurityPRD (660398200044)
+Detail :
+1.ดำเนินการ S3 Bucket สำหรับ Route53 และ add permission GET,PUT S3 สำหรับ account network และ user METRO
+2.ดำเนินการสร้าง SQS ผูกกับ S3 เพื่อ buffer log
+3.ดำเนินการเพิ่ม Permission IAM METRO ในการ access S3 ฺBucket นี้
+Document as attached : CloudFormation-Script.json , Configuration Manual - AWS Route 53.pdf
+เปิดเคสให้กับทาง INETMS-AWS",,"Request Number:
+REQ_ID
+Opened By:
+Thanapon Chantipwong
+Opened Date:
+2026-03-17 17:31:17 ICT
+Click
+here
+to view the request
+Requested For:
+Rattiphon Ketsophon
+Email Address:
+RATTIPHK@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-17 17:31:17 ICT
+Short Description:
+[AWS][SCG-METRO-CSOC] ดำเนินการสร้าง S3 Bucket สำหรับ Route53 , SQS service , Add Policy permission ใน S3+ IAM METRO บน AWS account AWS-Corp-Infra-SecurityPRD
+Description:
+[AWS][SCG-METRO-CSOC] ดำเนินการสร้าง S3 Bucket สำหรับ Route53 , SQS service , Add Policy permission ใน S3+ IAM METRO บน AWS account AWS-Corp-Infra-SecurityPRD (660398200044)
+Detail :
+1.ดำเนินการ S3 Bucket สำหรับ Route53 และ add permission GET,PUT S3 สำหรับ account network และ user METRO
+2.ดำเนินการสร้าง SQS ผูกกับ S3 เพื่อ buffer log
+3.ดำเนินการเพิ่ม Permission IAM METRO ในการ access S3 ฺBucket นี้
+Document as attached : CloudFormation-Script.json , Configuration Manual - AWS Route 53.pdf
+เปิดเคสให้กับทาง INETMS-AWS
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[AWS][SCG-METRO-CSOC] ดำเนินการสร้าง S3 Bucket สำหรับ Route53 , SQS service , Add Policy permission ใน S3+ IAM METRO บน AWS account AWS-Corp-Infra-SecurityPRD
+Click
+here
+to view the task","ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [AWS][SCG-METRO-CSOC] ดำเนินการสร้าง S3 Bucket สำหรับ Route53 , SQS service , Add Policy permission ใน S3+ IAM METRO บน AWS account AWS-Corp-Infra-SecurityPRD [SEP] description: [AWS][SCG-METRO-CSOC] ดำเนินการสร้าง S3 Bucket สำหรับ Route53 , SQS service , Add Policy permission ใน S3+ IAM METRO บน AWS account AWS-Corp-Infra-SecurityPRD (660398200044) | Detail : | 1.ดำเนินการ S3 Bucket สำหรับ Route53 และ add permission GET,PUT S3 สำหรับ account network และ user METRO | 2.ดำเนินการสร้าง SQS ผูกกับ S3 เพื่อ buffer log | 3.ดำเนินการเพิ่ม Permission IAM METRO ในการ access S3 ฺBucket นี้ | Document as attached : CloudFormation-Script.json , Configuration Manual - AWS Route 53.pdf | เปิดเคสให้กับทาง INETMS-AWS [SEP] body: Request Number: | REQ_ID | Opened By: | Thanapon Chantipwong | Opened Date: | 2026-03-17 17:31:17 ICT | Click | here | to view the request | Requested For: | Rattiphon Ketsophon | Email Address: | RATTIPHK@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-17 17:31:17 ICT | Short Description: | [AWS][SCG-METRO-CSOC] ดำเนินการสร้าง S3 Bucket สำหรับ Route53 , SQS service , Add Policy permission ใน S3+ IAM METRO บน AWS account AWS-Corp-Infra-SecurityPRD | Description: | [AWS][SCG-METRO-CSOC] ดำเนินการสร้าง S3 Bucket สำหรับ Route53 , SQS service , Add Policy permission ใน S3+ IAM METRO บน AWS account AWS-Corp-Infra-SecurityPRD (660398200044) | Detail : | 1.ดำเนินการ S3 Bucket สำหรับ Route53 และ add permission GET,PUT S3 สำหรับ account network และ user METRO | 2.ดำเนินการสร้าง SQS ผูกกับ S3 เพื่อ buffer log | 3.ดำเนินการเพิ่ม Permission IAM METRO ในการ access S3 ฺBucket นี้ | Document as attached : CloudFormation-Script.json , Configuration Manual - AWS Route 53.pdf | เปิดเคสให้กับทาง INETMS-AWS | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [AWS][SCG-METRO-CSOC] ดำเนินการสร้าง S3 Bucket สำหรับ Route53 , SQS service , Add Policy permission ใน S3+ IAM METRO บน AWS account AWS-Corp-Infra-SecurityPRD | Click | here | to view the task",AWS Team
+TASK1635498,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP]ขอสร้าง GCP account สำหรับ User: PHUMTANG@SCG.COM,"[GCP]ขอสร้าง GCP account สำหรับ User: PHUMTANG@SCG.COM
+Employee name (first name and last name): Phum Tanggasemsun
+SCG Email: PHUMTANG@SCG.COM",,"Request Number:
+REQ_ID
+Opened By:
+Supanya Srisuk
+Opened Date:
+2026-03-18 15:35:41 ICT
+Click
+here
+to view the request
+Requested For:
+Phum Tanggasemsun
+Business Phone:
+(087) 550-2020
+Email Address:
+PHUMTANG@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-18 15:35:41 ICT
+Short Description:
+[GCP]ขอสร้าง GCP account สำหรับ User: PHUMTANG@SCG.COM
+Description:
+[GCP]ขอสร้าง GCP account สำหรับ User: PHUMTANG@SCG.COM
+Employee name (first name and last name): Phum Tanggasemsun
+SCG Email: PHUMTANG@SCG.COM
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP]ขอสร้าง GCP account สำหรับ User: PHUMTANG@SCG.COM
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP]ขอสร้าง GCP account สำหรับ User: PHUMTANG@SCG.COM [SEP] description: [GCP]ขอสร้าง GCP account สำหรับ User: PHUMTANG@SCG.COM | Employee name (first name and last name): Phum Tanggasemsun | SCG Email: PHUMTANG@SCG.COM [SEP] body: Request Number: | REQ_ID | Opened By: | Supanya Srisuk | Opened Date: | 2026-03-18 15:35:41 ICT | Click | here | to view the request | Requested For: | Phum Tanggasemsun | Business Phone: | (087) 550-2020 | Email Address: | PHUMTANG@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-18 15:35:41 ICT | Short Description: | [GCP]ขอสร้าง GCP account สำหรับ User: PHUMTANG@SCG.COM | Description: | [GCP]ขอสร้าง GCP account สำหรับ User: PHUMTANG@SCG.COM | Employee name (first name and last name): Phum Tanggasemsun | SCG Email: PHUMTANG@SCG.COM | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP]ขอสร้าง GCP account สำหรับ User: PHUMTANG@SCG.COM | Click | here | to view the task,GCP Team
+TASK1635433,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP] ตรวจสอบและขอ GCP User ให้ user akaritch,"[GCP] ตรวจสอบและขอ GCP User ให้ user akaritch
+เนื่องจากโดนระบุว่าไม่ได้อยู่ในบริษัทเดียวกัน
+Employee name (first name and last name): Akarit Chaipecharakul
+SCG Email: akaritch@scg.com",,"Request Number:
+REQ_ID
+Opened By:
+Rumpiapa Siriruk
+Opened Date:
+2026-03-18 13:53:15 ICT
+Click
+here
+to view the request
+Requested For:
+Akarit Chaipecharakul
+Business Phone:
+084-3606031
+Email Address:
+AKARITCH@SCG.COM
+Service Request Number:
+RITM_ID
+Opened Date:
+2026-03-18 13:53:15 ICT
+Short Description:
+[GCP] ตรวจสอบและขอ GCP User ให้ user akaritch
+Description:
+[GCP] ตรวจสอบและขอ GCP User ให้ user akaritch
+เนื่องจากโดนระบุว่าไม่ได้อยู่ในบริษัทเดียวกัน
+Employee name (first name and last name): Akarit Chaipecharakul
+SCG Email: akaritch@scg.com
+State:
+Assigned
+Click
+here
+to view the item
+Task Number:
+TASK_ID
+State:
+Assigned
+Assignment Group:
+iNET Cloud Support Team
+Service Provider:
+iNET
+Short Description:
+[GCP] ตรวจสอบและขอ GCP User ให้ user akaritch
+Click
+here
+to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP] ตรวจสอบและขอ GCP User ให้ user akaritch [SEP] description: [GCP] ตรวจสอบและขอ GCP User ให้ user akaritch | เนื่องจากโดนระบุว่าไม่ได้อยู่ในบริษัทเดียวกัน | Employee name (first name and last name): Akarit Chaipecharakul | SCG Email: akaritch@scg.com [SEP] body: Request Number: | REQ_ID | Opened By: | Rumpiapa Siriruk | Opened Date: | 2026-03-18 13:53:15 ICT | Click | here | to view the request | Requested For: | Akarit Chaipecharakul | Business Phone: | 084-3606031 | Email Address: | AKARITCH@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-18 13:53:15 ICT | Short Description: | [GCP] ตรวจสอบและขอ GCP User ให้ user akaritch | Description: | [GCP] ตรวจสอบและขอ GCP User ให้ user akaritch | เนื่องจากโดนระบุว่าไม่ได้อยู่ในบริษัทเดียวกัน | Employee name (first name and last name): Akarit Chaipecharakul | SCG Email: akaritch@scg.com | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP] ตรวจสอบและขอ GCP User ให้ user akaritch | Click | here | to view the task,GCP Team
 TASK1635011,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP] ขอ Register GCP SSO เพื่อใช้บน GCP สำหรับ User: AMWE@scg.com,"[GCP] ขอ Register GCP SSO เพื่อใช้บน GCP สำหรับ User: AMWE@scg.com
 Employee name (first name and last name): Suparat Jaidech
 SCG Email: AMWE@scg.com",,"Request Number:
@@ -138,55 +811,6 @@ Short Description:
 Click
 here
 to view the task",ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: ขอสร้าง folder สำหรับ SCGD และย้าย project [SEP] description: Subject: ขอสร้าง folder สำหรับ SCGD และย้าย project | Additional Information: ขอสร้าง folder สำหรับ SCGD และย้าย project ดังนี้ไปยัง SCGD folder | - cbm-lhp-ssw-datawarehouse-dev | - cbm-lhp-ssw-datawarehouse-prd | - scgd-procurementplatform-prd [SEP] body: Request Number: | REQ_ID | Opened By: | Prapat Thanomsak | Opened Date: | 2026-03-17 16:32:19 ICT | Click | here | to view the request | Requested For: | Prapat Thanomsak | Business Phone: | (087) 101-7331 | Email Address: | PRAPATHA@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-17 16:32:18 ICT | Short Description: | ขอสร้าง folder สำหรับ SCGD และย้าย project | Description: | Subject: ขอสร้าง folder สำหรับ SCGD และย้าย project | Additional Information: ขอสร้าง folder สำหรับ SCGD และย้าย project ดังนี้ไปยัง SCGD folder | - cbm-lhp-ssw-datawarehouse-dev | - cbm-lhp-ssw-datawarehouse-prd | - scgd-procurementplatform-prd | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | ขอสร้าง folder สำหรับ SCGD และย้าย project | Click | here | to view the task,GCP & AWS Team (Both)
-TASK1634729,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,"[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio","[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET
-GCP project name: CBM-Regional-RMCNET
-Information Detail:
-ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod
-ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24
-ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET",,"Request Number:
-REQ_ID
-Opened By:
-Pattanan Sukkasem
-Opened Date:
-2026-03-17 16:03:28 ICT
-Click
-here
-to view the request
-Requested For:
-Methus Saengbua
-Email Address:
-METHUSSA@SCG.COM
-Service Request Number:
-RITM_ID
-Opened Date:
-2026-03-17 16:03:28 ICT
-Short Description:
-[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio
-Description:
-[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET
-GCP project name: CBM-Regional-RMCNET
-Information Detail:
-ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod
-ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24
-ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET
-State:
-Assigned
-Click
-here
-to view the item
-Task Number:
-TASK_ID
-State:
-Assigned
-Assignment Group:
-iNET Cloud Support Team
-Service Provider:
-iNET
-Short Description:
-[GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio
-Click
-here
-to view the task","ticket_type: catalog_task [SEP] to_address: inetmscloud@inetms.co.th [SEP] subject: Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team [SEP] short_desc: [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio [SEP] description: [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET | GCP project name: CBM-Regional-RMCNET | Information Detail: | ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod | ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24 | ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET [SEP] body: Request Number: | REQ_ID | Opened By: | Pattanan Sukkasem | Opened Date: | 2026-03-17 16:03:28 ICT | Click | here | to view the request | Requested For: | Methus Saengbua | Email Address: | METHUSSA@SCG.COM | Service Request Number: | RITM_ID | Opened Date: | 2026-03-17 16:03:28 ICT | Short Description: | [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio | Description: | [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regional-RMCNET | GCP project name: CBM-Regional-RMCNET | Information Detail: | ขอเพิ่ม secondary ip : 100.x.x.x /22 ใต้ subnet: cbm-regional-rmcnet-general-subnet (vpc: scgcbmr-spoke01-shared-vpc) ไว้ใช้กับ gke pod | ขอ allow firewall ตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/24 | ขอ share subnet ดังกล่าว มาที่ project : CBM-Regional-RMCNET | State: | Assigned | Click | here | to view the item | Task Number: | TASK_ID | State: | Assigned | Assignment Group: | iNET Cloud Support Team | Service Provider: | iNET | Short Description: | [GCP] ขอเพิ่ม secondary ip 100.x.x.x /22 , allow firewall ล้อตาม cbm-regional-rmcnet-pod-subnet : 10.42.131.0/ ,share subnet มาที่ project CBM-Regio | Click | here | to view the task",GCP Team
 TASK1634723,catalog_task,inetmscloud@inetms.co.th,Catalog Task TASK_ID has been assigned to group iNET Cloud | Support Team,[GCP] ขอทำ Private service connect ผ่าน Spokedist เพื่อทำ Datastream (Bigquery/SAAS) connection กับ SQL server (intranet),"[GCP] ขอทำ Private service connect ผ่าน Spokedist เพื่อทำ Datastream (Bigquery/SAAS) connection กับ SQL server (intranet)
 ส่งเคสไปยังทีม INET Cloud เพื่อ support config vpc > private services connect src.project : scg-cbm-datapipeline-qa
 services Bigquery Datastreamผ่าน spokedist ไปยัง Endpoint target
