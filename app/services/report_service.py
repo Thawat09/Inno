@@ -5,14 +5,12 @@ from sqlalchemy import text
 
 def get_daily_case_summary():
     now = datetime.now()
-
     end_dt = now.replace(hour=17, minute=30, second=0, microsecond=0)
     start_dt = end_dt - timedelta(days=1)
-
     report_date = end_dt
     report_date_th = report_date.strftime("%d/%m/") + str(report_date.year + 543)
-
     session = db.get_session()
+
     try:
         sql = text("""
             SELECT
@@ -22,7 +20,7 @@ def get_daily_case_summary():
                 COUNT(*) AS total_count
             FROM email_ticket_master
             WHERE email_date >= :start_dt
-              AND email_date < :end_dt
+                AND email_date < :end_dt
         """)
 
         result = session.execute(sql, {

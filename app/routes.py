@@ -6,7 +6,11 @@ from app.repositories.line_repository import (
     log_event,
     upsert_line_chat,
     upsert_line_user,
-    upsert_membership
+    upsert_membership,
+    upsert_internal_user,
+    deactivate_internal_user,
+    is_event_processed,
+    mark_event_processed
 )
 from app.services.line_api import get_profile_data
 
@@ -31,6 +35,23 @@ def line_webhook():
             source = event.get("source", {})
             event_type = event.get("type")
             uid = source.get("userId")
+            webhook_event_id = event.get("webhookEventId")
+            is_redelivery = event.get("deliveryContext", {}).get("isRedelivery", False)
+
+            print({
+                "event_type": event.get("type"),
+                "timestamp": event.get("timestamp"),
+                "is_redelivery": is_redelivery,
+                "webhook_event_id": webhook_event_id,
+                "source_type": source.get("type"),
+                "source_user_id": source.get("userId"),
+                "group_id": source.get("groupId"),
+                "room_id": source.get("roomId"),
+            })
+
+            if webhook_event_id and is_event_processed(session, webhook_event_id):
+                print(f"⏭️ Skip duplicated event: {webhook_event_id}")
+                continue
 
             log_event(session, event)
 
@@ -50,6 +71,7 @@ def line_webhook():
 
                 for m in event.get("joined", {}).get("members", []):
                     joined_user_id = m.get("userId")
+
                     line_user_pk = upsert_line_user(
                         session=session,
                         user_id=joined_user_id,
@@ -62,6 +84,8 @@ def line_webhook():
                         line_user_pk=line_user_pk,
                         active=True
                     )
+                    upsert_internal_user(session, joined_user_id)
+
                     print(f"🆕 Member joined: user_id={joined_user_id}, chat_pk={chat_pk}")
 
             # 4) Member left
@@ -70,11 +94,12 @@ def line_webhook():
 
                 for m in event.get("left", {}).get("members", []):
                     left_user_id = m.get("userId")
+
                     line_user_pk = upsert_line_user(
                         session=session,
                         user_id=left_user_id,
                         source=None,
-                        status="active"
+                        status="left"
                     )
                     upsert_membership(
                         session=session,
@@ -82,11 +107,14 @@ def line_webhook():
                         line_user_pk=line_user_pk,
                         active=False
                     )
+                    deactivate_internal_user(session, left_user_id)
+
                     print(f"❌ Member left: user_id={left_user_id}, chat_pk={chat_pk}")
 
             # 5) Follow (1:1 add friend)
             elif event_type == "follow":
                 chat_pk = upsert_line_chat(session, source, bot_status="active")
+
                 line_user_pk = upsert_line_user(
                     session=session,
                     user_id=uid,
@@ -100,6 +128,8 @@ def line_webhook():
                     line_user_pk=line_user_pk,
                     active=True
                 )
+                upsert_internal_user(session, uid)
+
                 print(f"➕ Follow: user_id={uid}")
 
             # 6) Unfollow (1:1 block OA)
@@ -111,6 +141,8 @@ def line_webhook():
                     is_friend=False,
                     status="blocked"
                 )
+                deactivate_internal_user(session, uid)
+
                 print(f"🚫 Unfollow: user_id={uid}, line_user_pk={line_user_pk}")
 
             # 7) Message
@@ -130,6 +162,7 @@ def line_webhook():
                         line_user_pk=line_user_pk,
                         active=True
                     )
+                    upsert_internal_user(session, uid)
 
                 message = event.get("message", {})
                 if message.get("type") == "text":
@@ -158,10 +191,15 @@ def line_webhook():
                         line_user_pk=line_user_pk,
                         active=True
                     )
+                    upsert_internal_user(session, uid)
+
                 print(f"📨 Postback from user_id={uid}")
 
             else:
                 print(f"ℹ️ Unhandled event type: {event_type}")
+
+            if webhook_event_id:
+                mark_event_processed(session, webhook_event_id, event_type)
 
         session.commit()
         return jsonify({"status": "ok"}), 200

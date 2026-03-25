@@ -318,3 +318,82 @@ def upsert_membership(session, chat_pk, line_user_pk, active=True):
             "chat_pk": chat_pk,
             "line_user_pk": line_user_pk
         })
+
+
+def upsert_internal_user(session, line_user_id):
+    if not line_user_id:
+        return None
+
+    row = session.execute(text("""
+        SELECT id, is_active
+        FROM dbo.users
+        WHERE line_user_id = :line_user_id
+    """), {"line_user_id": line_user_id}).mappings().first()
+
+    if row:
+        session.execute(text("""
+            UPDATE dbo.users
+            SET is_active = 1,
+                failed_login_count = 0
+            WHERE id = :id
+        """), {"id": row["id"]})
+        return row["id"]
+
+    return session.execute(text("""
+        INSERT INTO dbo.users (
+            line_user_id,
+            is_active,
+            created_at,
+            updated_at
+        )
+        OUTPUT INSERTED.id
+        VALUES (
+            :line_user_id,
+            1,
+            SYSUTCDATETIME(),
+            SYSUTCDATETIME()
+        )
+    """), {"line_user_id": line_user_id}).scalar()
+
+
+def deactivate_internal_user(session, line_user_id):
+    if not line_user_id:
+        return
+
+    session.execute(text("""
+        UPDATE dbo.users
+        SET is_active = 0
+        WHERE line_user_id = :line_user_id
+    """), {"line_user_id": line_user_id})
+
+
+def is_event_processed(session, webhook_event_id):
+    if not webhook_event_id:
+        return False
+
+    row = session.execute(text("""
+        SELECT 1
+        FROM dbo.line_processed_events
+        WHERE webhook_event_id = :webhook_event_id
+    """), {"webhook_event_id": webhook_event_id}).first()
+
+    return row is not None
+
+
+def mark_event_processed(session, webhook_event_id, event_type):
+    if not webhook_event_id:
+        return
+
+    session.execute(text("""
+        INSERT INTO dbo.line_processed_events (
+            webhook_event_id,
+            event_type
+        )
+        VALUES (
+            :webhook_event_id,
+            :event_type
+        )
+    """), {
+        "webhook_event_id": webhook_event_id,
+        "event_type": event_type
+    })

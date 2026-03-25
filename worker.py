@@ -24,7 +24,7 @@ def run_worker():
                     print(f"📤 Sending notification for {task_item['task']}")
                     print(f"📌 Task: {task_item['task']} | Parent: {task_item['ritm']}")
                     print(f"🎯 Route To: {task_item['final_route']}")
-                    # send_task_notification(task_item)
+                    #! send_task_notification(task_item)
                     time.sleep(1)
 
             # ส่ง summary ทุกวันตอน 17:30 ครั้งเดียว
@@ -42,7 +42,7 @@ def run_worker():
                         f"Change={summary['change_count']} | "
                         f"Total={summary['total_count']}"
                     )
-                    # send_daily_summary_notification(summary)
+                    #! send_daily_summary_notification(summary)
                     last_summary_sent_key = today_key
 
             print(f"✅ Cycle complete. Sleeping for {Config.CHECK_INTERVAL}s...")

@@ -75,3 +75,13 @@ def get_group_summary(group_id):
         print(f"❌ get_group_summary error: {str(e)}")
 
     return {}
+
+
+def push_message(payload: dict):
+    push_url = "https://api.line.me/v2/bot/message/push"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {Config.LINE_ACCESS_TOKEN}",
+    }
+
+    return requests.post(push_url, headers=headers, json=payload, timeout=15)

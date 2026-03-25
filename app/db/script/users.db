@@ -4,16 +4,17 @@ GO
 
 CREATE TABLE dbo.users (
     id BIGINT IDENTITY(1,1) NOT NULL,
+    line_user_id NVARCHAR(100) NOT NULL,
     employee_code NVARCHAR(100) NULL,
     first_name NVARCHAR(255) NULL,
     last_name NVARCHAR(255) NULL,
     nickname NVARCHAR(255) NULL,
     phone NVARCHAR(50) NULL,
-    email NVARCHAR(255) NOT NULL,
+    email NVARCHAR(255) NULL,
     main_team NVARCHAR(255) NULL,
     sub_team NVARCHAR(255) NULL,
 
-    password_hash NVARCHAR(500) NOT NULL,
+    password_hash NVARCHAR(500) NULL,
     password_salt NVARCHAR(255) NULL,
     failed_login_count INT NOT NULL CONSTRAINT DF_users_failed_login_count DEFAULT (0),
     last_login_at DATETIME2 NULL,
@@ -43,12 +44,17 @@ END
 GO
 
 ALTER TABLE dbo.users
-ADD CONSTRAINT UQ_users_email UNIQUE (email);
+ADD CONSTRAINT UQ_users_line_user_id UNIQUE (line_user_id);
+GO
+
+CREATE UNIQUE INDEX UX_users_email
+ON dbo.users(email)
+WHERE email IS NOT NULL;
 GO
 
 EXEC sp_addextendedproperty
     @name = N'MS_Description',
-    @value = N'ตารางเก็บข้อมูลผู้ใช้งานภายในระบบเว็บหรือระบบแอดมินขององค์กร ใช้สำหรับ login, จัดการข้อมูลพนักงาน, กำหนดทีม และเชื่อมโยงกับ LINE user ผ่าน line_users.user_pk',
+    @value = N'ตารางผู้ใช้งานภายในระบบ (sync จาก LINE)',
     @level0type = N'SCHEMA', @level0name = 'dbo',
     @level1type = N'TABLE',  @level1name = 'users';
 GO
@@ -59,6 +65,14 @@ EXEC sp_addextendedproperty
     @level0type = N'SCHEMA', @level0name = 'dbo',
     @level1type = N'TABLE',  @level1name = 'users',
     @level2type = N'COLUMN', @level2name = 'id';
+GO
+
+EXEC sp_addextendedproperty 
+    @name = N'MS_Description',
+    @value = N'LINE User ID ใช้เป็น identity หลักของ user',
+    @level0type = N'SCHEMA', @level0name = 'dbo',
+    @level1type = N'TABLE',  @level1name = 'users',
+    @level2type = N'COLUMN', @level2name = 'line_user_id';
 GO
 
 EXEC sp_addextendedproperty
@@ -103,7 +117,7 @@ GO
 
 EXEC sp_addextendedproperty
     @name = N'MS_Description',
-    @value = N'email ของผู้ใช้งาน ใช้สำหรับ login, ติดต่อ, หรือใช้จับคู่กับข้อมูลจากระบบอื่น',
+    @value = N'email สำหรับ login (admin จะเพิ่มให้ภายหลัง)',
     @level0type = N'SCHEMA', @level0name = 'dbo',
     @level1type = N'TABLE',  @level1name = 'users',
     @level2type = N'COLUMN', @level2name = 'email';
@@ -127,7 +141,7 @@ GO
 
 EXEC sp_addextendedproperty
     @name = N'MS_Description',
-    @value = N'ค่า hash ของรหัสผ่านสำหรับใช้ login ระบบเว็บ ไม่ควรเก็บรหัสผ่านจริงแบบ plain text',
+    @value = N'password hash (NULL = ยังไม่ได้ตั้งรหัสผ่าน)',
     @level0type = N'SCHEMA', @level0name = 'dbo',
     @level1type = N'TABLE',  @level1name = 'users',
     @level2type = N'COLUMN', @level2name = 'password_hash';
@@ -159,7 +173,7 @@ GO
 
 EXEC sp_addextendedproperty
     @name = N'MS_Description',
-    @value = N'สถานะการใช้งานของบัญชีผู้ใช้ภายในระบบ 1=ใช้งานได้, 0=ปิดการใช้งาน',
+    @value = N'สถานะการใช้งาน (1=ใช้งานได้, 0=ถูก disable จากการออก group)',
     @level0type = N'SCHEMA', @level0name = 'dbo',
     @level1type = N'TABLE',  @level1name = 'users',
     @level2type = N'COLUMN', @level2name = 'is_active';
