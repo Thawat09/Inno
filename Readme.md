@@ -13,3 +13,4 @@
 # Install Database
 1. docker pull mcr.microsoft.com/mssql/server:2022-latest
 2. docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Inetms@2026" -p 1433:1433 --name sql_server_dev -d mcr.microsoft.com/mssql/server:2022-latest
+3. docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Inetms@2026" -p 1434:1433 --name sql_server_prd -d mcr.microsoft.com/mssql/server:2022-latest

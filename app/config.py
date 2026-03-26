@@ -29,7 +29,15 @@ class Config:
     CHECK_INTERVAL = int(env_or_default("CHECK_INTERVAL", 10))
     TARGET_SENDER = env_or_default("TARGET_SENDER", "SCGTicketSystems@service-now.com")
 
-    DB_URI = os.getenv("DATABASE_URL")
+    APP_ENV = env_or_default("APP_ENV", "dev").lower()
+
+    DATABASE_URL_DEV = os.getenv("DATABASE_URL_DEV")
+    DATABASE_URL_PRD = os.getenv("DATABASE_URL_PRD")
+
+    if APP_ENV == "prd":
+        DB_URI = DATABASE_URL_PRD
+    else:
+        DB_URI = DATABASE_URL_DEV
 
     TARGET_RECEIVER = {
         "scg-wifi@inetms.co.th": "iNET Network Team",

@@ -32,3 +32,6 @@ outputs/train/cloud_subteam_*.csv
 outputs/train/main_team_*.csv
 best_vs_bundle_predictions.csv
 best_vs_bundle_report.csv
+
+# --- Scripts ---
+app/db/script/recommend/v*
