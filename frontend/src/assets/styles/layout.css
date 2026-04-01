@@ -15,6 +15,7 @@ body,
 
 body {
     font-size: clamp(14px, 0.95vw, 18px);
+    min-height: 100vh;
 }
 
 a {
@@ -126,6 +127,8 @@ a {
     padding-right: 1rem;
     padding-bottom: 1rem;
     transition: padding-left 0.3s ease;
+    min-height: 100vh;
+    background: var(--bg-color);
 }
 
 .layout-main-inner {
@@ -414,6 +417,18 @@ a {
 .app-dark #app {
     background: #0b0f14;
     color: #f3f4f6;
+}
+
+body.app-dark,
+.app-dark,
+.app-dark #app {
+    background: #0b0f14;
+    color: #f3f4f6;
+}
+
+.app-dark .layout-wrapper,
+.app-dark .layout-main {
+    background: #0b0f14;
 }
 
 .app-dark .layout-topbar {
@@ -844,6 +859,17 @@ a {
 
 .ai-chat-input-wrap .p-inputtext {
     flex: 1;
+}
+
+.app-dark .mock-note {
+    background: #151a21 !important;
+    border: 1px solid #2a2f36 !important;
+    color: #f3f4f6 !important;
+}
+
+.app-dark .mock-note p,
+.app-dark .mock-note strong {
+    color: #f3f4f6 !important;
 }
 
 @media (max-width: 1024px) {

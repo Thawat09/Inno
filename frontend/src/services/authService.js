@@ -22,40 +22,94 @@ function normalizeEmail(email) {
     return String(email || '').trim().toLowerCase()
 }
 
+function toRoleName(role) {
+    switch (role) {
+        case 'super_admin':
+            return 'Super Admin'
+        case 'admin':
+            return 'Admin'
+        case 'employee':
+            return 'Employee'
+        default:
+            return 'User'
+    }
+}
+
 export function seedMockUsers() {
     const users = loadUsers()
     if (users.length > 0) return
 
+    const now = new Date().toISOString()
+
     const seed = [
         {
             id: 1,
+            employee_code: 'EMP-0001',
+            first_name: 'User',
+            last_name: 'One',
+            nickname: 'U1',
+            phone: '0812345678',
             email: 'user1@company.com',
             name: 'User One',
             role: 'employee',
+            role_name: 'Employee',
+            main_team: 'Operations',
+            sub_team: 'Standby',
             password: '',
+            hasPassword: false,
             failedLoginCount: 0,
             isLocked: false,
-            hasPassword: false
+            locked_at: '',
+            last_login_at: '',
+            is_active: true,
+            created_at: now,
+            updated_at: now
         },
         {
             id: 2,
+            employee_code: 'EMP-0002',
+            first_name: 'Admin',
+            last_name: 'User',
+            nickname: 'Admin',
+            phone: '0899999999',
             email: 'admin@company.com',
             name: 'Admin User',
             role: 'admin',
+            role_name: 'Admin',
+            main_team: 'Infrastructure',
+            sub_team: 'Cloud Operations',
             password: 'Admin123!',
+            hasPassword: true,
             failedLoginCount: 0,
             isLocked: false,
-            hasPassword: true
+            locked_at: '',
+            last_login_at: '',
+            is_active: true,
+            created_at: now,
+            updated_at: now
         },
         {
             id: 3,
+            employee_code: 'EMP-0003',
+            first_name: 'Super',
+            last_name: 'Admin',
+            nickname: 'SA',
+            phone: '0888888888',
             email: 'superadmin@company.com',
             name: 'Super Admin',
             role: 'super_admin',
+            role_name: 'Super Admin',
+            main_team: 'Management',
+            sub_team: 'Platform',
             password: 'Super123!',
+            hasPassword: true,
             failedLoginCount: 0,
             isLocked: false,
-            hasPassword: true
+            locked_at: '',
+            last_login_at: '',
+            is_active: true,
+            created_at: now,
+            updated_at: now
         }
     ]
 
@@ -71,28 +125,42 @@ export function loginWithPassword(email, password) {
     const users = loadUsers()
     const user = users.find((u) => normalizeEmail(u.email) === normalizeEmail(email))
 
+    // ไม่ reveal ว่ามี user หรือไม่
     if (!user) {
-        return { ok: false, code: 'USER_NOT_FOUND', message: 'ไม่พบผู้ใช้งานในระบบ' }
+        return {
+            ok: false,
+            code: 'USER_NOT_FOUND',
+            message: 'Invalid email or password'
+        }
     }
 
+    // บอกเฉพาะกรณีโดน lock
     if (user.isLocked) {
-        return { ok: false, code: 'LOCKED', message: 'บัญชีถูกล็อก กรุณาติดต่อผู้ดูแลระบบ' }
+        return {
+            ok: false,
+            code: 'LOCKED',
+            message: 'This account has been locked due to multiple failed login attempts.'
+        }
     }
 
+    // first login flow
     if (!user.hasPassword || !user.password) {
         return {
             ok: false,
             code: 'PASSWORD_NOT_SET',
-            message: 'ผู้ใช้นี้ยังไม่ได้ตั้งรหัสผ่าน',
+            message: 'Password has not been set',
             user
         }
     }
 
+    // invalid password
     if (user.password !== password) {
         user.failedLoginCount += 1
+        user.updated_at = new Date().toISOString()
 
         if (user.failedLoginCount >= 3) {
             user.isLocked = true
+            user.locked_at = new Date().toISOString()
         }
 
         saveUsers(users)
@@ -101,12 +169,18 @@ export function loginWithPassword(email, password) {
             ok: false,
             code: user.isLocked ? 'LOCKED' : 'INVALID_PASSWORD',
             message: user.isLocked
-                ? 'กรอกรหัสผ่านผิดเกิน 3 ครั้ง บัญชีถูกล็อกแล้ว'
-                : `รหัสผ่านไม่ถูกต้อง (ผิด ${user.failedLoginCount}/3)`
+                ? 'This account has been locked due to multiple failed login attempts.'
+                : 'Invalid email or password'
         }
     }
 
+    // success
     user.failedLoginCount = 0
+    user.isLocked = false
+    user.locked_at = ''
+    user.last_login_at = new Date().toISOString()
+    user.updated_at = new Date().toISOString()
+
     saveUsers(users)
 
     return {
@@ -121,16 +195,19 @@ export function setFirstPassword(email, password) {
     const user = users.find((u) => normalizeEmail(u.email) === normalizeEmail(email))
 
     if (!user) {
-        return { ok: false, message: 'ไม่พบผู้ใช้งาน' }
+        return { ok: false, message: 'User not found' }
     }
 
     if (user.isLocked) {
-        return { ok: false, message: 'บัญชีถูกล็อก' }
+        return { ok: false, message: 'This account is locked' }
     }
 
     user.password = password
     user.hasPassword = true
     user.failedLoginCount = 0
+    user.isLocked = false
+    user.locked_at = ''
+    user.updated_at = new Date().toISOString()
 
     saveUsers(users)
 
@@ -139,8 +216,13 @@ export function setFirstPassword(email, password) {
 
 export function generateOtp(email) {
     const user = findUserByEmail(email)
+
     if (!user) {
-        return { ok: false, message: 'ไม่พบผู้ใช้งาน' }
+        return { ok: false, message: 'Unable to generate OTP' }
+    }
+
+    if (user.isLocked) {
+        return { ok: false, message: 'This account is locked' }
     }
 
     const otp = String(Math.floor(100000 + Math.random() * 900000))
@@ -166,23 +248,27 @@ export function verifyOtp(email, otp) {
     const record = otpMap[key]
 
     if (!record) {
-        return { ok: false, message: 'ไม่พบ OTP กรุณากดส่งใหม่' }
+        return { ok: false, message: 'OTP not found. Please request a new one.' }
     }
 
     if (Date.now() > record.expiresAt) {
         delete otpMap[key]
         saveOtpMap(otpMap)
-        return { ok: false, message: 'OTP หมดอายุ กรุณากดส่งใหม่' }
+        return { ok: false, message: 'OTP expired. Please request a new one.' }
     }
 
     if (String(record.code) !== String(otp)) {
-        return { ok: false, message: 'OTP ไม่ถูกต้อง' }
+        return { ok: false, message: 'Invalid OTP' }
     }
 
     delete otpMap[key]
     saveOtpMap(otpMap)
 
     const user = findUserByEmail(email)
+
+    if (!user) {
+        return { ok: false, message: 'User not found' }
+    }
 
     sessionStorage.setItem(
         SESSION_KEY,
@@ -221,11 +307,107 @@ export function unlockUser(email) {
     const users = loadUsers()
     const user = users.find((u) => normalizeEmail(u.email) === normalizeEmail(email))
 
-    if (!user) return { ok: false, message: 'ไม่พบผู้ใช้' }
+    if (!user) {
+        return { ok: false, message: 'User not found' }
+    }
 
     user.isLocked = false
     user.failedLoginCount = 0
+    user.locked_at = ''
+    user.updated_at = new Date().toISOString()
 
     saveUsers(users)
+    return { ok: true }
+}
+
+export function updateCurrentUserProfile(payload) {
+    const session = getSession()
+    const currentUser = session?.user
+
+    if (!currentUser?.email) {
+        return { ok: false, message: 'Session not found' }
+    }
+
+    const users = loadUsers()
+    const user = users.find((u) => normalizeEmail(u.email) === normalizeEmail(currentUser.email))
+
+    if (!user) {
+        return { ok: false, message: 'User not found' }
+    }
+
+    user.first_name = payload.first_name?.trim() || ''
+    user.last_name = payload.last_name?.trim() || ''
+    user.nickname = payload.nickname?.trim() || ''
+    user.phone = payload.phone?.trim() || ''
+    user.name = [user.first_name, user.last_name].filter(Boolean).join(' ') || user.email
+    user.role_name = user.role_name || toRoleName(user.role)
+    user.updated_at = new Date().toISOString()
+
+    saveUsers(users)
+
+    const updatedSession = {
+        ...session,
+        user: { ...user }
+    }
+
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(updatedSession))
+
+    return { ok: true, user }
+}
+
+export function changePassword(email, currentPassword, newPassword) {
+    const users = loadUsers()
+    const user = users.find((u) => normalizeEmail(u.email) === normalizeEmail(email))
+
+    if (!user) {
+        return { ok: false, message: 'User not found' }
+    }
+
+    if (user.isLocked) {
+        return {
+            ok: false,
+            message: 'This account has been locked due to multiple failed login attempts.'
+        }
+    }
+
+    if (user.password !== currentPassword) {
+        return {
+            ok: false,
+            message: 'Current password is incorrect'
+        }
+    }
+
+    user.password = newPassword
+    user.hasPassword = true
+    user.updated_at = new Date().toISOString()
+
+    saveUsers(users)
+
+    const session = getSession()
+    if (session?.user && normalizeEmail(session.user.email) === normalizeEmail(email)) {
+        session.user = { ...user }
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(session))
+    }
+
+    return { ok: true, user }
+}
+
+export function resetPassword(email, newPassword) {
+    const users = loadUsers()
+    const user = users.find(u => normalizeEmail(u.email) === normalizeEmail(email))
+
+    if (!user) {
+        return { ok: false, message: 'User not found' }
+    }
+
+    user.password = newPassword
+    user.hasPassword = true
+    user.failedLoginCount = 0
+    user.isLocked = false
+    user.locked_at = ''
+    user.updated_at = new Date().toISOString()
+
+    saveUsers(users)
+
     return { ok: true }
 }
