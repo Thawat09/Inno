@@ -35,3 +35,13 @@ outputs/train/best_vs_bundle_report.csv
 
 # --- Scripts ---
 app/db/script/recommend/v*
+# --- Exclude Data Export Files ---
+outputs/export/*.csv
+
+# --- Exclude Executable Tools ---
+*.exe
+ngrok*
+
+# --- System Files ---
+.DS_Store
+Thumbs.db

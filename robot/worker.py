@@ -1,53 +1,217 @@
+import os
 import time
+import threading
 from datetime import datetime
+import schedule
+from app.config import Config
 from app.services.mail_service import fetch_and_group_tasks
 from app.services.report_service import get_daily_case_summary
-from app.services.line_service import send_task_notification, send_daily_summary_notification
-from app.config import Config
+from app.services.line_service import (
+    send_task_notification,
+    send_daily_summary_notification,
+)
+
+# TODO: implement จริงใน service layer/database layer
+# from app.services.escalation_service import process_pending_escalations
+# from app.services.job_state_service import was_job_run_today, mark_job_run_today
+
+# =========================================================
+# CONFIG DEFAULTS
+# =========================================================
+ENABLE_LINE_SEND = str(getattr(Config, "ENABLE_LINE_SEND", "false")).lower() == "true"
+EMAIL_POLL_INTERVAL_SECONDS = int(getattr(Config, "CHECK_INTERVAL", 10))
+ESCALATION_CHECK_INTERVAL_SECONDS = int(getattr(Config, "ESCALATION_CHECK_INTERVAL", 60))
+DAILY_SUMMARY_TIME = getattr(Config, "DAILY_SUMMARY_TIME", "17:30")
+WORKER_IDLE_SLEEP_SECONDS = float(getattr(Config, "WORKER_IDLE_SLEEP_SECONDS", 1.0))
+
+
+# =========================================================
+# IN-PROCESS LOCKS
+# =========================================================
+_email_job_lock = threading.Lock()
+_escalation_job_lock = threading.Lock()
+_summary_job_lock = threading.Lock()
+
+
+# =========================================================
+# HELPERS
+# =========================================================
+def log(message: str):
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"[{now}] {message}")
+
+
+def safe_run(job_name: str, fn):
+    try:
+        log(f"▶ START {job_name}")
+        fn()
+        log(f"✅ END {job_name}")
+    except Exception as e:
+        log(f"❌ ERROR {job_name}: {e}")
+
+
+def _send_line_task(task_item: dict):
+    if not ENABLE_LINE_SEND:
+        log(
+            f"LINE disabled (dry-run) | task={task_item.get('task')} "
+            f"| ritm={task_item.get('ritm')} | route={task_item.get('final_route')}"
+        )
+        return
+
+    status_code = send_task_notification(task_item)
+    if status_code != 200:
+        log(
+            f"⚠ LINE send failed | task={task_item.get('task')} "
+            f"| ritm={task_item.get('ritm')} | status={status_code}"
+        )
+
+
+def _send_line_summary(summary: dict):
+    if not ENABLE_LINE_SEND:
+        log(
+            "LINE disabled (dry-run) | daily summary "
+            f"| total={summary.get('total_count', 0)}"
+        )
+        return
+
+    status_code = send_daily_summary_notification(summary)
+    if status_code != 200:
+        log(f"⚠ LINE daily summary failed | status={status_code}")
+
+
+# =========================================================
+# JOB 1: EMAIL POLLING
+# =========================================================
+def email_polling_job():
+    if not _email_job_lock.acquire(blocking=False):
+        log("⏭ Skip email polling: previous run still in progress")
+        return
+
+    try:
+        log("🔍 Checking for new emails...")
+        task_list = fetch_and_group_tasks()
+
+        if not task_list:
+            log("😴 No new tasks found.")
+            return
+
+        log(f"📥 New tasks found: {len(task_list)}")
+
+        for idx, task_item in enumerate(task_list, start=1):
+            task = task_item.get("task", "-")
+            ritm = task_item.get("ritm", "-")
+            route = task_item.get("final_route", "-")
+
+            log(f"📌 [{idx}/{len(task_list)}] task={task} | ritm={ritm} | route={route}")
+
+            # ตรงนี้ mail_service ควรทำ DB persistence เสร็จเรียบร้อยก่อน
+            # แล้ว worker ค่อยทำ notification รอบแรก
+            #! _send_line_task(task_item)
+
+            # กันยิงเร็วเกินไปเล็กน้อย
+            time.sleep(0.3)
+
+    finally:
+        _email_job_lock.release()
+
+
+# =========================================================
+# JOB 2: ESCALATION CHECK
+# =========================================================
+def escalation_check_job():
+    if not _escalation_job_lock.acquire(blocking=False):
+        log("⏭ Skip escalation check: previous run still in progress")
+        return
+
+    try:
+        # TODO:
+        # ดึง ticket ที่ยังไม่ accepted และยังส่งไม่ครบ 3 รอบ
+        # เช็ค response_deadline_at ว่าครบ 15 นาทีหรือยัง
+        # ถ้าครบแล้วให้หา tier ถัดไป แล้วส่ง LINE รอบใหม่
+        # ถ้าถึง tier สุดท้ายหรือครบ 3 รอบแล้ว ให้ mark missed SLA แล้วจบ
+        #
+        # ตัวอย่าง:
+        # result = process_pending_escalations(
+        #     max_rounds=3,
+        #     default_wait_minutes=15,
+        #     enable_line_send=ENABLE_LINE_SEND,
+        # )
+        # log(
+        #     f"📈 Escalation checked | scanned={result['scanned']} "
+        #     f"| escalated={result['escalated']} | closed={result['closed']}"
+        # )
+        log("🕒 Escalation check tick")
+    finally:
+        _escalation_job_lock.release()
+
+
+# =========================================================
+# JOB 3: DAILY SUMMARY
+# =========================================================
+def daily_summary_job():
+    if not _summary_job_lock.acquire(blocking=False):
+        log("⏭ Skip daily summary: previous run still in progress")
+        return
+
+    try:
+        today_key = datetime.now().strftime("%Y-%m-%d")
+
+        # แนะนำให้เปลี่ยนเป็นเช็คจาก DB จริง ไม่ใช่ memory
+        # if was_job_run_today("daily_summary", today_key):
+        #     log(f"⏭ Daily summary already sent for {today_key}")
+        #     return
+
+        summary = get_daily_case_summary()
+
+        log(
+            "📊 Daily summary prepared "
+            f"| incident={summary.get('incident_count', 0)} "
+            f"| request={summary.get('request_count', 0)} "
+            f"| change={summary.get('change_count', 0)} "
+            f"| total={summary.get('total_count', 0)}"
+        )
+
+        #! _send_line_summary(summary)
+
+        # mark_job_run_today("daily_summary", today_key)
+
+    finally:
+        _summary_job_lock.release()
+
+
+# =========================================================
+# SCHEDULER BOOTSTRAP
+# =========================================================
+def register_jobs():
+    schedule.every(EMAIL_POLL_INTERVAL_SECONDS).seconds.do(
+        lambda: safe_run("email_polling_job", email_polling_job)
+    )
+
+    schedule.every(ESCALATION_CHECK_INTERVAL_SECONDS).seconds.do(
+        lambda: safe_run("escalation_check_job", escalation_check_job)
+    )
+
+    schedule.every().day.at(DAILY_SUMMARY_TIME).do(
+        lambda: safe_run("daily_summary_job", daily_summary_job)
+    )
+
+    log(
+        "🧩 Jobs registered "
+        f"| email_poll={EMAIL_POLL_INTERVAL_SECONDS}s "
+        f"| escalation_check={ESCALATION_CHECK_INTERVAL_SECONDS}s "
+        f"| daily_summary={DAILY_SUMMARY_TIME} "
+        f"| enable_line_send={ENABLE_LINE_SEND}"
+    )
 
 
 def run_worker():
-    print("🚀 Email Worker started...")
-    last_summary_sent_key = None
+    log("🚀 Python Worker started")
+    register_jobs()
 
     while True:
-        try:
-            now = datetime.now()
-            print(f"🔍 Checking for new emails... ({now.strftime('%H:%M:%S')})")
+        schedule.run_pending()
+        time.sleep(WORKER_IDLE_SLEEP_SECONDS)
 
-            task_list = fetch_and_group_tasks()
 
-            if not task_list:
-                print("😴 No new tasks found.")
-            else:
-                for task_item in task_list:
-                    print(f"📤 Sending notification for {task_item['task']}")
-                    print(f"📌 Task: {task_item['task']} | Parent: {task_item['ritm']}")
-                    print(f"🎯 Route To: {task_item['final_route']}")
-                    #! send_task_notification(task_item)
-                    time.sleep(1)
-
-            # ส่ง summary ทุกวันตอน 17:30 ครั้งเดียว
-            now = datetime.now()
-            # now = datetime.now().replace(hour=17, minute=30, second=0, microsecond=0)
-            if now.hour == 17 and now.minute == 30:
-                today_key = now.strftime("%Y-%m-%d")
-
-                if last_summary_sent_key != today_key:
-                    summary = get_daily_case_summary()
-                    print(
-                        f"📊 Sending daily summary | "
-                        f"Incident={summary['incident_count']} | "
-                        f"Request={summary['request_count']} | "
-                        f"Change={summary['change_count']} | "
-                        f"Total={summary['total_count']}"
-                    )
-                    #! send_daily_summary_notification(summary)
-                    last_summary_sent_key = today_key
-
-            print(f"✅ Cycle complete. Sleeping for {Config.CHECK_INTERVAL}s...")
-
-        except Exception as e:
-            print(f"⚠️ Worker Loop Error: {e}")
-
-        time.sleep(Config.CHECK_INTERVAL)
+if __name__ == "__main__":
+    run_worker()
