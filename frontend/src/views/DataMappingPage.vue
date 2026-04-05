@@ -23,6 +23,10 @@
             </template>
 
             <template #content>
+                <div v-if="isLoading" class="loading-state">
+                    <ProgressSpinner style="width: 50px; height: 50px" />
+                </div>
+                <template v-else>
                 <Message v-if="pageError" severity="error" class="mb-3">
                     {{ pageError }}
                 </Message>
@@ -53,6 +57,8 @@
                     </div>
                 </div>
 
+                <TabView>
+                    <TabPanel header="Mapping Issue Queue">
                 <div class="toolbar-row">
                     <div class="toolbar-search">
                         <i class="pi pi-search toolbar-search-icon"></i>
@@ -198,11 +204,49 @@
                         </div>
                     </template>
                 </DataTable>
+                    </TabPanel>
+
+                    <TabPanel header="LINE ↔ Web User">
+                        <DataTable :value="mockLineMapping" responsiveLayout="scroll" stripedRows>
+                            <Column field="line_name" header="LINE Display Name"></Column>
+                            <Column field="employee_name" header="Web User (Employee)"></Column>
+                            <Column header="Status">
+                                <template #body><span class="status-badge status-active">Mapped</span></template>
+                            </Column>
+                            <Column header="Action">
+                                <template #body><Button label="Edit" size="small" outlined/></template>
+                            </Column>
+                        </DataTable>
+                    </TabPanel>
+
+                    <TabPanel header="User ↔ Team">
+                        <DataTable :value="mockTeamMapping" responsiveLayout="scroll" stripedRows>
+                            <Column field="employee_name" header="Web User (Employee)"></Column>
+                            <Column field="team" header="Main Team"></Column>
+                            <Column field="sub_team" header="Sub Team"></Column>
+                            <Column header="Action">
+                                <template #body><Button label="Edit" size="small" outlined/></template>
+                            </Column>
+                        </DataTable>
+                    </TabPanel>
+
+                    <TabPanel header="Keyword ↔ Team">
+                        <DataTable :value="mockKeywordMapping" responsiveLayout="scroll" stripedRows>
+                            <Column field="keyword" header="Keyword / Domain Pattern"></Column>
+                            <Column field="target_team" header="Target Team"></Column>
+                            <Column field="target_sub_team" header="Target Sub Team"></Column>
+                            <Column header="Action">
+                                <template #body><Button label="Edit" size="small" outlined/></template>
+                            </Column>
+                        </DataTable>
+                    </TabPanel>
+                </TabView>
 
                 <div class="mock-note mt-3">
                     This page currently uses frontend mock data and is ready for future backend integration
                     for mapping queue, unresolved reference management, and routing/data-quality workflows.
                 </div>
+                </template>
             </template>
         </Card>
 
@@ -269,7 +313,10 @@
 
 <script setup>
 import { computed, onMounted, ref } from "vue";
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
 
+const isLoading = ref(true);
 const pageError = ref("");
 const successMessage = ref("");
 const searchText = ref("");
@@ -358,16 +405,34 @@ const mockMappings = [
     }
 ];
 
+const mockLineMapping = [
+    { line_name: "Admin John", employee_name: "Admin User" },
+    { line_name: "Narin_Line", employee_name: "Narin Sukjai" }
+];
+const mockTeamMapping = [
+    { employee_name: "Admin User", team: "Cloud Operations", sub_team: "AWS Team" },
+    { employee_name: "Ploy Jinda", team: "Security Operations", sub_team: "SOC" }
+];
+const mockKeywordMapping = [
+    { keyword: "@aws.com", target_team: "Cloud Operations", target_sub_team: "AWS Team" },
+    { keyword: "firewall issue", target_team: "Security Operations", target_sub_team: "Network Security" }
+];
+
 const loadMappings = () => {
+    isLoading.value = true;
     pageError.value = "";
     successMessage.value = "";
 
-    try {
-        mappings.value = [...mockMappings];
-    } catch (error) {
-        console.error(error);
-        pageError.value = "Unable to load data mapping queue.";
-    }
+    setTimeout(() => {
+        try {
+            mappings.value = [...mockMappings];
+        } catch (error) {
+            console.error(error);
+            pageError.value = "Unable to load data mapping queue.";
+        } finally {
+            isLoading.value = false;
+        }
+    }, 500);
 };
 
 const teamOptions = computed(() => {
@@ -698,6 +763,13 @@ onMounted(() => {
 
 .mt-3 {
     margin-top: 1rem;
+}
+
+.loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
 }
 
 @media (max-width: 1200px) {

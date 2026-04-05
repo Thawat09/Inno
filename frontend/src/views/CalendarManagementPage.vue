@@ -6,13 +6,13 @@
                     <div>
                         <div class="page-title">Calendar Management</div>
                         <div class="page-subtitle">
-                            Manage standby roster, shift coverage, and tier assignment by team and date.
+                            Configure standby shift rules, rotation cycles, and infinite tier assignments.
                         </div>
                     </div>
 
                     <div class="page-header-actions">
                         <Button
-                            label="New Slot"
+                            label="New Shift Rule"
                             icon="pi pi-plus"
                             @click="startCreate"
                         />
@@ -28,6 +28,10 @@
             </template>
 
             <template #content>
+                <div v-if="isLoading" class="loading-state">
+                    <ProgressSpinner style="width: 50px; height: 50px" />
+                </div>
+                <template v-else>
                 <Message v-if="pageError" severity="error" class="mb-3">
                     {{ pageError }}
                 </Message>
@@ -38,30 +42,30 @@
 
                 <div class="summary-grid">
                     <div class="summary-card">
-                        <div class="summary-label">Filtered Slots</div>
-                        <div class="summary-value">{{ filteredRosters.length }}</div>
+                        <div class="summary-label">Active Rules</div>
+                        <div class="summary-value">{{ filteredRules.length }}</div>
                     </div>
 
                     <div class="summary-card">
-                        <div class="summary-label">Teams</div>
+                        <div class="summary-label">Teams Configured</div>
                         <div class="summary-value">{{ uniqueTeamCount }}</div>
                     </div>
 
                     <div class="summary-card">
-                        <div class="summary-label">Coverage Gaps</div>
-                        <div class="summary-value">{{ coverageGapCount }}</div>
+                        <div class="summary-label">Daily Rotations</div>
+                        <div class="summary-value">{{ dailyRotationCount }}</div>
                     </div>
 
                     <div class="summary-card">
-                        <div class="summary-label">Today Slots</div>
-                        <div class="summary-value">{{ todaySlotCount }}</div>
+                        <div class="summary-label">Weekly Rotations</div>
+                        <div class="summary-value">{{ weeklyRotationCount }}</div>
                     </div>
                 </div>
 
                 <div class="page-two-column">
                     <Card class="content-card">
                         <template #title>
-                            <span>{{ editMode ? 'Edit Slot' : 'Create Slot' }}</span>
+                            <span>{{ editMode ? 'Edit Shift Rule' : 'Create Shift Rule' }}</span>
                         </template>
 
                         <template #content>
@@ -78,9 +82,9 @@
                                 </div>
 
                                 <div class="form-field">
-                                    <label>Date</label>
+                                    <label>Effective Start Date</label>
                                     <InputText
-                                        v-model="form.date"
+                                        v-model="form.anchor_date"
                                         type="date"
                                     />
                                 </div>
@@ -135,13 +139,13 @@
                                 </div>
 
                                 <div class="form-field">
-                                    <label>Coverage Status</label>
+                                    <label>Rotation Cycle</label>
                                     <Dropdown
-                                        v-model="form.coverage_ok"
-                                        :options="coverageOptions"
+                                        v-model="form.cycle_days"
+                                        :options="rotationOptions"
                                         optionLabel="label"
                                         optionValue="value"
-                                        placeholder="Select coverage"
+                                        placeholder="Select cycle"
                                     />
                                 </div>
 
@@ -156,7 +160,7 @@
 
                                 <div class="form-actions">
                                     <Button
-                                        :label="editMode ? 'Update Slot' : 'Create Slot'"
+                                        :label="editMode ? 'Update Rule' : 'Create Rule'"
                                         icon="pi pi-check"
                                         @click="handleSave"
                                     />
@@ -180,23 +184,23 @@
                         <template #content>
                             <div class="notes-list">
                                 <div class="note-item">
-                                    <div class="note-title">Shift Logic</div>
+                                    <div class="note-title">Infinite Rotation</div>
                                     <div class="note-desc">
-                                        Each slot should represent one time range with assigned standby tiers.
+                                        Setting a rule generates standby slots automatically forever based on the cycle (e.g., every 7 days).
                                     </div>
                                 </div>
 
                                 <div class="note-item">
-                                    <div class="note-title">Coverage Gap</div>
+                                    <div class="note-title">Effective Start Date</div>
                                     <div class="note-desc">
-                                        If Tier 1 is unavailable or empty, future backend logic should evaluate fallback handling.
+                                        Choose a Monday if you want weekly rotations to always switch on Mondays.
                                     </div>
                                 </div>
 
                                 <div class="note-item">
-                                    <div class="note-title">Future Features</div>
+                                    <div class="note-title">Advanced Roasters</div>
                                     <div class="note-desc">
-                                        Bulk edit, copy previous month, import/export, and impact preview can be added later.
+                                        In full backend implementation, a single rule can accept multiple roster groups to cycle through.
                                     </div>
                                 </div>
                             </div>
@@ -206,7 +210,7 @@
 
                 <Card class="content-card">
                     <template #title>
-                        <span>Roster Table</span>
+                        <span>Active Shift Rules</span>
                     </template>
 
                     <template #content>
@@ -215,7 +219,7 @@
                                 <i class="pi pi-search toolbar-search-icon"></i>
                                 <InputText
                                     v-model="searchText"
-                                    placeholder="Search team, date, tier user..."
+                                    placeholder="Search team, rule name, tier user..."
                                 />
                             </div>
 
@@ -228,16 +232,11 @@
                                     placeholder="Team"
                                     class="filter-dropdown"
                                 />
-                                <InputText
-                                    v-model="dateFilter"
-                                    type="date"
-                                    class="date-filter"
-                                />
                             </div>
                         </div>
 
                         <DataTable
-                            :value="filteredRosters"
+                            :value="filteredRules"
                             dataKey="id"
                             paginator
                             :rows="10"
@@ -250,9 +249,9 @@
                                 </template>
                             </Column>
 
-                            <Column field="date" header="Date" style="min-width: 140px">
+                            <Column field="anchor_date" header="Effective From" style="min-width: 140px">
                                 <template #body="{ data }">
-                                    {{ formatDate(data.date) }}
+                                    {{ formatDate(data.anchor_date) }}
                                 </template>
                             </Column>
 
@@ -260,9 +259,15 @@
 
                             <Column field="shift_label" header="Shift" style="min-width: 150px" />
 
+                            <Column field="cycle_days" header="Cycle" style="min-width: 120px">
+                                <template #body="{ data }">
+                                    {{ data.cycle_days === 1 ? 'Daily' : data.cycle_days === 7 ? 'Weekly' : data.cycle_days + ' Days' }}
+                                </template>
+                            </Column>
+
                             <Column field="tier1_name" header="Tier 1" style="min-width: 170px">
                                 <template #body="{ data }">
-                                    {{ data.tier1_name || "-" }}
+                                    <b>{{ data.tier1_name || "-" }}</b>
                                 </template>
                             </Column>
 
@@ -275,17 +280,6 @@
                             <Column field="tier3_name" header="Tier 3" style="min-width: 170px">
                                 <template #body="{ data }">
                                     {{ data.tier3_name || "-" }}
-                                </template>
-                            </Column>
-
-                            <Column header="Coverage" style="min-width: 130px">
-                                <template #body="{ data }">
-                                    <span
-                                        class="status-badge"
-                                        :class="data.coverage_ok ? 'status-active' : 'status-inactive'"
-                                    >
-                                        {{ data.coverage_ok ? "Covered" : "Gap" }}
-                                    </span>
                                 </template>
                             </Column>
 
@@ -314,7 +308,7 @@
 
                             <template #empty>
                                 <div class="empty-box">
-                                    No roster slots found.
+                                    No shift rules found.
                                 </div>
                             </template>
                         </DataTable>
@@ -323,8 +317,9 @@
 
                 <div class="mock-note mt-3">
                     This page currently uses frontend mock data and is ready for future backend integration
-                    for roster management, bulk edit, import/export, and schedule impact analysis.
+                    for generating infinite `standby_slots` based on these `standby_shift_rules`.
                 </div>
+                </template>
             </template>
         </Card>
     </section>
@@ -333,14 +328,14 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
 
+const isLoading = ref(true);
 const pageError = ref("");
 const successMessage = ref("");
 const searchText = ref("");
 const teamFilter = ref("all");
-const dateFilter = ref("");
 const editMode = ref(false);
 const editingId = ref(null);
-const rosters = ref([]);
+const shiftRules = ref([]);
 
 const teamOptions = [
     { label: "All Teams", value: "all" },
@@ -365,106 +360,96 @@ const memberOptions = [
     { label: "Mali Kanit", value: "Mali Kanit" }
 ];
 
-const coverageOptions = [
-    { label: "Covered", value: true },
-    { label: "Gap", value: false }
+const rotationOptions = [
+    { label: "Daily (1 Day)", value: 1 },
+    { label: "Weekly (7 Days)", value: 7 },
+    { label: "Bi-Weekly (14 Days)", value: 14 }
 ];
 
 const form = ref({
     team_name: "",
-    date: "",
+    anchor_date: "",
     shift_start: "",
     shift_end: "",
     tier1_name: "",
     tier2_name: "",
     tier3_name: "",
-    coverage_ok: true,
+    cycle_days: 7,
     note: ""
 });
 
-const mockRosters = [
+const mockRules = [
     {
         id: 1,
-        date: "2026-04-01",
         team_name: "Cloud Operations",
-        shift_start: "08:00",
-        shift_end: "16:00",
-        shift_label: "08:00 - 16:00",
+        anchor_date: "2024-01-01",
+        shift_start: "08:30",
+        shift_end: "08:30",
+        shift_label: "08:30 - 08:30",
+        cycle_days: 7,
         tier1_name: "Admin User",
         tier2_name: "Narin Sukjai",
         tier3_name: "Mali Kanit",
-        coverage_ok: true,
-        note: "Business hours shift"
+        note: "Weekly rotation starting Monday"
     },
     {
         id: 2,
-        date: "2026-04-01",
         team_name: "Security Operations",
+        anchor_date: "2024-01-01",
         shift_start: "08:00",
         shift_end: "16:00",
         shift_label: "08:00 - 16:00",
+        cycle_days: 1,
         tier1_name: "Super Admin",
         tier2_name: "Ploy Jinda",
         tier3_name: "",
-        coverage_ok: true,
-        note: "SOC monitoring shift"
+        note: "Daily SOC monitoring shift"
     },
     {
         id: 3,
-        date: "2026-04-01",
         team_name: "Standby Support",
+        anchor_date: "2024-01-03",
         shift_start: "16:00",
         shift_end: "00:00",
         shift_label: "16:00 - 00:00",
+        cycle_days: 7,
         tier1_name: "User One",
         tier2_name: "Krit Meechai",
         tier3_name: "",
-        coverage_ok: false,
-        note: "Tier 1 may be unavailable"
-    },
-    {
-        id: 4,
-        date: "2026-04-02",
-        team_name: "Cloud Operations",
-        shift_start: "08:00",
-        shift_end: "16:00",
-        shift_label: "08:00 - 16:00",
-        tier1_name: "Admin User",
-        tier2_name: "Narin Sukjai",
-        tier3_name: "Mali Kanit",
-        coverage_ok: true,
-        note: ""
+        note: "Weekly rotation starting Wednesday"
     }
 ];
 
 const getTodayDate = () => new Date().toISOString().slice(0, 10);
 
-const loadRosters = () => {
+const loadRules = () => {
+    isLoading.value = true;
     pageError.value = "";
     successMessage.value = "";
 
-    try {
-        rosters.value = [...mockRosters];
-    } catch (error) {
-        console.error(error);
-        pageError.value = "Unable to load calendar roster data.";
-    }
+    setTimeout(() => {
+        try {
+            shiftRules.value = [...mockRules];
+        } catch (error) {
+            pageError.value = "Unable to load shift rules data.";
+        } finally {
+            isLoading.value = false;
+        }
+    }, 500);
 };
 
-const filteredRosters = computed(() => {
+const filteredRules = computed(() => {
     const keyword = searchText.value.trim().toLowerCase();
 
-    return rosters.value.filter((item) => {
+    return shiftRules.value.filter((item) => {
         const matchKeyword = !keyword
             ? true
             : [
                   item.team_name,
-                  item.date,
                   item.shift_label,
                   item.tier1_name,
                   item.tier2_name,
-                  item.tier3_name,
-                  item.note
+                  item.tier3_name
               ]
                   .filter(Boolean)
                   .some((value) => value.toLowerCase().includes(keyword));
@@ -472,36 +457,32 @@ const filteredRosters = computed(() => {
         const matchTeam =
             teamFilter.value === "all" ? true : item.team_name === teamFilter.value;
 
-        const matchDate =
-            !dateFilter.value ? true : item.date === dateFilter.value;
-
-        return matchKeyword && matchTeam && matchDate;
+        return matchKeyword && matchTeam;
     });
 });
 
 const uniqueTeamCount = computed(() => {
-    return new Set(filteredRosters.value.map((item) => item.team_name)).size;
+    return new Set(filteredRules.value.map((item) => item.team_name)).size;
 });
 
-const coverageGapCount = computed(() => {
-    return filteredRosters.value.filter((item) => !item.coverage_ok).length;
+const dailyRotationCount = computed(() => {
+    return filteredRules.value.filter((item) => item.cycle_days === 1).length;
 });
 
-const todaySlotCount = computed(() => {
-    const today = getTodayDate();
-    return rosters.value.filter((item) => item.date === today).length;
+const weeklyRotationCount = computed(() => {
+    return filteredRules.value.filter((item) => item.cycle_days === 7).length;
 });
 
 const resetForm = () => {
     form.value = {
         team_name: "",
-        date: "",
+        anchor_date: getTodayDate(),
         shift_start: "",
         shift_end: "",
         tier1_name: "",
         tier2_name: "",
         tier3_name: "",
-        coverage_ok: true,
+        cycle_days: 7,
         note: ""
     };
     editMode.value = false;
@@ -518,7 +499,7 @@ const handleSave = () => {
     pageError.value = "";
     successMessage.value = "";
 
-    if (!form.value.team_name || !form.value.date || !form.value.shift_start || !form.value.shift_end) {
+    if (!form.value.team_name || !form.value.anchor_date || !form.value.shift_start || !form.value.shift_end) {
         pageError.value = "Please complete all required fields.";
         return;
     }
@@ -529,20 +510,20 @@ const handleSave = () => {
     };
 
     if (editMode.value && editingId.value !== null) {
-        const target = rosters.value.find((item) => item.id === editingId.value);
+        const target = shiftRules.value.find((item) => item.id === editingId.value);
         if (!target) {
-            pageError.value = "Selected roster slot not found.";
+            pageError.value = "Selected shift rule not found.";
             return;
         }
 
         Object.assign(target, payload);
-        successMessage.value = "Roster slot updated successfully. (mock)";
+        successMessage.value = "Shift rule updated successfully. The calendar will reflect this logic. (mock)";
     } else {
-        rosters.value.unshift({
+        shiftRules.value.unshift({
             id: Date.now(),
             ...payload
         });
-        successMessage.value = "Roster slot created successfully. (mock)";
+        successMessage.value = `Shift rule created successfully. This will generate endless future slots. (mock)`;
     }
 
     resetForm();
@@ -554,13 +535,13 @@ const handleEdit = (item) => {
 
     form.value = {
         team_name: item.team_name || "",
-        date: item.date || "",
+        anchor_date: item.anchor_date || "",
         shift_start: item.shift_start || "",
         shift_end: item.shift_end || "",
         tier1_name: item.tier1_name || "",
         tier2_name: item.tier2_name || "",
         tier3_name: item.tier3_name || "",
-        coverage_ok: item.coverage_ok ?? true,
+        cycle_days: item.cycle_days || 7,
         note: item.note || ""
     };
 
@@ -569,8 +550,8 @@ const handleEdit = (item) => {
 };
 
 const handleDelete = (item) => {
-    rosters.value = rosters.value.filter((row) => row.id !== item.id);
-    successMessage.value = `Roster slot ${item.team_name} ${item.date} deleted. (mock)`;
+    shiftRules.value = shiftRules.value.filter((row) => row.id !== item.id);
+    successMessage.value = `Shift rule for ${item.team_name} deleted. (mock)`;
 
     if (editingId.value === item.id) {
         resetForm();
@@ -591,7 +572,7 @@ const formatDate = (value) => {
 };
 
 onMounted(() => {
-    loadRosters();
+    loadRules();
 });
 </script>
 
@@ -712,10 +693,9 @@ onMounted(() => {
 }
 
 .filter-dropdown,
-.date-filter {
+.filter-dropdown {
     min-width: 170px;
 }
-
 .action-group {
     display: flex;
     flex-wrap: wrap;
@@ -736,6 +716,13 @@ onMounted(() => {
 
 .mt-3 {
     margin-top: 1rem;
+}
+
+.loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
 }
 
 @media (max-width: 1200px) {

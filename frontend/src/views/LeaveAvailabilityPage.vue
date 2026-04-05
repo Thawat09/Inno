@@ -23,6 +23,10 @@
             </template>
 
             <template #content>
+                <div v-if="isLoading" class="loading-state">
+                    <ProgressSpinner style="width: 50px; height: 50px" />
+                </div>
+                <template v-else>
                 <Message v-if="pageError" severity="error" class="mb-3">
                     {{ pageError }}
                 </Message>
@@ -38,13 +42,8 @@
                     </div>
 
                     <div class="summary-card">
-                        <div class="summary-label">Approved</div>
-                        <div class="summary-value">{{ approvedCount }}</div>
-                    </div>
-
-                    <div class="summary-card">
-                        <div class="summary-label">Pending</div>
-                        <div class="summary-value">{{ pendingCount }}</div>
+                        <div class="summary-label">Active Records</div>
+                        <div class="summary-value">{{ activeCount }}</div>
                     </div>
 
                     <div class="summary-card">
@@ -138,7 +137,7 @@
                                 <div class="note-item">
                                     <div class="note-title">Leave Request</div>
                                     <div class="note-desc">
-                                        Use this for full-day or multi-day leave periods.
+                                        Use this for full-day leave. Requests are applied immediately (No approval required).
                                     </div>
                                 </div>
 
@@ -239,33 +238,10 @@
                                 <template #body="{ data }">
                                     <span
                                         class="status-badge"
-                                        :class="data.status === 'Approved' ? 'status-active' : data.status === 'Pending' ? 'status-pending' : 'status-inactive'"
+                                        :class="data.status === 'Active' ? 'status-active' : 'status-inactive'"
                                     >
                                         {{ data.status }}
                                     </span>
-                                </template>
-                            </Column>
-
-                            <Column header="Actions" style="min-width: 200px">
-                                <template #body="{ data }">
-                                    <div class="action-group">
-                                        <Button
-                                            label="Approve"
-                                            icon="pi pi-check"
-                                            size="small"
-                                            v-if="data.status === 'Pending'"
-                                            @click="handleApprove(data)"
-                                        />
-                                        <Button
-                                            label="Reject"
-                                            icon="pi pi-times"
-                                            size="small"
-                                            severity="danger"
-                                            outlined
-                                            v-if="data.status === 'Pending'"
-                                            @click="handleReject(data)"
-                                        />
-                                    </div>
                                 </template>
                             </Column>
 
@@ -282,6 +258,7 @@
                     This page currently uses frontend mock data and is ready for future backend integration
                     for leave workflow, availability control, and standby impact calculation.
                 </div>
+                </template>
             </template>
         </Card>
     </section>
@@ -290,6 +267,7 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
 
+const isLoading = ref(true);
 const pageError = ref("");
 const successMessage = ref("");
 const searchText = ref("");
@@ -317,9 +295,8 @@ const teamOptions = [
 
 const statusOptions = [
     { label: "All Status", value: "all" },
-    { label: "Pending", value: "Pending" },
-    { label: "Approved", value: "Approved" },
-    { label: "Rejected", value: "Rejected" }
+    { label: "Active", value: "Active" },
+    { label: "Past", value: "Past" }
 ];
 
 const form = ref({
@@ -339,7 +316,7 @@ const mockRequests = [
         start_date: "2026-04-01",
         end_date: "2026-04-02",
         reason: "Personal leave",
-        status: "Approved"
+        status: "Active"
     },
     {
         id: 2,
@@ -349,7 +326,7 @@ const mockRequests = [
         start_date: "2026-04-01",
         end_date: "2026-04-01",
         reason: "Training session",
-        status: "Pending"
+        status: "Active"
     },
     {
         id: 3,
@@ -359,7 +336,7 @@ const mockRequests = [
         start_date: "2026-04-03",
         end_date: "2026-04-05",
         reason: "Vacation",
-        status: "Pending"
+        status: "Active"
     },
     {
         id: 4,
@@ -369,20 +346,25 @@ const mockRequests = [
         start_date: "2026-04-01",
         end_date: "2026-04-01",
         reason: "Customer site visit",
-        status: "Approved"
+        status: "Past"
     }
 ];
 
 const loadData = () => {
+    isLoading.value = true;
     pageError.value = "";
     successMessage.value = "";
 
-    try {
-        requests.value = [...mockRequests];
-    } catch (error) {
-        console.error(error);
-        pageError.value = "Unable to load leave and availability data.";
-    }
+    setTimeout(() => {
+        try {
+            requests.value = [...mockRequests];
+        } catch (error) {
+            console.error(error);
+            pageError.value = "Unable to load leave and availability data.";
+        } finally {
+            isLoading.value = false;
+        }
+    }, 500);
 };
 
 const filteredRequests = computed(() => {
@@ -405,19 +387,15 @@ const filteredRequests = computed(() => {
     });
 });
 
-const approvedCount = computed(() =>
-    filteredRequests.value.filter((item) => item.status === "Approved").length
-);
-
-const pendingCount = computed(() =>
-    filteredRequests.value.filter((item) => item.status === "Pending").length
+const activeCount = computed(() =>
+    filteredRequests.value.filter((item) => item.status === "Active").length
 );
 
 const unavailableTodayCount = computed(() =>
     requests.value.filter(
         (item) =>
             item.type === "Unavailable" &&
-            item.status === "Approved" &&
+            item.status === "Active" &&
             isTodayInRange(item.start_date, item.end_date)
     ).length
 );
@@ -449,21 +427,11 @@ const handleSubmit = () => {
         start_date: form.value.start_date,
         end_date: form.value.end_date,
         reason: form.value.reason || "-",
-        status: "Pending"
+        status: "Active"
     });
 
-    successMessage.value = "Request submitted successfully. (mock)";
+    successMessage.value = "Leave applied immediately. (No approval required)";
     resetForm();
-};
-
-const handleApprove = (item) => {
-    item.status = "Approved";
-    successMessage.value = `Request for ${item.employee_name} approved. (mock)`;
-};
-
-const handleReject = (item) => {
-    item.status = "Rejected";
-    successMessage.value = `Request for ${item.employee_name} rejected. (mock)`;
 };
 
 const resetForm = () => {
@@ -662,6 +630,13 @@ onMounted(() => {
 
 .mt-3 {
     margin-top: 1rem;
+}
+
+.loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
 }
 
 @media (max-width: 1200px) {

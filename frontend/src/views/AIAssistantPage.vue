@@ -27,6 +27,15 @@
                                 <div class="chat-bubble">
                                     {{ msg.text }}
                                 </div>
+                                <div v-if="msg.role === 'assistant' && !msg.isLoading" class="chat-feedback">
+                                    <Button icon="pi pi-thumbs-up" text rounded size="small" @click="giveFeedback(msg, 'up')" />
+                                    <Button icon="pi pi-thumbs-down" text rounded size="small" @click="giveFeedback(msg, 'down')" />
+                                </div>
+                            </div>
+                            <div v-if="isProcessing" class="chat-message assistant">
+                                <div class="chat-bubble">
+                                    <ProgressSpinner style="width: 20px; height: 20px" strokeWidth="4" />
+                                </div>
                             </div>
                         </div>
 
@@ -35,8 +44,9 @@
                                 v-model="userInput"
                                 placeholder="Ask something..."
                                 @keyup.enter="sendMessage"
+                                :disabled="isProcessing"
                             />
-                            <Button icon="pi pi-send" @click="sendMessage" />
+                            <Button icon="pi pi-send" @click="sendMessage" :loading="isProcessing" />
                         </div>
                     </div>
 
@@ -107,10 +117,12 @@
 import { ref } from "vue";
 
 const userInput = ref("");
+const isProcessing = ref(false);
 const messages = ref([
     {
         role: "assistant",
-        text: "Hello! How can I help you today?"
+        text: "Hello! How can I help you today?",
+        id: 1
     }
 ]);
 
@@ -162,9 +174,33 @@ const quickAsk = (text) => {
     userInput.value = text;
     sendMessage();
 };
+
+const giveFeedback = (msg, type) => {
+    // Mock feedback system
+    console.log(`Feedback ${type} for message ${msg.id}`);
+};
 </script>
 
 <style scoped>
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.page-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.page-subtitle {
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+    font-size: 0.95rem;
+}
+
 .ai-layout {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -198,6 +234,12 @@ const quickAsk = (text) => {
 
 .chat-message.assistant {
     justify-content: flex-start;
+}
+
+.chat-feedback {
+    display: flex;
+    align-items: center;
+    margin-left: 0.5rem;
 }
 
 .chat-bubble {

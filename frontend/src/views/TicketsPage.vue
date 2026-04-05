@@ -23,6 +23,10 @@
             </template>
 
             <template #content>
+                <div v-if="isLoading" class="loading-state">
+                    <ProgressSpinner style="width: 50px; height: 50px" />
+                </div>
+                <template v-else>
                 <Message v-if="pageError" severity="error" class="mb-3">
                     {{ pageError }}
                 </Message>
@@ -183,6 +187,7 @@
                     This page currently uses frontend mock data and is ready for future backend integration
                     for ticket search, filtering, acceptance monitoring, and routing workflow.
                 </div>
+                </template>
             </template>
         </Card>
     </section>
@@ -194,6 +199,7 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
+const isLoading = ref(true);
 const pageError = ref("");
 const searchText = ref("");
 const teamFilter = ref("all");
@@ -331,14 +337,19 @@ const mockTickets = [
 ];
 
 const loadTickets = () => {
+    isLoading.value = true;
     pageError.value = "";
 
-    try {
-        tickets.value = [...mockTickets];
-    } catch (error) {
-        console.error(error);
-        pageError.value = "Unable to load tickets.";
-    }
+    setTimeout(() => {
+        try {
+            tickets.value = [...mockTickets];
+        } catch (error) {
+            console.error(error);
+            pageError.value = "Unable to load tickets.";
+        } finally {
+            isLoading.value = false;
+        }
+    }, 500);
 };
 
 const filteredTickets = computed(() => {
@@ -586,6 +597,13 @@ onMounted(() => {
 
 .mt-3 {
     margin-top: 1rem;
+}
+
+.loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
 }
 
 @media (max-width: 1200px) {

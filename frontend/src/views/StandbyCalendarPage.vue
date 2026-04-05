@@ -30,23 +30,27 @@
             </template>
 
             <template #content>
+                <div v-if="isLoading" class="loading-state">
+                    <ProgressSpinner style="width: 50px; height: 50px" />
+                </div>
+                <template v-else>
                 <Message v-if="pageError" severity="error" class="mb-3">
                     {{ pageError }}
                 </Message>
 
                 <div class="summary-grid">
                     <div class="summary-card">
-                        <div class="summary-label">Schedules</div>
+                        <div class="summary-label">Filtered Schedules</div>
                         <div class="summary-value">{{ filteredSchedules.length }}</div>
                     </div>
 
                     <div class="summary-card">
-                        <div class="summary-label">Teams</div>
+                        <div class="summary-label">Total Teams</div>
                         <div class="summary-value">{{ uniqueTeamCount }}</div>
                     </div>
 
                     <div class="summary-card">
-                        <div class="summary-label">Today Tier 1</div>
+                        <div class="summary-label">Active T1 Today</div>
                         <div class="summary-value">{{ todayTier1Count }}</div>
                     </div>
 
@@ -57,142 +61,71 @@
                 </div>
 
                 <div class="toolbar-row">
-                    <div class="toolbar-filters">
-                        <Dropdown
-                            v-model="teamFilter"
-                            :options="teamOptions"
-                            optionLabel="label"
-                            optionValue="value"
-                            placeholder="Select Team"
-                            class="filter-dropdown"
-                        />
-                        <Dropdown
-                            v-model="viewMode"
-                            :options="viewOptions"
-                            optionLabel="label"
-                            optionValue="value"
-                            placeholder="View Mode"
-                            class="filter-dropdown"
-                        />
+                    <div class="toolbar-title">
+                        <h2>Monthly Standby Roster</h2>
                     </div>
 
                     <div class="toolbar-date">
-                        <label class="toolbar-date-label">Reference Date</label>
+                        <label class="toolbar-date-label">Month / Year:</label>
                         <InputText
-                            v-model="selectedDate"
-                            type="date"
+                            v-model="selectedMonth"
+                            type="month"
                             class="date-input"
                         />
                     </div>
                 </div>
 
-                <div class="calendar-meta-bar">
-                    <div class="calendar-meta-title">
-                        {{ currentViewTitle }}
-                    </div>
-                    <div class="calendar-meta-subtitle">
-                        Team:
-                        <strong>{{ selectedTeamLabel }}</strong>
-                    </div>
-                </div>
-
                 <Card class="content-card">
-                    <template #title>
-                        <span>Standby Schedule</span>
-                    </template>
-
                     <template #content>
-                        <DataTable
-                            :value="filteredSchedules"
-                            dataKey="id"
-                            paginator
-                            :rows="10"
-                            responsiveLayout="scroll"
-                            stripedRows
-                        >
-                            <Column header="#" style="width: 70px">
-                                <template #body="{ index }">
-                                    {{ index + 1 }}
-                                </template>
-                            </Column>
-
-                            <Column field="date" header="Date" style="min-width: 140px">
-                                <template #body="{ data }">
-                                    {{ formatDate(data.date) }}
-                                </template>
-                            </Column>
-
-                            <Column field="team_name" header="Team" style="min-width: 180px" />
-
-                            <Column field="shift_label" header="Shift" style="min-width: 160px">
-                                <template #body="{ data }">
-                                    {{ data.shift_label }}
-                                </template>
-                            </Column>
-
-                            <Column header="Tier 1" style="min-width: 220px">
-                                <template #body="{ data }">
-                                    <div class="tier-user-box">
-                                        <div class="tier-user-name">
-                                            {{ data.tier1_name || "-" }}
-                                        </div>
-                                        <div class="tier-user-sub">
-                                            {{ data.tier1_status || "-" }}
-                                        </div>
-                                    </div>
-                                </template>
-                            </Column>
-
-                            <Column header="Tier 2" style="min-width: 220px">
-                                <template #body="{ data }">
-                                    <div class="tier-user-box">
-                                        <div class="tier-user-name">
-                                            {{ data.tier2_name || "-" }}
-                                        </div>
-                                        <div class="tier-user-sub">
-                                            {{ data.tier2_status || "-" }}
-                                        </div>
-                                    </div>
-                                </template>
-                            </Column>
-
-                            <Column header="Tier 3" style="min-width: 220px">
-                                <template #body="{ data }">
-                                    <div class="tier-user-box">
-                                        <div class="tier-user-name">
-                                            {{ data.tier3_name || "-" }}
-                                        </div>
-                                        <div class="tier-user-sub">
-                                            {{ data.tier3_status || "-" }}
-                                        </div>
-                                    </div>
-                                </template>
-                            </Column>
-
-                            <Column header="Coverage" style="min-width: 140px">
-                                <template #body="{ data }">
-                                    <span
-                                        class="status-badge"
-                                        :class="data.coverage_ok ? 'status-active' : 'status-inactive'"
-                                    >
-                                        {{ data.coverage_ok ? "Covered" : "Gap" }}
-                                    </span>
-                                </template>
-                            </Column>
-
-                            <template #empty>
-                                <div class="empty-box">
-                                    No standby schedules found.
+                        <TabView :activeIndex="activeTabIndex" @update:activeIndex="activeTabIndex = $event">
+                            <TabPanel v-for="teamCal in teamCalendars" :key="teamCal.team_name" :header="teamCal.team_name">
+                                <div class="calendar-legend">
+                                    <div class="legend-item"><span class="legend-color t1-color"></span> Tier 1 (Primary)</div>
+                                    <div class="legend-item"><span class="legend-color t2-color"></span> Tier 2 (Backup)</div>
+                                    <div class="legend-item"><span class="legend-color t3-color"></span> Tier 3 (Escalation)</div>
+                                    <div class="legend-item"><span class="legend-color gap-color"></span> Gap / Unavailable</div>
                                 </div>
-                            </template>
-                        </DataTable>
+                                
+                                <div class="calendar-month-view">
+                                    <div class="calendar-days-header">
+                                        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+                                    </div>
+                                    <div class="calendar-grid">
+                                        <div v-for="(day, idx) in teamCal.days" :key="idx" 
+                                             class="calendar-cell" :class="{'empty-cell': !day.dayOfMonth, 'is-today': day.isToday}">
+                                            <div class="cell-date" v-if="day.dayOfMonth">{{ day.dayOfMonth }}</div>
+                                            <div class="cell-events" v-if="day.dayOfMonth">
+                                                <div v-for="evt in day.events" :key="evt.id" 
+                                                     class="event-chip" 
+                                                     :class="[
+                                                         `tier-${evt.tierLevel}-chip`,
+                                                         {
+                                                             'gap': evt.gap,
+                                                             'span-start': evt.spanStart,
+                                                             'span-middle': evt.spanMiddle,
+                                                             'span-end': evt.spanEnd,
+                                                             'span-start-of-week': evt.isStartOfWeek,
+                                                             'span-end-of-week': evt.isEndOfWeek
+                                                         }
+                                                     ]">
+                                                    <div v-if="!evt.hideText" class="evt-content">
+                                                        <span class="evt-user">T{{ evt.tierLevel }}: {{ evt.display_name }}</span>
+                                                    </div>
+                                                    <div v-else class="evt-content hidden-text">&nbsp;</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </TabPanel>
+                        </TabView>
                     </template>
                 </Card>
 
                 <div class="page-two-column">
                     <Card class="content-card">
                         <template #title>
-                            <span>Current Active Coverage</span>
+                            <span>Active Coverage (Today)</span>
                         </template>
 
                         <template #content>
@@ -214,14 +147,34 @@
 
                                     <div class="coverage-shift">{{ item.shift_label }}</div>
 
-                                    <div class="coverage-tier-row">
-                                        <strong>Tier 1:</strong> {{ item.tier1_name || "-" }}
+                                    <div class="coverage-tier-detail t1" :class="{'gap': item.tier1_status === 'Unavailable'}">
+                                        <div class="tier-badge">T1</div>
+                                        <div class="tier-contact-info">
+                                            <div class="tier-person-name">{{ item.tier1_name || "Unassigned" }}</div>
+                                            <div class="tier-person-phone" v-if="item.tier1_phone">
+                                                <i class="pi pi-phone"></i> {{ item.tier1_phone }}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="coverage-tier-row">
-                                        <strong>Tier 2:</strong> {{ item.tier2_name || "-" }}
+
+                                    <div class="coverage-tier-detail t2" :class="{'gap': item.tier2_status === 'Unavailable'}" v-if="item.tier2_name">
+                                        <div class="tier-badge">T2</div>
+                                        <div class="tier-contact-info">
+                                            <div class="tier-person-name">{{ item.tier2_name }}</div>
+                                            <div class="tier-person-phone" v-if="item.tier2_phone">
+                                                <i class="pi pi-phone"></i> {{ item.tier2_phone }}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="coverage-tier-row">
-                                        <strong>Tier 3:</strong> {{ item.tier3_name || "-" }}
+
+                                    <div class="coverage-tier-detail t3" :class="{'gap': item.tier3_status === 'Unavailable'}" v-if="item.tier3_name">
+                                        <div class="tier-badge">T3</div>
+                                        <div class="tier-contact-info">
+                                            <div class="tier-person-name">{{ item.tier3_name }}</div>
+                                            <div class="tier-person-phone" v-if="item.tier3_phone">
+                                                <i class="pi pi-phone"></i> {{ item.tier3_phone }}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -254,9 +207,9 @@
                                 </div>
 
                                 <div class="note-item">
-                                    <div class="note-title">View Mode</div>
+                                    <div class="note-title">Contact & Escalation</div>
                                     <div class="note-desc">
-                                        Monthly and weekly views are simplified in this frontend version and are ready for enhancement later.
+                                        Use the provided phone numbers for emergency contact if the assignee does not respond to LINE notifications.
                                     </div>
                                 </div>
                             </div>
@@ -265,186 +218,210 @@
                 </div>
 
                 <div class="mock-note mt-3">
-                    This page currently uses frontend mock data and is ready for future backend integration
-                    for standby roster, team shift logic, and tier escalation rules.
+                    This page demonstrates dynamic recurring shifts (e.g., 7-day Monday rotations, daily rotations).
+                    In the final backend, these slots are generated automatically from `standby_shift_rules`.
                 </div>
+                </template>
             </template>
         </Card>
     </section>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
 
+const isLoading = ref(true);
 const pageError = ref("");
-const teamFilter = ref("all");
-const viewMode = ref("day");
-const selectedDate = ref(getTodayDate());
+const activeTabIndex = ref(0);
+const selectedMonth = ref(getTodayMonth());
 const schedules = ref([]);
 
-const viewOptions = [
-    { label: "Daily View", value: "day" },
-    { label: "Weekly View", value: "week" },
-    { label: "Monthly View", value: "month" }
-];
-
-const mockSchedules = [
+const teamRotations = [
     {
-        id: 1,
-        date: "2026-04-01",
         team_name: "Cloud Operations",
-        shift_label: "08:00 - 16:00",
-        tier1_name: "Admin User",
-        tier1_status: "Available",
-        tier2_name: "Narin Sukjai",
-        tier2_status: "Available",
-        tier3_name: "Mali Kanit",
-        tier3_status: "Unavailable",
-        coverage_ok: true
+        shift_label: "08:30 - 08:30",
+        cycle_days: 7,
+        anchor_date: "2024-01-01", // A known Monday
+        roster: [
+            { tier1_name: "Admin User", tier2_name: "Narin Sukjai", tier3_name: "Mali Kanit" },
+            { tier1_name: "Narin Sukjai", tier2_name: "Admin User", tier3_name: "" }
+        ]
     },
     {
-        id: 2,
-        date: "2026-04-01",
         team_name: "Security Operations",
         shift_label: "08:00 - 16:00",
-        tier1_name: "Super Admin",
-        tier1_status: "Available",
-        tier2_name: "Ploy Jinda",
-        tier2_status: "Available",
-        tier3_name: "",
-        tier3_status: "",
-        coverage_ok: true
+        cycle_days: 1, // Daily rotation
+        anchor_date: "2024-01-01",
+        roster: [
+            { tier1_name: "Super Admin", tier2_name: "Ploy Jinda", tier3_name: "" },
+            { tier1_name: "Ploy Jinda", tier2_name: "Super Admin", tier3_name: "" },
+            { tier1_name: "Mali Kanit", tier2_name: "Ploy Jinda", tier3_name: "" }
+        ]
     },
     {
-        id: 3,
-        date: "2026-04-01",
         team_name: "Standby Support",
         shift_label: "16:00 - 00:00",
-        tier1_name: "User One",
-        tier1_status: "Unavailable",
-        tier2_name: "Krit Meechai",
-        tier2_status: "Available",
-        tier3_name: "",
-        tier3_status: "",
-        coverage_ok: false
-    },
-    {
-        id: 4,
-        date: "2026-04-02",
-        team_name: "Cloud Operations",
-        shift_label: "08:00 - 16:00",
-        tier1_name: "Admin User",
-        tier1_status: "Available",
-        tier2_name: "Narin Sukjai",
-        tier2_status: "Available",
-        tier3_name: "Mali Kanit",
-        tier3_status: "Available",
-        coverage_ok: true
-    },
-    {
-        id: 5,
-        date: "2026-04-03",
-        team_name: "Security Operations",
-        shift_label: "08:00 - 16:00",
-        tier1_name: "Super Admin",
-        tier1_status: "Available",
-        tier2_name: "Ploy Jinda",
-        tier2_status: "Unavailable",
-        tier3_name: "",
-        tier3_status: "",
-        coverage_ok: true
-    },
-    {
-        id: 6,
-        date: "2026-04-10",
-        team_name: "Standby Support",
-        shift_label: "00:00 - 08:00",
-        tier1_name: "Krit Meechai",
-        tier1_status: "Available",
-        tier2_name: "User One",
-        tier2_status: "Available",
-        tier3_name: "",
-        tier3_status: "",
-        coverage_ok: true
+        cycle_days: 7,
+        anchor_date: "2024-01-03", // A known Wednesday
+        roster: [
+            { tier1_name: "Krit Meechai", tier2_name: "User One", tier3_name: "" },
+            { tier1_name: "User One", tier2_name: "Krit Meechai", tier3_name: "" }
+        ]
     }
 ];
+
+const generateMockSchedules = (yearMonth) => {
+    const results = [];
+    let idCounter = 1;
+    const [year, month] = yearMonth.split('-');
+    
+    // Expand generation window to cover overlapping weeks (1 month before and after)
+    const windowStart = new Date(year, parseInt(month) - 2, 15).toISOString().slice(0, 10);
+    const windowEnd = new Date(year, parseInt(month), 15).toISOString().slice(0, 10);
+
+    const getDaysDiff = (d1, d2) => {
+        const date1 = new Date(d1 + "T12:00:00Z");
+        const date2 = new Date(d2 + "T12:00:00Z");
+        return Math.floor((date2 - date1) / (1000 * 60 * 60 * 24));
+    };
+
+    const addDays = (dateStr, days) => {
+        const d = new Date(dateStr + "T12:00:00Z");
+        d.setDate(d.getDate() + days);
+        return d.toISOString().slice(0, 10);
+    };
+
+    teamRotations.forEach(team => {
+        const diff = getDaysDiff(team.anchor_date, windowStart);
+        let cycleIndex = Math.floor(diff / team.cycle_days);
+        let currentStart = addDays(team.anchor_date, cycleIndex * team.cycle_days);
+
+        while (currentStart <= windowEnd) {
+            const currentEnd = addDays(currentStart, team.cycle_days - 1);
+            
+            let rosterIndex = cycleIndex % team.roster.length;
+            if (rosterIndex < 0) rosterIndex += team.roster.length;
+            const roster = team.roster[rosterIndex];
+
+            // Example: Make someone unavailable randomly (only on the 15th of the month) for visual feedback
+            const isGap = currentStart.endsWith("-15");
+
+            results.push({
+                id: idCounter++,
+                start_date: currentStart,
+                end_date: currentEnd,
+                team_name: team.team_name,
+                shift_label: team.shift_label,
+                tier1_name: roster.tier1_name,
+                tier1_phone: "089-999-9999",
+                tier1_status: isGap ? "Unavailable" : "Available",
+                tier2_name: roster.tier2_name,
+                tier2_phone: "081-111-1111",
+                tier2_status: "Available",
+                tier3_name: roster.tier3_name,
+                tier3_phone: "082-222-2222",
+                tier3_status: "Available",
+                coverage_ok: !isGap
+            });
+
+            currentStart = addDays(currentStart, team.cycle_days);
+            cycleIndex++;
+        }
+    });
+    return results;
+};
+
+function getTodayMonth() {
+    return new Date().toISOString().slice(0, 7);
+}
 
 function getTodayDate() {
     return new Date().toISOString().slice(0, 10);
 }
 
 const loadSchedules = () => {
+    isLoading.value = true;
     pageError.value = "";
 
-    try {
-        schedules.value = [...mockSchedules];
-    } catch (error) {
-        console.error(error);
-        pageError.value = "Unable to load standby schedules.";
-    }
+    setTimeout(() => {
+        try {
+            schedules.value = generateMockSchedules(selectedMonth.value);
+        } catch (error) {
+            console.error(error);
+            pageError.value = "Unable to load standby schedules.";
+        } finally {
+            isLoading.value = false;
+        }
+    }, 300); // Shorter loading time to make month-switching feel smoother
 };
 
-const teamOptions = computed(() => {
-    const teams = [...new Set(schedules.value.map((item) => item.team_name))];
-    return [
-        { label: "All Teams", value: "all" },
-        ...teams.map((team) => ({ label: team, value: team }))
-    ];
-});
-
-const selectedTeamLabel = computed(() => {
-    const found = teamOptions.value.find((item) => item.value === teamFilter.value);
-    return found?.label || "All Teams";
-});
-
-const filteredSchedules = computed(() => {
-    let data = [...schedules.value];
-
-    if (teamFilter.value !== "all") {
-        data = data.filter((item) => item.team_name === teamFilter.value);
-    }
-
-    if (viewMode.value === "day") {
-        data = data.filter((item) => item.date === selectedDate.value);
-    } else if (viewMode.value === "week") {
-        const start = new Date(selectedDate.value);
-        const end = new Date(selectedDate.value);
-        end.setDate(end.getDate() + 6);
-
-        data = data.filter((item) => {
-            const current = new Date(item.date);
-            return current >= start && current <= end;
-        });
-    } else if (viewMode.value === "month") {
-        const month = selectedDate.value.slice(0, 7);
-        data = data.filter((item) => item.date.startsWith(month));
-    }
-
-    return data.sort((a, b) => {
-        if (a.date === b.date) {
-            return a.team_name.localeCompare(b.team_name);
+const teamCalendars = computed(() => {
+    if (!selectedMonth.value || !schedules.value.length) return [];
+    const [yearStr, monthStr] = selectedMonth.value.split('-');
+    const year = parseInt(yearStr);
+    const month = parseInt(monthStr) - 1;
+    
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDayIndex = new Date(year, month, 1).getDay();
+    
+    const teams = [...new Set(schedules.value.map(s => s.team_name))];
+    
+    return teams.map(teamName => {
+        const days = [];
+        for(let i=0; i<firstDayIndex; i++) {
+            days.push({ date: `empty-${i}`, dayOfMonth: '', events: [] });
         }
-        return a.date.localeCompare(b.date);
+        
+        for(let i=1; i<=daysInMonth; i++) {
+            const dStr = `${year}-${String(month+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+            const dayOfWeek = new Date(dStr).getDay();
+            
+            const daySchedules = schedules.value.filter(s => 
+                s.team_name === teamName && dStr >= s.start_date && dStr <= s.end_date
+            );
+            
+            const events = [];
+            daySchedules.forEach(s => {
+                const isStart = dStr === s.start_date;
+                const isEnd = dStr === s.end_date;
+                const baseSpan = {
+                    spanStart: isStart && !isEnd,
+                    spanMiddle: !isStart && !isEnd,
+                    spanEnd: !isStart && isEnd,
+                    isStartOfWeek: dayOfWeek === 0,
+                    isEndOfWeek: dayOfWeek === 6,
+                    hideText: !isStart && dayOfWeek !== 0
+                };
+                
+                if (s.tier1_name) events.push({ ...baseSpan, id: `${s.id}-t1`, tierLevel: 1, display_name: s.tier1_name, gap: s.tier1_status === 'Unavailable' });
+                if (s.tier2_name) events.push({ ...baseSpan, id: `${s.id}-t2`, tierLevel: 2, display_name: s.tier2_name, gap: s.tier2_status === 'Unavailable' });
+                if (s.tier3_name) events.push({ ...baseSpan, id: `${s.id}-t3`, tierLevel: 3, display_name: s.tier3_name, gap: s.tier3_status === 'Unavailable' });
+            });
+            
+            days.push({ date: dStr, dayOfMonth: i, events, isToday: dStr === getTodayDate() });
+        }
+        
+        return { team_name: teamName, days };
     });
 });
 
-const currentViewTitle = computed(() => {
-    if (viewMode.value === "day") {
-        return `Daily Schedule - ${formatDate(selectedDate.value)}`;
-    }
-    if (viewMode.value === "week") {
-        return `Weekly Schedule from ${formatDate(selectedDate.value)}`;
-    }
-    return `Monthly Schedule - ${selectedDate.value.slice(0, 7)}`;
+const activeTeamName = computed(() => {
+    if (!teamCalendars.value.length) return "";
+    return teamCalendars.value[activeTabIndex.value]?.team_name || "";
 });
 
-const uniqueTeamCount = computed(() => {
-    return new Set(filteredSchedules.value.map((item) => item.team_name)).size;
+const filteredSchedules = computed(() => {
+    return schedules.value.filter(item => item.team_name === activeTeamName.value);
 });
+
+const uniqueTeamCount = computed(() => teamCalendars.value.length);
 
 const todayTier1Count = computed(() => {
-    return schedules.value.filter(
-        (item) => item.date === selectedDate.value && item.tier1_name
+    const today = getTodayDate();
+    return filteredSchedules.value.filter(
+        (item) => today >= item.start_date && today <= item.end_date && item.tier1_name
     ).length;
 });
 
@@ -458,12 +435,12 @@ const unavailableCount = computed(() => {
 });
 
 const activeCoverage = computed(() => {
-    return schedules.value.filter((item) => item.date === selectedDate.value);
+    const today = getTodayDate();
+    return filteredSchedules.value.filter((item) => today >= item.start_date && today <= item.end_date);
 });
 
 const goToday = () => {
-    selectedDate.value = getTodayDate();
-    viewMode.value = "day";
+    selectedMonth.value = getTodayMonth();
 };
 
 const formatDate = (value) => {
@@ -478,6 +455,10 @@ const formatDate = (value) => {
         day: "2-digit"
     });
 };
+
+watch(selectedMonth, () => {
+    loadSchedules();
+});
 
 onMounted(() => {
     loadSchedules();
@@ -543,10 +524,10 @@ onMounted(() => {
     margin-bottom: 1rem;
 }
 
-.toolbar-filters {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
+.toolbar-title h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    color: var(--text-color);
 }
 
 .toolbar-date {
@@ -561,51 +542,8 @@ onMounted(() => {
     color: var(--text-color);
 }
 
-.filter-dropdown {
-    min-width: 180px;
-}
-
 .date-input {
     min-width: 180px;
-}
-
-.calendar-meta-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-    padding: 1rem 1.1rem;
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    background: var(--card-bg);
-    margin-bottom: 1rem;
-}
-
-.calendar-meta-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text-color);
-}
-
-.calendar-meta-subtitle {
-    color: var(--text-muted);
-}
-
-.tier-user-box {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-}
-
-.tier-user-name {
-    font-weight: 600;
-    color: var(--text-color);
-}
-
-.tier-user-sub {
-    font-size: 0.88rem;
-    color: var(--text-muted);
 }
 
 .page-two-column {
@@ -647,11 +585,35 @@ onMounted(() => {
     margin-bottom: 0.75rem;
 }
 
-.coverage-tier-row {
-    color: var(--text-color);
-    margin-bottom: 0.35rem;
+.coverage-tier-detail {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    border-left: 4px solid transparent;
+    background: var(--surface-50);
 }
+.coverage-tier-detail.t1 { border-left-color: #3b82f6; background: #eff6ff; }
+.coverage-tier-detail.t2 { border-left-color: #10b981; background: #ecfdf5; }
+.coverage-tier-detail.t3 { border-left-color: #8b5cf6; background: #f5f3ff; }
+.coverage-tier-detail.gap { border-left-color: #ef4444; background: #fef2f2; opacity: 0.7; }
 
+.tier-badge {
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(0,0,0,0.05);
+}
+.tier-contact-info {
+    display: flex;
+    flex-direction: column;
+}
+.tier-person-name { font-weight: 700; color: var(--text-color); }
+.tier-person-phone { font-size: 0.85rem; color: var(--text-muted); margin-top: 2px; }
+    
 .notes-list {
     display: flex;
     flex-direction: column;
@@ -691,6 +653,152 @@ onMounted(() => {
 .mt-3 {
     margin-top: 1rem;
 }
+
+.loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+/* Calendar Grid CSS */
+.calendar-legend {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+.t1-color { background: #3b82f6; }
+.t2-color { background: #10b981; }
+.t3-color { background: #8b5cf6; }
+.gap-color { background: #ef4444; }
+
+.calendar-month-view {
+    width: 100%;
+}
+.calendar-days-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 0.5rem;
+}
+.calendar-cell {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    min-height: 100px;
+    padding: 0.5rem 0;
+    background: var(--card-bg);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+.calendar-cell.empty-cell {
+    background: transparent;
+    border: none;
+}
+.calendar-cell.is-today {
+    border: 2px solid #3b82f6;
+    background: #eff6ff;
+}
+.cell-date {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    padding: 0 0.5rem;
+    margin-bottom: 0.2rem;
+}
+.cell-events {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.event-chip {
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 22px;
+    margin: 0 4px;
+}
+
+.tier-1-chip { background: #dbeafe; border-left: 3px solid #3b82f6; color: #1e3a8a; }
+.tier-2-chip { background: #d1fae5; border-left: 3px solid #10b981; color: #065f46; }
+.tier-3-chip { background: #f3e8ff; border-left: 3px solid #8b5cf6; color: #581c87; }
+
+.event-chip.gap {
+    background: #fee2e2 !important;
+    border-left-color: #dc2626 !important;
+    color: #991b1b !important;
+    opacity: 0.8;
+}
+.event-chip.gap .evt-user {
+    text-decoration: line-through;
+    color: #7f1d1d !important;
+}
+
+.event-chip.span-start {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-right: 0;
+}
+.event-chip.span-middle {
+    border-radius: 0;
+    border-left: none;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0.5rem;
+}
+.event-chip.span-end {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: none;
+    margin-left: 0;
+}
+.event-chip.span-start-of-week {
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 4px !important;
+    margin-left: 4px !important;
+    padding-left: 0.4rem !important;
+}
+.event-chip.span-start-of-week.gap {
+    border-left-color: #dc2626 !important;
+}
+.event-chip.span-end-of-week {
+    border-top-right-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+    margin-right: 4px !important;
+}
+.evt-content {
+    display: flex;
+    gap: 0.3rem;
+}
+.evt-content.hidden-text {
+    visibility: hidden;
+}
+.evt-user { font-weight: 600; }
 
 @media (max-width: 1200px) {
     .summary-grid {

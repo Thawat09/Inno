@@ -23,6 +23,10 @@
             </template>
 
             <template #content>
+                <div v-if="isLoading" class="loading-state">
+                    <ProgressSpinner style="width: 50px; height: 50px" />
+                </div>
+                <template v-else>
                 <Message v-if="pageError" severity="error" class="mb-3">
                     {{ pageError }}
                 </Message>
@@ -52,17 +56,17 @@
 
                     <div class="summary-card">
                         <div class="summary-label">Tickets</div>
-                        <div class="summary-value">{{ countByType('ticket') }}</div>
+                        <div class="summary-value">{{ countByType('ticket') + countByType('task') + countByType('RITM') + countByType('INC') }}</div>
                     </div>
 
                     <div class="summary-card">
                         <div class="summary-label">Users</div>
-                        <div class="summary-value">{{ countByType('user') }}</div>
+                        <div class="summary-value">{{ countByType('user') + countByType('line') }}</div>
                     </div>
 
                     <div class="summary-card">
-                        <div class="summary-label">Teams / Others</div>
-                        <div class="summary-value">{{ otherCount }}</div>
+                        <div class="summary-label">Emails</div>
+                        <div class="summary-value">{{ countByType('email') }}</div>
                     </div>
                 </div>
 
@@ -149,6 +153,7 @@
                     This page currently uses frontend mock data and is ready for future backend integration
                     for full-text search across tickets, users, teams, notifications, and mapping issues.
                 </div>
+                </template>
             </template>
         </Card>
     </section>
@@ -161,6 +166,7 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
+const isLoading = ref(true);
 const pageError = ref("");
 const keyword = ref("");
 const typeFilter = ref("all");
@@ -169,10 +175,12 @@ const results = ref([]);
 const typeOptions = [
     { label: "All Types", value: "all" },
     { label: "Ticket", value: "ticket" },
+    { label: "Task", value: "task" },
+    { label: "RITM", value: "RITM" },
+    { label: "INC", value: "INC" },
+    { label: "Email", value: "email" },
     { label: "User", value: "user" },
-    { label: "Team", value: "team" },
-    { label: "Notification", value: "notification" },
-    { label: "Mapping", value: "mapping" }
+    { label: "LINE", value: "line" }
 ];
 
 const mockResults = [
@@ -188,8 +196,8 @@ const mockResults = [
     },
     {
         id: "T-002",
-        type: "ticket",
-        type_label: "Ticket",
+        type: "RITM",
+        type_label: "RITM",
         title: "RITM000245",
         subtitle: "Request standby escalation review",
         detail: "Requester: admin@company.com | Team: Security Operations | Status: Escalated",
@@ -217,63 +225,23 @@ const mockResults = [
         route: "/users"
     },
     {
-        id: "TM-001",
-        type: "team",
-        type_label: "Team",
-        title: "Cloud Operations",
-        subtitle: "Team",
-        detail: "Lead: Admin User | Members: 3",
-        reference: "TEAM-CO",
-        route: "/teams"
+        id: "E-001",
+        type: "email",
+        type_label: "Email",
+        title: "System Alert: DB High Load",
+        subtitle: "From: monitor@company.com",
+        detail: "Email parsed but unmapped. Received at 08:00 AM.",
+        reference: "MSG-10023",
+        route: "/search"
     },
     {
-        id: "TM-002",
-        type: "team",
-        type_label: "Team",
-        title: "Security Operations",
-        subtitle: "Team",
-        detail: "Lead: Super Admin | Members: 2",
-        reference: "TEAM-SOC",
-        route: "/teams"
-    },
-    {
-        id: "N-001",
-        type: "notification",
-        type_label: "Notification",
-        title: "Account Locked",
-        subtitle: "Security Alert",
-        detail: "User account locked after 3 failed login attempts",
-        reference: "LOCKED-USER",
-        route: "/notifications"
-    },
-    {
-        id: "N-002",
-        type: "notification",
-        type_label: "Notification",
-        title: "SLA Warning",
-        subtitle: "Alert",
-        detail: "Ticket nearing response timeout",
-        reference: "SLA-WARN",
-        route: "/notifications"
-    },
-    {
-        id: "M-001",
-        type: "mapping",
-        type_label: "Mapping",
-        title: "Unmapped LINE User",
-        subtitle: "Data Mapping Queue",
-        detail: "LINE member could not be mapped to internal user record",
-        reference: "MAP-001",
-        route: "/data-mapping"
-    },
-    {
-        id: "M-002",
-        type: "mapping",
-        type_label: "Mapping",
-        title: "Low Confidence Team Match",
-        subtitle: "Data Mapping Queue",
-        detail: "Model confidence below threshold for team classification",
-        reference: "MAP-002",
+        id: "L-001",
+        type: "line",
+        type_label: "LINE",
+        title: "Narin Sukjai (LINE)",
+        subtitle: "line-user-9988",
+        detail: "Mapped to Employee EMP-0004",
+        reference: "LINE-9988",
         route: "/data-mapping"
     }
 ];
@@ -281,24 +249,27 @@ const mockResults = [
 const normalize = (value) => String(value || "").toLowerCase();
 
 const runSearch = () => {
+    isLoading.value = true;
     pageError.value = "";
 
-    try {
-        const q = keyword.value.trim().toLowerCase();
-
-        if (!q) {
-            results.value = [...mockResults];
-            return;
+    setTimeout(() => {
+        try {
+            const q = keyword.value.trim().toLowerCase();
+            if (!q) {
+                results.value = [...mockResults];
+            } else {
+                results.value = mockResults.filter((item) =>
+                    [item.title, item.subtitle, item.detail, item.reference, item.type_label]
+                        .some((value) => normalize(value).includes(q))
+                );
+            }
+        } catch (error) {
+            console.error(error);
+            pageError.value = "Unable to run global search.";
+        } finally {
+            isLoading.value = false;
         }
-
-        results.value = mockResults.filter((item) =>
-            [item.title, item.subtitle, item.detail, item.reference, item.type_label]
-                .some((value) => normalize(value).includes(q))
-        );
-    } catch (error) {
-        console.error(error);
-        pageError.value = "Unable to run global search.";
-    }
+    }, 600);
 };
 
 const applySearch = () => {
@@ -318,24 +289,20 @@ const countByType = (type) => {
     return filteredResults.value.filter((item) => item.type === type).length;
 };
 
-const otherCount = computed(() => {
-    return filteredResults.value.filter((item) =>
-        ["team", "notification", "mapping"].includes(item.type)
-    ).length;
-});
-
 const typeClass = (type) => {
     switch (type) {
         case "ticket":
+        case "INC":
             return "type-ticket";
+        case "task":
+        case "RITM":
+            return "type-task";
         case "user":
             return "type-user";
-        case "team":
-            return "type-team";
-        case "notification":
-            return "type-notification";
-        case "mapping":
-            return "type-mapping";
+        case "line":
+            return "type-line";
+        case "email":
+            return "type-email";
         default:
             return "";
     }
@@ -491,17 +458,17 @@ onMounted(() => {
     color: #166534;
 }
 
-.type-team {
+.type-task {
     background: #f3e8ff;
     color: #7e22ce;
 }
 
-.type-notification {
+.type-line {
     background: #fef3c7;
     color: #92400e;
 }
 
-.type-mapping {
+.type-email {
     background: #fee2e2;
     color: #991b1b;
 }
@@ -536,6 +503,13 @@ onMounted(() => {
 
 .mt-3 {
     margin-top: 1rem;
+}
+
+.loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
 }
 
 @media (max-width: 1200px) {

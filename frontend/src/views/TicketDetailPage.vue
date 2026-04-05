@@ -23,6 +23,10 @@
             </template>
 
             <template #content>
+                <div v-if="isLoading" class="loading-state">
+                    <ProgressSpinner style="width: 50px; height: 50px" />
+                </div>
+                <template v-else>
                 <Message v-if="pageError" severity="error" class="mb-3">
                     {{ pageError }}
                 </Message>
@@ -315,6 +319,7 @@
                         for parsed email, routing decision, acceptance timeline, escalation history, and audit evidence.
                     </div>
                 </template>
+                </template>
             </template>
         </Card>
     </section>
@@ -327,6 +332,7 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
+const isLoading = ref(true);
 const pageError = ref("");
 const ticket = ref(null);
 const acceptanceTimeline = ref([]);
@@ -552,27 +558,30 @@ const mockNotes = {
 };
 
 const loadTicket = () => {
+    isLoading.value = true;
     pageError.value = "";
 
-    const ticketNo = String(route.query.ticketNo || "").trim();
-
-    if (!ticketNo) {
-        pageError.value = "Ticket number is missing.";
-        return;
-    }
-
-    const found = mockTickets.find((item) => item.ticket_no === ticketNo);
-
-    if (!found) {
-        pageError.value = `Ticket ${ticketNo} not found.`;
-        return;
-    }
-
-    ticket.value = found;
-    acceptanceTimeline.value = mockTimeline[ticketNo] || [];
-    escalationHistory.value = mockEscalation[ticketNo] || [];
-    adminOverride.value = mockAdminOverride[ticketNo] || null;
-    notes.value = mockNotes[ticketNo] || [];
+    setTimeout(() => {
+        try {
+            const ticketNo = String(route.query.ticketNo || "").trim();
+            if (!ticketNo) {
+                pageError.value = "Ticket number is missing.";
+                return;
+            }
+            const found = mockTickets.find((item) => item.ticket_no === ticketNo);
+            if (!found) {
+                pageError.value = `Ticket ${ticketNo} not found.`;
+                return;
+            }
+            ticket.value = found;
+            acceptanceTimeline.value = mockTimeline[ticketNo] || [];
+            escalationHistory.value = mockEscalation[ticketNo] || [];
+            adminOverride.value = mockAdminOverride[ticketNo] || null;
+            notes.value = mockNotes[ticketNo] || [];
+        } finally {
+            isLoading.value = false;
+        }
+    }, 500);
 };
 
 const goBack = () => {
@@ -825,6 +834,13 @@ onMounted(() => {
 
 .mt-3 {
     margin-top: 1rem;
+}
+
+.loading-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
 }
 
 @media (max-width: 1200px) {
