@@ -1,5 +1,5 @@
 # Library
-1. pip install flask requests python-dotenv beautifulsoup4 pythainlp sqlalchemy pyodbc schedule
+1. pip install flask requests python-dotenv beautifulsoup4 pythainlp sqlalchemy psycopg2-binary schedule
 
 # Run Project
 1. python run.py
@@ -11,10 +11,8 @@
 2. python -m model.train_pipeline
 
 # Install Database
-1. docker pull mcr.microsoft.com/mssql/server:2022-latest
-2. docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Inetms@2026" -p 1433:1433 --name sql_server_dev -d mcr.microsoft.com/mssql/server:2022-latest
-3. docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Inetms@2026" -p 1434:1433 --name sql_server_prd -d mcr.microsoft.com/mssql/server:2022-latest
-
+1. docker pull postgres:16.2
+2. docker run -d --name postgres_prd -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=Inetms@2026 -e POSTGRES_DB=inno -p 5432:5432 -v postgres_data:/var/lib/postgresql/data postgres:16
 
 # Install Ollama
 1. docker run -d --name ollama --restart unless-stopped -p 11434:11434 -v ollama:/root/.ollama ollama/ollama

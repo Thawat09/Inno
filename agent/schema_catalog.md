@@ -1,11 +1,11 @@
 # Schema Catalog
 ## Ticket Routing & Standby Notification Platform
 Version: 1.0  
-Source basis: uploaded SQL Server DDL; target implementation will later move to PostgreSQL  
+Source basis: PostgreSQL schema (migrated from SQL Server DDL)
 Purpose: provide a schema-locked reference for AI Assistant SQL generation
 
 > Important: This file is a catalog and query guide.  
-> It is **not** the final PostgreSQL migration script.  
+> It is not the final PostgreSQL migration script.
 > Use this file to understand table purpose, safe joins, key columns, and restricted areas.  
 > Sensitive fields must still be filtered by `sensitive_data_guardrails.md`.
 
@@ -13,28 +13,29 @@ Source schema reference: fileciteturn14file0
 
 ---
 
-## 1) Schema Migration Note
+## 1) Schema Platform Note
 
-The uploaded DDL is SQL Server style:
-- `dbo.*`
-- `bigint identity`
-- `nvarchar`
-- `datetime2`
-- `bit`
-- `uniqueidentifier`
-- triggers using `create or alter trigger`
+The current schema is PostgreSQL-based (migrated from SQL Server).
 
-Future production target is PostgreSQL.
+Typical PostgreSQL characteristics:
+- schema prefix: `public` (instead of `dbo`)
+- identity keys: `bigserial`, `generated identity`, or `uuid`, depending on table design
+- string types: `varchar` / `text`
+- datetime types: `timestamp` / `timestamptz`
+- boolean type: `boolean`
+- UUID type: `uuid`
+- triggers use PostgreSQL `CREATE TRIGGER` with trigger functions (typically `plpgsql`)
 
 For AI query generation:
 - generate **PostgreSQL-style read-only SQL**
 - table names should conceptually map 1:1
-- schema prefix may become `public`
-- identity keys will likely become `bigserial` or `uuid` depending on migration choice
-- booleans will likely become `boolean`
-- `datetime2` will likely become `timestamp` / `timestamptz`
+- schema prefix may be `public`
+- use PostgreSQL-compatible data types and syntax
+- booleans are represented as `boolean`
+- former SQL Server `datetime2` values are represented as `timestamp` / `timestamptz`
+- former SQL Server `uniqueidentifier` values are represented as `uuid`
 
-Do not rely on SQL Server-only syntax when generating runtime query text for the future system.
+Do not rely on SQL Server-only syntax when generating runtime query text for the current system.
 
 ---
 

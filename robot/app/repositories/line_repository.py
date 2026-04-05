@@ -18,7 +18,7 @@ def log_event(session, event):
             line_user_id = members[0].get("userId")
 
     sql = text("""
-        INSERT INTO dbo.line_event_logs (
+        INSERT INTO line_event_logs (
             event_type,
             chat_type,
             chat_id,
@@ -59,7 +59,7 @@ def upsert_line_chat(session, source, bot_status=None):
 
     select_sql = text("""
         SELECT id, chat_type, chat_id, group_name, bot_status
-        FROM dbo.line_chats
+        FROM line_chats
         WHERE chat_type = :chat_type
         AND chat_id = :chat_id
     """)
@@ -69,7 +69,7 @@ def upsert_line_chat(session, source, bot_status=None):
     }).mappings().first()
 
     if row:
-        update_fields = ["last_seen_at = SYSUTCDATETIME()"]
+        update_fields = ["last_seen_at = CURRENT_TIMESTAMP"]
         params = {
             "id": row["id"]
         }
@@ -83,13 +83,13 @@ def upsert_line_chat(session, source, bot_status=None):
             params["bot_status"] = bot_status
 
             if bot_status == "active":
-                update_fields.append("bot_joined_at = ISNULL(bot_joined_at, SYSUTCDATETIME())")
+                update_fields.append("bot_joined_at = COALESCE(bot_joined_at, CURRENT_TIMESTAMP)")
                 update_fields.append("bot_left_at = NULL")
             elif bot_status == "left":
-                update_fields.append("bot_left_at = SYSUTCDATETIME()")
+                update_fields.append("bot_left_at = CURRENT_TIMESTAMP")
 
         update_sql = text(f"""
-            UPDATE dbo.line_chats
+            UPDATE line_chats
             SET {", ".join(update_fields)}
             WHERE id = :id
         """)
@@ -97,7 +97,7 @@ def upsert_line_chat(session, source, bot_status=None):
         return row["id"]
 
     insert_sql = text("""
-        INSERT INTO dbo.line_chats (
+        INSERT INTO line_chats (
             chat_type,
             chat_id,
             group_name,
@@ -106,7 +106,6 @@ def upsert_line_chat(session, source, bot_status=None):
             bot_left_at,
             last_seen_at
         )
-        OUTPUT INSERTED.id
         VALUES (
             :chat_type,
             :chat_id,
@@ -114,8 +113,9 @@ def upsert_line_chat(session, source, bot_status=None):
             :bot_status,
             :bot_joined_at,
             :bot_left_at,
-            SYSUTCDATETIME()
+            CURRENT_TIMESTAMP
         )
+        RETURNING id
     """)
 
     if not bot_status:
@@ -132,8 +132,8 @@ def upsert_line_chat(session, source, bot_status=None):
 
     if bot_status == "active":
         session.execute(text("""
-            UPDATE dbo.line_chats
-            SET bot_joined_at = ISNULL(bot_joined_at, SYSUTCDATETIME())
+            UPDATE line_chats
+            SET bot_joined_at = COALESCE(bot_joined_at, CURRENT_TIMESTAMP)
             WHERE id = :id
         """), {"id": chat_id_inserted})
 
@@ -156,13 +156,13 @@ def upsert_line_user(session, user_id, source=None, is_friend=None, status=None)
 
     select_sql = text("""
         SELECT id, user_id, display_name, is_friend, status
-        FROM dbo.line_users
+        FROM line_users
         WHERE user_id = :user_id
     """)
     row = session.execute(select_sql, {"user_id": user_id}).mappings().first()
 
     if row:
-        update_fields = ["last_seen_at = SYSUTCDATETIME()"]
+        update_fields = ["last_seen_at = CURRENT_TIMESTAMP"]
         params = {"id": row["id"]}
 
         if profile.get("display_name"):
@@ -190,7 +190,7 @@ def upsert_line_user(session, user_id, source=None, is_friend=None, status=None)
             params["status"] = status
 
         update_sql = text(f"""
-            UPDATE dbo.line_users
+            UPDATE line_users
             SET {", ".join(update_fields)}
             WHERE id = :id
         """)
@@ -198,7 +198,7 @@ def upsert_line_user(session, user_id, source=None, is_friend=None, status=None)
         return row["id"]
 
     insert_sql = text("""
-        INSERT INTO dbo.line_users (
+        INSERT INTO line_users (
             user_id,
             display_name,
             picture_url,
@@ -208,7 +208,6 @@ def upsert_line_user(session, user_id, source=None, is_friend=None, status=None)
             status,
             last_seen_at
         )
-        OUTPUT INSERTED.id
         VALUES (
             :user_id,
             :display_name,
@@ -217,8 +216,9 @@ def upsert_line_user(session, user_id, source=None, is_friend=None, status=None)
             :language,
             :is_friend,
             :status,
-            SYSUTCDATETIME()
+            CURRENT_TIMESTAMP
         )
+        RETURNING id
     """)
 
     line_user_id = session.execute(insert_sql, {
@@ -240,7 +240,7 @@ def upsert_membership(session, chat_pk, line_user_pk, active=True):
 
     select_sql = text("""
         SELECT id, status, joined_at, left_at
-        FROM dbo.line_chat_memberships
+        FROM line_chat_memberships
         WHERE chat_pk = :chat_pk
         AND line_user_pk = :line_user_pk
     """)
@@ -252,19 +252,19 @@ def upsert_membership(session, chat_pk, line_user_pk, active=True):
     if row:
         if active:
             update_sql = text("""
-                UPDATE dbo.line_chat_memberships
+                UPDATE line_chat_memberships
                 SET status = 'active',
-                    joined_at = ISNULL(joined_at, SYSUTCDATETIME()),
+                    joined_at = COALESCE(joined_at, CURRENT_TIMESTAMP),
                     left_at = NULL,
-                    last_seen_at = SYSUTCDATETIME()
+                    last_seen_at = CURRENT_TIMESTAMP
                 WHERE id = :id
             """)
         else:
             update_sql = text("""
-                UPDATE dbo.line_chat_memberships
+                UPDATE line_chat_memberships
                 SET status = 'left',
-                    left_at = SYSUTCDATETIME(),
-                    last_seen_at = SYSUTCDATETIME()
+                    left_at = CURRENT_TIMESTAMP,
+                    last_seen_at = CURRENT_TIMESTAMP
                 WHERE id = :id
             """)
 
@@ -272,7 +272,7 @@ def upsert_membership(session, chat_pk, line_user_pk, active=True):
         return
 
     insert_sql = text("""
-        INSERT INTO dbo.line_chat_memberships (
+        INSERT INTO line_chat_memberships (
             chat_pk,
             line_user_pk,
             status,
@@ -286,7 +286,7 @@ def upsert_membership(session, chat_pk, line_user_pk, active=True):
             :status,
             :joined_at,
             :left_at,
-            SYSUTCDATETIME()
+            CURRENT_TIMESTAMP
         )
     """)
 
@@ -300,8 +300,8 @@ def upsert_membership(session, chat_pk, line_user_pk, active=True):
 
     if active:
         session.execute(text("""
-            UPDATE dbo.line_chat_memberships
-            SET joined_at = ISNULL(joined_at, SYSUTCDATETIME())
+            UPDATE line_chat_memberships
+            SET joined_at = COALESCE(joined_at, CURRENT_TIMESTAMP)
             WHERE chat_pk = :chat_pk
             AND line_user_pk = :line_user_pk
         """), {
@@ -310,8 +310,8 @@ def upsert_membership(session, chat_pk, line_user_pk, active=True):
         })
     else:
         session.execute(text("""
-            UPDATE dbo.line_chat_memberships
-            SET left_at = SYSUTCDATETIME()
+            UPDATE line_chat_memberships
+            SET left_at = CURRENT_TIMESTAMP
             WHERE chat_pk = :chat_pk
             AND line_user_pk = :line_user_pk
         """), {
@@ -326,13 +326,13 @@ def upsert_internal_user(session, line_user_id):
 
     row = session.execute(text("""
         SELECT id, is_active
-        FROM dbo.users
+        FROM users
         WHERE line_user_id = :line_user_id
     """), {"line_user_id": line_user_id}).mappings().first()
 
     if row:
         session.execute(text("""
-            UPDATE dbo.users
+            UPDATE users
             SET is_active = 1,
                 failed_login_count = 0
             WHERE id = :id
@@ -340,19 +340,19 @@ def upsert_internal_user(session, line_user_id):
         return row["id"]
 
     return session.execute(text("""
-        INSERT INTO dbo.users (
+        INSERT INTO users (
             line_user_id,
             is_active,
             created_at,
             updated_at
         )
-        OUTPUT INSERTED.id
         VALUES (
             :line_user_id,
             1,
-            SYSUTCDATETIME(),
-            SYSUTCDATETIME()
+            CURRENT_TIMESTAMP,
+            CURRENT_TIMESTAMP
         )
+        RETURNING id
     """), {"line_user_id": line_user_id}).scalar()
 
 
@@ -361,7 +361,7 @@ def deactivate_internal_user(session, line_user_id):
         return
 
     session.execute(text("""
-        UPDATE dbo.users
+        UPDATE users
         SET is_active = 0
         WHERE line_user_id = :line_user_id
     """), {"line_user_id": line_user_id})
@@ -373,7 +373,7 @@ def is_event_processed(session, webhook_event_id):
 
     row = session.execute(text("""
         SELECT 1
-        FROM dbo.line_processed_events
+        FROM line_processed_events
         WHERE webhook_event_id = :webhook_event_id
     """), {"webhook_event_id": webhook_event_id}).first()
 
@@ -385,7 +385,7 @@ def mark_event_processed(session, webhook_event_id, event_type):
         return
 
     session.execute(text("""
-        INSERT INTO dbo.line_processed_events (
+        INSERT INTO line_processed_events (
             webhook_event_id,
             event_type
         )

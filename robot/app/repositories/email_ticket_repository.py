@@ -17,9 +17,10 @@ def task_already_recorded(task_id):
     session = db.get_session()
     try:
         query = text("""
-            SELECT TOP 1 record_id
+            SELECT record_id
             FROM email_ticket_master
             WHERE record_id = :record_id
+            LIMIT 1
         """)
 
         result = session.execute(query, {"record_id": task_id}).fetchone()

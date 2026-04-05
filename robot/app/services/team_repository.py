@@ -19,8 +19,8 @@ def get_staffs_by_team(team_name: str):
                             PARTITION BY u.sub_team
                             ORDER BY u.created_at ASC, u.id ASC
                         ) AS rn
-                    FROM dbo.users u
-                    INNER JOIN dbo.line_users lu
+                    FROM users u
+                    INNER JOIN line_users lu
                         ON lu.user_id = u.line_user_id
                     WHERE u.is_active = 1
                         AND NULLIF(u.line_user_id, '') IS NOT NULL
@@ -49,30 +49,32 @@ def get_staffs_by_team(team_name: str):
         # ถ้าไม่มี ค่อยหา main_team
         sql = text("""
             WITH candidate AS (
-                SELECT TOP 1
+                SELECT
                     lu.display_name,
                     u.line_user_id,
                     u.created_at
-                FROM dbo.users u
-                INNER JOIN dbo.line_users lu
+                FROM users u
+                INNER JOIN line_users lu
                     ON lu.user_id = u.line_user_id
                 WHERE u.is_active = 1
                     AND NULLIF(u.line_user_id, '') IS NOT NULL
                     AND u.sub_team = :team_name
                 ORDER BY u.created_at ASC, u.id ASC
+                LIMIT 1
             ),
             fallback_candidate AS (
-                SELECT TOP 1
+                SELECT
                     lu.display_name,
                     u.line_user_id,
                     u.created_at
-                FROM dbo.users u
-                INNER JOIN dbo.line_users lu
+                FROM users u
+                INNER JOIN line_users lu
                     ON lu.user_id = u.line_user_id
                 WHERE u.is_active = 1
                     AND NULLIF(u.line_user_id, '') IS NOT NULL
                     AND u.main_team = :team_name
                 ORDER BY u.created_at ASC, u.id ASC
+                LIMIT 1
             )
             SELECT display_name, line_user_id
             FROM candidate

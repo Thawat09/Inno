@@ -4,7 +4,7 @@ Version: 1.1
 Scope: Ticket Routing & Standby Notification Platform  
 Target runtime: AI Assistant orchestration layer  
 Primary target DB: PostgreSQL  
-Current source schema reference: SQL Server DDL converted conceptually for future PostgreSQL use  
+Current source schema reference: PostgreSQL schema (migrated from SQL Server DDL)  
 Web/API backend: Express.js  
 Worker/AI/LINE side: Python  
 Assistant scope: This system only

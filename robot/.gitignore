@@ -37,7 +37,8 @@ outputs/train/best_vs_bundle_predictions.csv
 outputs/train/best_vs_bundle_report.csv
 
 # --- Scripts ---
-app/db/script/recommend/v*
+app/db/script/
+
 # --- Exclude Data Export Files ---
 outputs/export/
 
