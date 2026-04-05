@@ -984,6 +984,19 @@ Do not rely on SQL Server-only syntax when generating runtime query text for the
 
 ---
 
+## 3.47 worker_job_states
+**Purpose**: track the execution state and dates of background Python worker jobs  
+**Primary key**: `job_name`  
+**Important columns**:
+- `job_name`
+- `last_run_date`
+- `updated_at`
+
+**Typical use**:
+- check if daily summary or other recurring jobs have run today
+
+---
+
 # 4) Recommended Join Paths
 
 ## 4.1 Ticket summary with classification and assignment

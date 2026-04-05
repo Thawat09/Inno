@@ -10,10 +10,8 @@ from app.services.line_service import (
     send_task_notification,
     send_daily_summary_notification,
 )
-
-# TODO: implement จริงใน service layer/database layer
-# from app.services.escalation_service import process_pending_escalations
-# from app.services.job_state_service import was_job_run_today, mark_job_run_today
+from app.services.escalation_service import process_pending_escalations
+from app.services.job_state_service import was_job_run_today, mark_job_run_today
 
 # =========================================================
 # CONFIG DEFAULTS
@@ -104,11 +102,8 @@ def email_polling_job():
 
             log(f"📌 [{idx}/{len(task_list)}] task={task} | ritm={ritm} | route={route}")
 
-            # ตรงนี้ mail_service ควรทำ DB persistence เสร็จเรียบร้อยก่อน
-            # แล้ว worker ค่อยทำ notification รอบแรก
             #! _send_line_task(task_item)
 
-            # กันยิงเร็วเกินไปเล็กน้อย
             time.sleep(0.3)
 
     finally:
@@ -124,23 +119,15 @@ def escalation_check_job():
         return
 
     try:
-        # TODO:
-        # ดึง ticket ที่ยังไม่ accepted และยังส่งไม่ครบ 3 รอบ
-        # เช็ค response_deadline_at ว่าครบ 15 นาทีหรือยัง
-        # ถ้าครบแล้วให้หา tier ถัดไป แล้วส่ง LINE รอบใหม่
-        # ถ้าถึง tier สุดท้ายหรือครบ 3 รอบแล้ว ให้ mark missed SLA แล้วจบ
-        #
-        # ตัวอย่าง:
-        # result = process_pending_escalations(
-        #     max_rounds=3,
-        #     default_wait_minutes=15,
-        #     enable_line_send=ENABLE_LINE_SEND,
-        # )
-        # log(
-        #     f"📈 Escalation checked | scanned={result['scanned']} "
-        #     f"| escalated={result['escalated']} | closed={result['closed']}"
-        # )
-        log("🕒 Escalation check tick")
+        result = process_pending_escalations(
+            max_rounds=3,
+            default_wait_minutes=15,
+            enable_line_send=ENABLE_LINE_SEND,
+        )
+        log(
+            f"📈 Escalation checked | scanned={result['scanned']} "
+            f"| escalated={result['escalated']} | closed={result['closed']}"
+        )
     finally:
         _escalation_job_lock.release()
 
@@ -156,10 +143,9 @@ def daily_summary_job():
     try:
         today_key = datetime.now().strftime("%Y-%m-%d")
 
-        # แนะนำให้เปลี่ยนเป็นเช็คจาก DB จริง ไม่ใช่ memory
-        # if was_job_run_today("daily_summary", today_key):
-        #     log(f"⏭ Daily summary already sent for {today_key}")
-        #     return
+        if was_job_run_today("daily_summary", today_key):
+            log(f"⏭ Daily summary already sent for {today_key}")
+            return
 
         summary = get_daily_case_summary()
 
@@ -171,9 +157,9 @@ def daily_summary_job():
             f"| total={summary.get('total_count', 0)}"
         )
 
-        #! _send_line_summary(summary)
+        _send_line_summary(summary)
 
-        # mark_job_run_today("daily_summary", today_key)
+        mark_job_run_today("daily_summary", today_key)
 
     finally:
         _summary_job_lock.release()
