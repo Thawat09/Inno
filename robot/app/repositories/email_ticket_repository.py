@@ -1,6 +1,6 @@
 from app.db.db_connection import db
 from sqlalchemy import text
-from model.export_to_csv import (
+from app.constants.export_headers import (
     MASTER_DB_HEADERS,
     AUDIT_RAW_HEADERS,
 )

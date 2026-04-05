@@ -25,6 +25,9 @@ dist/
 *.sqlite
 instance/
 
+# Ignore Model Training Scripts
+model/
+
 # --- Models ---
 outputs/train/best_cloud_subteam_classifier_model_*.pkl
 outputs/train/best_main_team_classifier_model_*.pkl
@@ -36,7 +39,7 @@ outputs/train/best_vs_bundle_report.csv
 # --- Scripts ---
 app/db/script/recommend/v*
 # --- Exclude Data Export Files ---
-outputs/export/*.csv
+outputs/export/
 
 # --- Exclude Executable Tools ---
 *.exe
